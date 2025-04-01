@@ -16,10 +16,10 @@ interface BudgetItem {
 }
 
 const budgetData: BudgetItem[] = [
-  { label: "Food", color: "#4285F4", value: 0.6, amount: "$400 / $300", status: "Under" },
+  { label: "Food", color: "#4285F4", value: 0.6, amount: "$100 / $300", status: "Under" },
   { label: "Rent", color: "#8AB4F8", value: 1, amount: "$1,200 / $1,200", status: "On track" },
   { label: "Entertainment", color: "#F25C54", value: 1, amount: "$250 / $300", status: "Over", textColor: "text-red-500" },
-  { label: "Other", color: "#9AA0A6", value: 0.4, amount: "$200 / $500", status: "Under" },
+  { label: "Other", color: "#9AA0A6", value: 0.4, amount: "$400 / $500", status: "Under" },
 ];
 
 const calculatePieChartData = (data: BudgetItem[]): BudgetItem[] => {

@@ -1,58 +1,80 @@
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
 import { ArrowLeft, ChevronRight } from "lucide-react-native";
-import { Button } from "react-native-paper";
 
 export default function SettingsView() {
   const router = useRouter();
 
   return (
-    <ScrollView className="p-4 space-y-6">
-      <View className="flex-row items-center gap-2">
-        <TouchableOpacity onPress={() => router.back()} className="p-2">
-          <ArrowLeft size={24} color="black" />
-        </TouchableOpacity>
-        <Text className="text-2xl font-bold">Settings</Text>
-      </View>
-
-      <View className="space-y-4">
-        {[
-          { title: "Bank Accounts", subtitle: "Connect your bank to import transactions" },
-          { title: "Manage Categories" },
-          { title: "Budget Limits" },
-          { title: "Notifications" },
-        ].map((item, index) => (
-          <TouchableOpacity key={index} className="p-4 bg-gray-100 rounded-lg flex-row justify-between items-center">
-            <View>
-              <Text className="font-medium text-lg">{item.title}</Text>
-              {item.subtitle && <Text className="text-sm text-gray-500">{item.subtitle}</Text>}
-            </View>
-            <ChevronRight size={24} color="gray" />
+    <ScrollView className="flex-1 bg-white">
+      {/* Header */}
+      <View className="p-4">
+        <View className="flex-row items-center mb-4">
+          <TouchableOpacity onPress={() => router.back()}>
+            <ArrowLeft size={24} color="black" />
           </TouchableOpacity>
-        ))}
+        </View>
+        <Text className="text-3xl font-bold mb-6">Settings</Text>
       </View>
 
-      <View className="border-t border-gray-300 my-4" />
-
-      <View className="space-y-4">
-        {[
-          { category: "Food", amount: "$500" },
-          { category: "Rent", amount: "$1,200" },
-          { category: "Entertainment", amount: "$200" },
-        ].map((item, index) => (
-          <View key={index} className="flex-row justify-between">
-            <Text className="font-medium text-lg">{item.category}</Text>
-            <Text className="font-medium text-lg">{item.amount}</Text>
+      {/* Menu Items */}
+      <View>
+        {/* Bank Accounts */}
+        <TouchableOpacity className="bg-white px-4 py-3 border-b border-gray-100">
+          <Text className="text-xl mb-1">Bank Accounts</Text>
+          <Text className="text-gray-500">Connect your bank to import transactions</Text>
+          <View className="absolute right-4 top-1/2 -translate-y-1/2">
+            <ChevronRight size={20} color="#9CA3AF" />
           </View>
-        ))}
+        </TouchableOpacity>
+
+        {/* Manage Categories */}
+        <TouchableOpacity className="bg-white px-4 py-4 border-b border-gray-100 flex-row justify-between items-center">
+          <Text className="text-xl">Manage Categories</Text>
+          <ChevronRight size={20} color="#9CA3AF" />
+        </TouchableOpacity>
+
+        {/* Budget Limits */}
+        <TouchableOpacity className="bg-white px-4 py-4 border-b border-gray-100 flex-row justify-between items-center">
+          <Text className="text-xl">Budget Limits</Text>
+          <ChevronRight size={20} color="#9CA3AF" />
+        </TouchableOpacity>
+
+        {/* Notifications */}
+        <TouchableOpacity className="bg-white px-4 py-4 border-b border-gray-100 flex-row justify-between items-center">
+          <Text className="text-xl">Notifications</Text>
+          <ChevronRight size={20} color="#9CA3AF" />
+        </TouchableOpacity>
       </View>
 
-      <Button 
-        className="bg-blue-500 p-4 rounded-lg mt-6"
-        onPress={() => console.log("Settings Saved")}
-      >
-        SAVE
-      </Button>
+      {/* Divider */}
+      <View className="h-4" />
+
+      {/* Budget Items */}
+      <View className="px-4">
+        <View className="py-3 flex-row justify-between items-center">
+          <Text className="text-xl">Food</Text>
+          <Text className="text-xl">$500</Text>
+        </View>
+        <View className="py-3 flex-row justify-between items-center">
+          <Text className="text-xl">Rent</Text>
+          <Text className="text-xl">$1,200</Text>
+        </View>
+        <View className="py-3 flex-row justify-between items-center">
+          <Text className="text-xl">Entertainment</Text>
+          <Text className="text-xl">$200</Text>
+        </View>
+      </View>
+
+      {/* Save Button */}
+      <View className="px-4 py-6">
+        <TouchableOpacity 
+          className="bg-[#4B7BF5] py-3 rounded-lg"
+          onPress={() => console.log("Settings Saved")}
+        >
+          <Text className="text-white text-center text-lg font-medium">SAVE</Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 }
