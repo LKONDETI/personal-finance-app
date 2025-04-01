@@ -48,10 +48,11 @@ export default function SettingsView() {
       </View>
 
       <Button 
-        label="SAVE" 
         className="bg-blue-500 p-4 rounded-lg mt-6"
         onPress={() => console.log("Settings Saved")}
-      />
+      >
+        SAVE
+      </Button>
     </ScrollView>
   );
 }
