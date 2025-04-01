@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Slot-Application",
-    "slug": "Slot-Application",
+    "name": "personal-finance",
+    "slug": "personal-finance",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
