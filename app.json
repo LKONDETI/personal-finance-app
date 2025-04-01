@@ -1,0 +1,54 @@
+{
+  "expo": {
+    "name": "Slot-Application",
+    "slug": "Slot-Application",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "myapp",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "bundleIdentifier": "com.yourcompany.yourappname",
+      "supportsTablet": true,
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.yourcompany.yourappname",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "extra": {
+      "projectId": "your-uuid-project-id",
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "f50f7649-45ac-483b-bfe9-f25aef154a6d"
+      }
+    },
+    "plugins": [
+      "expo-router",
+      "expo-video",
+      "expo-localization",
+      "expo-font"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "newArchEnabled": true  
+  }
+}
