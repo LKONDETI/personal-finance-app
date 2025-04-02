@@ -1,9 +1,12 @@
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, Pressable } from "react-native";
 import { useRouter } from "expo-router";
 import Svg, { Path, G, Text as SvgText } from "react-native-svg";
 import * as Progress from "react-native-progress";
 import { ArrowLeft } from "lucide-react-native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import budgetData from '@/data/budgetData.json';
+import * as FileSystem from 'expo-file-system';
+import { Platform } from 'react-native';
 
 interface BudgetItem {
   label: string;
@@ -12,32 +15,11 @@ interface BudgetItem {
   amount: string;
   status: string;
   textColor?: string;
+  limit: string;
+  spent: string;
   startAngle?: number;
   endAngle?: number;
 }
-
-const budgetData: BudgetItem[] = [
-  { label: "Food", color: "#4285F4", value: 0.2, amount: "$100 / $300", status: "Under" },
-  { label: "Rent", color: "#8AB4F8", value: 0.4, amount: "$1,200 / $1,200", status: "On track" },
-  { label: "Entertainment", color: "#F25C54", value: 0.15, amount: "$250 / $300", status: "Over", textColor: "text-red-500" },
-  { label: "Other", color: "#9AA0A6", value: 0.25, amount: "$400 / $500", status: "Under" },
-];
-
-const calculatePieChartData = (data: BudgetItem[]): BudgetItem[] => {
-  let currentAngle = 0;
-  return data.map((item) => {
-    const startAngle = currentAngle;
-    const sliceAngle = item.value * 2 * Math.PI;
-    const endAngle = startAngle + sliceAngle;
-    currentAngle = endAngle;
-    
-    return {
-      ...item,
-      startAngle,
-      endAngle
-    };
-  });
-};
 
 const PieSlice = ({ 
   cx, 
@@ -85,7 +67,51 @@ const PieSlice = ({
 export default function BudgetView() {
   const router = useRouter();
   const [activeSlice, setActiveSlice] = useState<number | null>(null);
-  const pieChartData = calculatePieChartData(budgetData);
+  const [budgetItems, setBudgetItems] = useState<BudgetItem[]>(budgetData.categories);
+
+  useEffect(() => {
+    const loadBudgetData = async () => {
+      try {
+        if (Platform.OS === 'web') {
+          const data = localStorage.getItem('budgetData');
+          if (data) {
+            setBudgetItems(JSON.parse(data).categories);
+          }
+        } else {
+          const jsonPath = FileSystem.documentDirectory + 'budgetData.json';
+          const fileExists = await FileSystem.getInfoAsync(jsonPath);
+          
+          if (fileExists.exists) {
+            const jsonContent = await FileSystem.readAsStringAsync(jsonPath);
+            const data = JSON.parse(jsonContent);
+            setBudgetItems(data.categories);
+          }
+        }
+      } catch (error) {
+        console.error('Error loading budget data:', error);
+      }
+    };
+
+    loadBudgetData();
+  }, []);
+
+  const calculatePieChartData = (data: BudgetItem[]): BudgetItem[] => {
+    let currentAngle = 0;
+    return data.map((item) => {
+      const startAngle = currentAngle;
+      const sliceAngle = item.value * 2 * Math.PI;
+      const endAngle = startAngle + sliceAngle;
+      currentAngle = endAngle;
+      
+      return {
+        ...item,
+        startAngle,
+        endAngle
+      };
+    });
+  };
+
+  const pieChartData = calculatePieChartData(budgetItems);
 
   return (
     <ScrollView className="flex-1 p-4 bg-white">
@@ -131,8 +157,8 @@ export default function BudgetView() {
       </View>
 
       {/* Budget Categories */}
-      {budgetData.map((item: BudgetItem, index: number) => (
-        <TouchableOpacity 
+      {budgetItems.map((item: BudgetItem, index: number) => (
+        <Pressable 
           key={index} 
           className="mb-4 p-4 bg-gray-100 rounded-lg shadow-md"
           onPress={() => setActiveSlice(index)}
@@ -143,12 +169,17 @@ export default function BudgetView() {
             <Text className="font-medium">{item.label}</Text>
             <Text className={`ml-auto font-medium ${item.textColor || "text-black"}`}>{item.status}</Text>
           </View>
-          <Progress.Bar progress={item.value} width={null} height={8} color={item.color} />
+          <Progress.Bar 
+            progress={parseInt(item.spent) / parseInt(item.limit)} 
+            width={null} 
+            height={8} 
+            color={item.color} 
+          />
           <View className="flex-row justify-between mt-2">
             <Text className="text-sm text-gray-500">Budget</Text>
-            <Text className="font-medium">{item.amount}</Text>
+            <Text className="font-medium">${item.spent} / ${item.limit}</Text>
           </View>
-        </TouchableOpacity>
+        </Pressable>
       ))}
     </ScrollView>
   );

@@ -2,33 +2,77 @@ import { View, Text, TouchableOpacity, ScrollView, TextInput } from "react-nativ
 import { useRouter } from "expo-router";
 import { ArrowLeft } from "lucide-react-native";
 import { useState } from "react";
+import budgetData from '@/data/budgetData.json';
+import * as FileSystem from 'expo-file-system';
+import { Platform } from 'react-native';
+import categoryMappings from '@/data/categoryMappings.json';
 
-interface BudgetLimit {
-  category: string;
+interface BudgetItem {
+  categoryId: number;
+  value: number;
+  amount: string;
+  status: string;
+  textColor?: string;
   limit: string;
   spent: string;
+  label: string;
   color: string;
+  icon: string;
 }
 
 export default function BudgetLimitsView() {
   const router = useRouter();
-  const [budgetLimits, setBudgetLimits] = useState<BudgetLimit[]>([
-    { category: "Food", limit: "300", spent: "100", color: "#4285F4" },
-    { category: "Rent", limit: "1200", spent: "1200", color: "#8AB4F8" },
-    { category: "Entertainment", limit: "300", spent: "250", color: "#F25C54" },
-    { category: "Other", limit: "500", spent: "400", color: "#9AA0A6" },
-  ]);
+  const [budgetItems, setBudgetItems] = useState<BudgetItem[]>(
+    budgetData.categories.map(item => {
+      const category = categoryMappings.categories.find(cat => cat.id === item.categoryId);
+      return {
+        ...item,
+        label: category?.label || '',
+        icon: category?.icon || '',
+        limit: category?.limit || '0',
+        color: category?.color || '',
+      };
+    })
+  );
 
-  const handleLimitChange = (index: number, value: string) => {
-    const newLimits = [...budgetLimits];
-    newLimits[index] = { ...newLimits[index], limit: value };
-    setBudgetLimits(newLimits);
+  const handleLimitChange = async (index: number, value: string) => {
+    const newItems = [...budgetItems];
+    const spent = parseInt(newItems[index].spent);
+    const newLimit = parseInt(value) || 0;
+    
+    newItems[index] = {
+      ...newItems[index],
+      limit: value,
+      amount: `$${spent} / $${value}`,
+      status: getStatus(spent, newLimit),
+      value: spent / newLimit,
+      textColor: spent >= newLimit ? "text-red-500" : undefined
+    };
+    
+    setBudgetItems(newItems);
   };
 
-  const handleSave = () => {
-    // Here you would typically save the limits to your storage/backend
-    console.log('Saving budget limits:', budgetLimits);
-    router.back();
+  const getStatus = (spent: number, limit: number): string => {
+    if (spent >= limit) return "Over";
+    if (spent === limit) return "On track";
+    return "Under";
+  };
+
+  const handleSave = async () => {
+    try {
+      if (Platform.OS === 'web') {
+        localStorage.setItem('budgetData', JSON.stringify({ categories: budgetItems }));
+      } else {
+        const jsonPath = FileSystem.documentDirectory + 'budgetData.json';
+        await FileSystem.writeAsStringAsync(
+          jsonPath,
+          JSON.stringify({ categories: budgetItems }, null, 2)
+        );
+      }
+      router.back();
+    } catch (error) {
+      console.error('Error saving budget data:', error);
+    }
   };
 
   return (
@@ -43,7 +87,7 @@ export default function BudgetLimitsView() {
 
       {/* Budget Limits List */}
       <View className="p-4">
-        {budgetLimits.map((item, index) => (
+        {budgetItems.map((item, index) => (
           <View 
             key={index} 
             className="mb-6 bg-gray-50 rounded-lg p-4 border border-gray-200"
@@ -53,7 +97,7 @@ export default function BudgetLimitsView() {
                 className="h-3 w-3 rounded-full" 
                 style={{ backgroundColor: item.color }} 
               />
-              <Text className="text-lg font-medium">{item.category}</Text>
+              <Text className="text-lg font-medium">{item.label}</Text>
             </View>
             
             <View className="mt-2">
@@ -66,24 +110,6 @@ export default function BudgetLimitsView() {
                   value={item.limit}
                   onChangeText={(value) => handleLimitChange(index, value)}
                   placeholder="Enter limit"
-                />
-              </View>
-            </View>
-
-            <View className="mt-4">
-              <Text className="text-gray-600">Current Spending</Text>
-              <Text className="text-lg mt-1">
-                ${item.spent} / ${item.limit}
-              </Text>
-              <View 
-                className="h-2 bg-gray-200 rounded-full mt-2 overflow-hidden"
-              >
-                <View 
-                  className="h-full rounded-full"
-                  style={{ 
-                    backgroundColor: item.color,
-                    width: `${Math.min((parseInt(item.spent) / parseInt(item.limit)) * 100, 100)}%`,
-                  }}
                 />
               </View>
             </View>

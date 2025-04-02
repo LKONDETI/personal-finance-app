@@ -1,0 +1,45 @@
+{
+  "categories": [
+    {
+      "categoryId": 1,
+      "value": 0.2,
+      "amount": "$100 / $300",
+      "status": "Under",
+      "limit": "300",
+      "spent": "100"
+    },
+    {
+      "categoryId": 2,
+      "value": 0.4,
+      "amount": "$1,200 / $1,200",
+      "status": "On track",
+      "limit": "1200",
+      "spent": "1200"
+    },
+    {
+      "categoryId": 3,
+      "value": 0.15,
+      "amount": "$250 / $300",
+      "status": "Over",
+      "textColor": "text-red-500",
+      "limit": "300",
+      "spent": "250"
+    },
+    {
+      "categoryId": 4,
+      "value": 0.15,
+      "amount": "$100 / $200",
+      "status": "Under",
+      "limit": "200",
+      "spent": "100"
+    },
+    {
+      "categoryId": 5,
+      "value": 0.1,
+      "amount": "$400 / $500",
+      "status": "Under",
+      "limit": "500",
+      "spent": "400"
+    }
+  ]
+} 

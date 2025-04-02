@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ArrowLeft } from 'lucide-react-native';
 import { Avatar } from '@/components/ui/avatar';
@@ -13,13 +13,13 @@ export default function PayNowScreen() {
     <ScrollView className="flex-1 bg-white">
       {/* Header */}
       <View className="flex-row items-center justify-between p-4 border-b border-gray-200">
-        <TouchableOpacity onPress={() => router.back()}>
+        <Pressable onPress={() => router.push('/requests')}>
           <ArrowLeft size={24} color="black" />
-        </TouchableOpacity>
+        </Pressable>
         <Text className="text-xl font-semibold">Review</Text>
-        <TouchableOpacity onPress={() => router.back()}>
+        <Pressable onPress={() => router.push('/requests')}>
           <Text className="text-blue-500">Cancel</Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
 
       {/* Recipient Info */}
