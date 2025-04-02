@@ -16,7 +16,7 @@ const Tab = ({ label, isActive, onPress }: { label: string; isActive: boolean; o
 );
 
 // Badge component
-const Badge = ({ variant, children }: { variant: string; children: string }) => {
+const Badge = ({ variant, children }: { variant: 'due3days' | 'dueToday' | 'due7days' | 'paid'; children: string }) => {
   const styles = {
     due3days: "bg-yellow-50 text-yellow-700 border border-yellow-200",
     dueToday: "bg-red-50 text-red-700 border border-red-200",
@@ -43,7 +43,8 @@ const RequestCard = ({
   amount, 
   date, 
   dateLabel, 
-  showActions 
+  showActions,
+  router 
 }: {
   icon: any;
   iconBg: string;
@@ -51,11 +52,12 @@ const RequestCard = ({
   title: string;
   subtitle: string;
   status: string;
-  statusVariant: string;
+  statusVariant: 'due3days' | 'dueToday' | 'due7days' | 'paid';
   amount: string;
   date: string;
   dateLabel: string;
   showActions?: boolean;
+  router?: any;
 }) => (
   <View className="bg-white rounded-xl overflow-hidden mb-4 shadow-sm">
     <View className="p-4 flex-row items-center justify-between">
@@ -83,7 +85,10 @@ const RequestCard = ({
       
       {showActions && (
         <View className="flex-row gap-2">
-          <TouchableOpacity className="flex-1 bg-blue-500 py-2 rounded-lg">
+          <TouchableOpacity 
+            className="flex-1 bg-blue-500 py-2 rounded-lg"
+            onPress={() => router?.push('/payNow')}
+          >
             <Text className="text-white text-center text-xs font-medium">Pay Now</Text>
           </TouchableOpacity>
           <TouchableOpacity className="flex-1 border border-gray-200 py-2 rounded-lg">
@@ -102,7 +107,20 @@ export default function RequestsView() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("pending");
 
-  const pendingRequests = [
+  type RequestData = {
+    icon: any;
+    iconBg: string;
+    iconColor: string;
+    title: string;
+    subtitle: string;
+    status: string;
+    statusVariant: 'due3days' | 'dueToday' | 'due7days' | 'paid';
+    amount: string;
+    date: string;
+    dateLabel: string;
+  };
+
+  const pendingRequests: RequestData[] = [
     {
       icon: Wifi,
       iconBg: "bg-blue-100",
@@ -141,7 +159,7 @@ export default function RequestsView() {
     },
   ];
 
-  const paidRequests = [
+  const paidRequests: RequestData[] = [
     {
       icon: Wifi,
       iconBg: "bg-gray-100",
@@ -172,7 +190,7 @@ export default function RequestsView() {
     <ScrollView className="flex-1 bg-white">
       <View className="p-4">
         {/* Header */}
-        <View className="flex-row items-center gap-2 mb-6">
+        <View className="flex-row items-center gap-2 mb-6 pt-8">
           <TouchableOpacity onPress={() => router.back()} className="p-2">
             <ArrowLeft size={24} color="black" />
           </TouchableOpacity>
@@ -197,13 +215,13 @@ export default function RequestsView() {
         {activeTab === "pending" ? (
           <View>
             {pendingRequests.map((request, index) => (
-              <RequestCard key={index} {...request} showActions />
+              <RequestCard key={index} {...request} showActions router={router} />
             ))}
           </View>
         ) : (
           <View>
             {paidRequests.map((request, index) => (
-              <RequestCard key={index} {...request} />
+              <RequestCard key={index} {...request} router={router} />
             ))}
           </View>
         )}

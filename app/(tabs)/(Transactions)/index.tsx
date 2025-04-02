@@ -9,7 +9,7 @@ export default function Dashboard() {
 
   return (
     <ScrollView className="p-4 bg-white">
-      <View className="flex-row items-center justify-between mb-4">
+      <View className="flex-row items-center justify-between mb-4 pt-9">
         <Text className="text-2xl font-bold">Dashboard</Text>
         <Icon name="file-text" size={24} />
       </View>
@@ -37,7 +37,8 @@ export default function Dashboard() {
         { id: 3, name: 'Movies', date: 'Apr 16', amount: '$40', icon: 'film', color: 'teal' },
         { id: 4, name: 'Electric Bill', date: 'Apr 18', amount: '$100', icon: 'zap', color: 'yellow' },
       ].map((item) => (
-        <Card key={item.id} className="mb-2 p-4 flex-row justify-between items-center">
+        <Card key={item.id} className="p-4 flex-row justify-between items-center p-2 ">
+          <View className="flex-row justify-between items-center m-2">
           <View className="flex-row items-center gap-3">
             <View className={`h-10 w-10 items-center justify-center rounded-md bg-${item.color}-100`}>
               <Icon name={item.icon} size={20} color={item.color} />
@@ -47,7 +48,7 @@ export default function Dashboard() {
               <Text className="text-sm text-gray-500">{item.date}</Text>
             </View>
           </View>
-          <Text className="font-semibold">{item.amount}</Text>
+          <Text className="font-semibold">{item.amount}</Text></View>
         </Card>
       ))}
       

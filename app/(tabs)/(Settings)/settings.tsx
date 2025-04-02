@@ -6,15 +6,15 @@ export default function SettingsView() {
   const router = useRouter();
 
   return (
-    <ScrollView className="flex-1 bg-white">
+    <ScrollView className="flex-1 bg-white ">
       {/* Header */}
-      <View className="p-4">
+      <View className="p-4 flex-row items-center justify-row pt-10">
         <View className="flex-row items-center mb-4">
           <TouchableOpacity onPress={() => router.back()}>
             <ArrowLeft size={24} color="black" />
           </TouchableOpacity>
         </View>
-        <Text className="text-3xl font-bold mb-6">Settings</Text>
+        <Text className="text-3xl font-bold mb-4">Settings</Text>
       </View>
 
       {/* Menu Items */}
@@ -35,7 +35,10 @@ export default function SettingsView() {
         </TouchableOpacity>
 
         {/* Budget Limits */}
-        <TouchableOpacity className="bg-white px-4 py-4 border-b border-gray-100 flex-row justify-between items-center">
+        <TouchableOpacity 
+          className="bg-white px-4 py-4 border-b border-gray-100 flex-row justify-between items-center"
+          onPress={() => router.push('/(tabs)/(Settings)/budgetLimits')}
+        >
           <Text className="text-xl">Budget Limits</Text>
           <ChevronRight size={20} color="#9CA3AF" />
         </TouchableOpacity>
