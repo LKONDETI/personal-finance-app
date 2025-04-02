@@ -1,9 +1,47 @@
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
 import { ArrowLeft, ChevronRight } from "lucide-react-native";
+import categoryMappings from '@/data/categoryMappings.json';
+
+interface CategoryAmounts {
+  [key: string]: number;
+}
+
+interface Transaction {
+  id: number;
+  name: string;
+  date: string;
+  amount: string;
+}
 
 export default function SettingsView() {
   const router = useRouter();
+  const [categoryAmounts, setCategoryAmounts] = useState<CategoryAmounts>({});
+
+  useEffect(() => {
+    fetch('http://localhost:3000/transactions')
+      .then(response => response.json())
+      .then((data: Transaction[]) => {
+        const amounts: CategoryAmounts = {};
+
+        data.forEach((transaction: Transaction) => {
+          const category = categoryMappings.categories.find(cat =>
+            cat.transactions.includes(transaction.name)
+          );
+
+          if (category) {
+            if (!amounts[category.label]) {
+              amounts[category.label] = 0;
+            }
+            amounts[category.label] += parseFloat(transaction.amount);
+          }
+        });
+
+        setCategoryAmounts(amounts);
+      })
+      .catch(error => console.error('Error fetching transactions:', error));
+  }, []);
 
   return (
     <ScrollView className="flex-1 bg-white ">
@@ -55,18 +93,12 @@ export default function SettingsView() {
 
       {/* Budget Items */}
       <View className="px-4">
-        <View className="py-3 flex-row justify-between items-center">
-          <Text className="text-xl">Food</Text>
-          <Text className="text-xl">$500</Text>
-        </View>
-        <View className="py-3 flex-row justify-between items-center">
-          <Text className="text-xl">Rent</Text>
-          <Text className="text-xl">$1,200</Text>
-        </View>
-        <View className="py-3 flex-row justify-between items-center">
-          <Text className="text-xl">Entertainment</Text>
-          <Text className="text-xl">$200</Text>
-        </View>
+        {Object.entries(categoryAmounts).map(([label, amount]) => (
+          <View key={label} className="py-3 flex-row justify-between items-center">
+            <Text className="text-xl">{label}</Text>
+            <Text className="text-xl">${amount.toFixed(2)}</Text>
+          </View>
+        ))}
       </View>
 
       {/* Save Button */}

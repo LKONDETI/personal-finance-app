@@ -12,7 +12,7 @@
       "id": 2,
       "label": "Rent",
       "icon": "home",
-      "color": "#8AB4F8",
+      "color": "#AFE1AF",
       "limit": "1200",
       "transactions": ["Rent", "Mortgage", "Housing"]
     },

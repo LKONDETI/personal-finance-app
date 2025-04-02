@@ -2,7 +2,6 @@ import { View, Text, TouchableOpacity, ScrollView, TextInput } from "react-nativ
 import { useRouter } from "expo-router";
 import { ArrowLeft } from "lucide-react-native";
 import { useState } from "react";
-import budgetData from '@/data/budgetData.json';
 import * as FileSystem from 'expo-file-system';
 import { Platform } from 'react-native';
 import categoryMappings from '@/data/categoryMappings.json';
@@ -23,16 +22,18 @@ interface BudgetItem {
 export default function BudgetLimitsView() {
   const router = useRouter();
   const [budgetItems, setBudgetItems] = useState<BudgetItem[]>(
-    budgetData.categories.map(item => {
-      const category = categoryMappings.categories.find(cat => cat.id === item.categoryId);
-      return {
-        ...item,
-        label: category?.label || '',
-        icon: category?.icon || '',
-        limit: category?.limit || '0',
-        color: category?.color || '',
-      };
-    })
+    categoryMappings.categories.map(item => ({
+      categoryId: item.id,
+      label: item.label,
+      icon: item.icon,
+      limit: item.limit,
+      color: item.color,
+      value: 0,
+      amount: '',
+      status: '',
+      spent: '0',
+      textColor: undefined,
+    }))
   );
 
   const handleLimitChange = async (index: number, value: string) => {

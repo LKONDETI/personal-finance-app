@@ -4,9 +4,7 @@ import Svg, { Path, G, Text as SvgText } from "react-native-svg";
 import * as Progress from "react-native-progress";
 import { ArrowLeft } from "lucide-react-native";
 import { useState, useEffect } from "react";
-import budgetData from '@/data/budgetData.json';
-import * as FileSystem from 'expo-file-system';
-import { Platform } from 'react-native';
+import categoryMappings from '@/data/categoryMappings.json';
 
 interface BudgetItem {
   label: string;
@@ -19,6 +17,13 @@ interface BudgetItem {
   spent: string;
   startAngle?: number;
   endAngle?: number;
+}
+
+interface Transaction {
+  id: number;
+  name: string;
+  date: string;
+  amount: string;
 }
 
 const PieSlice = ({ 
@@ -67,39 +72,51 @@ const PieSlice = ({
 export default function BudgetView() {
   const router = useRouter();
   const [activeSlice, setActiveSlice] = useState<number | null>(null);
-  const [budgetItems, setBudgetItems] = useState<BudgetItem[]>(budgetData.categories);
+  const [budgetItems, setBudgetItems] = useState<BudgetItem[]>([]);
 
   useEffect(() => {
-    const loadBudgetData = async () => {
-      try {
-        if (Platform.OS === 'web') {
-          const data = localStorage.getItem('budgetData');
-          if (data) {
-            setBudgetItems(JSON.parse(data).categories);
-          }
-        } else {
-          const jsonPath = FileSystem.documentDirectory + 'budgetData.json';
-          const fileExists = await FileSystem.getInfoAsync(jsonPath);
-          
-          if (fileExists.exists) {
-            const jsonContent = await FileSystem.readAsStringAsync(jsonPath);
-            const data = JSON.parse(jsonContent);
-            setBudgetItems(data.categories);
-          }
-        }
-      } catch (error) {
-        console.error('Error loading budget data:', error);
-      }
-    };
+    fetch('http://localhost:3000/transactions')
+      .then(response => response.json())
+      .then((transactions: Transaction[]) => {
+        const amounts: { [key: string]: number } = {};
 
-    loadBudgetData();
+        transactions.forEach(transaction => {
+          const category = categoryMappings.categories.find(cat =>
+            cat.transactions.includes(transaction.name)
+          );
+
+          if (category) {
+            if (!amounts[category.label]) {
+              amounts[category.label] = 0;
+            }
+            amounts[category.label] += parseFloat(transaction.amount);
+          }
+        });
+
+        const updatedBudgetItems = categoryMappings.categories.map(cat => ({
+          label: cat.label,
+          color: cat.color,
+          value: amounts[cat.label] / parseFloat(cat.limit),
+          amount: `$${amounts[cat.label] || 0} / $${cat.limit}`,
+          status: amounts[cat.label] >= parseFloat(cat.limit) ? 'Over' : 'Under',
+          limit: cat.limit,
+          spent: (amounts[cat.label] || 0).toString(),
+        }));
+
+        setBudgetItems(updatedBudgetItems);
+      })
+      .catch(error => console.error('Error fetching transactions:', error));
   }, []);
 
   const calculatePieChartData = (data: BudgetItem[]): BudgetItem[] => {
+    // Calculate total spent across all categories
+    const totalSpent = data.reduce((sum, item) => sum + parseFloat(item.spent), 0);
+    
     let currentAngle = 0;
     return data.map((item) => {
       const startAngle = currentAngle;
-      const sliceAngle = item.value * 2 * Math.PI;
+      // Calculate slice angle based on proportion of total spent
+      const sliceAngle = (parseFloat(item.spent) / totalSpent) * 2 * Math.PI;
       const endAngle = startAngle + sliceAngle;
       currentAngle = endAngle;
       
@@ -112,6 +129,7 @@ export default function BudgetView() {
   };
 
   const pieChartData = calculatePieChartData(budgetItems);
+  const totalSpent = budgetItems.reduce((sum, item) => sum + parseFloat(item.spent), 0);
 
   return (
     <ScrollView className="flex-1 p-4 bg-white">
@@ -124,34 +142,61 @@ export default function BudgetView() {
       </View>
 
       {/* Pie Chart */}
-      <View className="items-center py-4">
-        <Svg height="200" width="200" viewBox="-100 -100 200 200">
+      <View className="items-center py-4 ">
+        <Svg height="400" width="400" viewBox="-200 -200 400 400">
           <G>
-            {pieChartData.map((item, index) => (
-              <PieSlice
-                key={index}
-                cx={0}
-                cy={0}
-                radius={80}
-                startAngle={item.startAngle!}
-                endAngle={item.endAngle!}
-                color={item.color}
-                onPress={() => setActiveSlice(index)}
-                isActive={activeSlice === index}
-              />
-            ))}
-            {activeSlice !== null && (
-              <SvgText
-                x="0"
-                y="0"
-                fontSize="12"
-                fill="white"
-                textAnchor="middle"
-                alignmentBaseline="middle"
-              >
-                {pieChartData[activeSlice].label}
-              </SvgText>
-            )}
+            {pieChartData.map((item, index) => {
+              const midAngle = (item.startAngle! + item.endAngle!) / 2;
+              const labelRadius = 150; // Increased for larger chart
+              const labelX = labelRadius * Math.cos(midAngle);
+              const labelY = labelRadius * Math.sin(midAngle);
+              
+              // Calculate line end point (slightly outside pie)
+              const lineEndRadius = 120; // Increased for larger chart
+              const lineEndX = lineEndRadius * Math.cos(midAngle);
+              const lineEndY = lineEndRadius * Math.sin(midAngle);
+
+              return (
+                <G key={index}>
+                  <PieSlice
+                    cx={0}
+                    cy={0}
+                    radius={100} 
+                    startAngle={item.startAngle!}
+                    endAngle={item.endAngle!}
+                    color={item.color}
+                    onPress={() => setActiveSlice(index)}
+                    isActive={activeSlice === index}
+                  />
+                  <Path
+                    d={`M ${lineEndX} ${lineEndY} L ${labelX} ${labelY}`}
+                    stroke={item.color}
+                    strokeWidth="1"
+                  />
+                  <SvgText
+                    x={labelX}
+                    y={labelY}
+                    fontSize="14"
+                    fill={item.color}
+                    textAnchor={labelX > 0 ? "start" : "end"}
+                    alignmentBaseline="middle"
+                  >
+                    {item.label}
+                  </SvgText>
+                </G>
+              );
+            })}
+            <SvgText
+              x="0"
+              y="0"
+              fontSize="20"
+              fill="black"
+              textAnchor="middle"
+              alignmentBaseline="middle"
+              fontWeight="bold"
+            >
+              ${totalSpent.toFixed(2)}
+            </SvgText>
           </G>
         </Svg>
       </View>
@@ -170,14 +215,14 @@ export default function BudgetView() {
             <Text className={`ml-auto font-medium ${item.textColor || "text-black"}`}>{item.status}</Text>
           </View>
           <Progress.Bar 
-            progress={parseInt(item.spent) / parseInt(item.limit)} 
+            progress={parseFloat(item.spent) / parseFloat(item.limit)} 
             width={null} 
             height={8} 
             color={item.color} 
           />
           <View className="flex-row justify-between mt-2">
             <Text className="text-sm text-gray-500">Budget</Text>
-            <Text className="font-medium">${item.spent} / ${item.limit}</Text>
+            <Text className="font-medium">${parseFloat(item.spent).toFixed(2)} / ${parseFloat(item.limit).toFixed(2)}</Text>
           </View>
         </Pressable>
       ))}
