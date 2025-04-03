@@ -6,8 +6,9 @@ export default function Layout() {
       screenOptions={{
         headerShown: false,
       }}>
-      {/* Optionally configure static options outside the route.
-      <Stack.Screen name="Auth" options={{}} />*/}
+     
+      <Stack.Screen name="requests" options={{}}/>
+      <Stack.Screen name="payNow" options={{}}/>
     </Stack>
   );
 }

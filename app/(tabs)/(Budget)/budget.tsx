@@ -5,6 +5,7 @@ import * as Progress from "react-native-progress";
 import { ArrowLeft } from "lucide-react-native";
 import { useState, useEffect } from "react";
 import categoryMappings from '@/data/categoryMappings.json';
+import transactionsData from '@/data/transactions.json';
 
 interface BudgetItem {
   label: string;
@@ -24,6 +25,10 @@ interface Transaction {
   name: string;
   date: string;
   amount: string;
+}
+
+interface TransactionsData {
+  transactions: Transaction[];
 }
 
 const PieSlice = ({ 
@@ -75,37 +80,36 @@ export default function BudgetView() {
   const [budgetItems, setBudgetItems] = useState<BudgetItem[]>([]);
 
   useEffect(() => {
-    fetch('http://localhost:3000/transactions')
-      .then(response => response.json())
-      .then((transactions: Transaction[]) => {
-        const amounts: { [key: string]: number } = {};
+    const processTransactions = () => {
+      const amounts: { [key: string]: number } = {};
 
-        transactions.forEach(transaction => {
-          const category = categoryMappings.categories.find(cat =>
-            cat.transactions.includes(transaction.name)
-          );
+      (transactionsData as TransactionsData).transactions.forEach((transaction: Transaction) => {
+        const category = categoryMappings.categories.find(cat =>
+          cat.transactions.includes(transaction.name)
+        );
 
-          if (category) {
-            if (!amounts[category.label]) {
-              amounts[category.label] = 0;
-            }
-            amounts[category.label] += parseFloat(transaction.amount);
+        if (category) {
+          if (!amounts[category.label]) {
+            amounts[category.label] = 0;
           }
-        });
+          amounts[category.label] += parseFloat(transaction.amount);
+        }
+      });
 
-        const updatedBudgetItems = categoryMappings.categories.map(cat => ({
-          label: cat.label,
-          color: cat.color,
-          value: amounts[cat.label] / parseFloat(cat.limit),
-          amount: `$${amounts[cat.label] || 0} / $${cat.limit}`,
-          status: amounts[cat.label] >= parseFloat(cat.limit) ? 'Over' : 'Under',
-          limit: cat.limit,
-          spent: (amounts[cat.label] || 0).toString(),
-        }));
+      const updatedBudgetItems = categoryMappings.categories.map(cat => ({
+        label: cat.label,
+        color: cat.color,
+        value: amounts[cat.label] / parseFloat(cat.limit),
+        amount: `$${amounts[cat.label] || 0} / $${cat.limit}`,
+        status: amounts[cat.label] >= parseFloat(cat.limit) ? 'Over' : 'Under',
+        limit: cat.limit,
+        spent: (amounts[cat.label] || 0).toString(),
+      }));
 
-        setBudgetItems(updatedBudgetItems);
-      })
-      .catch(error => console.error('Error fetching transactions:', error));
+      setBudgetItems(updatedBudgetItems);
+    };
+
+    processTransactions();
   }, []);
 
   const calculatePieChartData = (data: BudgetItem[]): BudgetItem[] => {
@@ -134,12 +138,15 @@ export default function BudgetView() {
   return (
     <ScrollView className="flex-1 p-4 bg-white">
       {/* Header */}
-      <View className="flex-row items-center gap-2 mb-4 pt-8">
-        <TouchableOpacity onPress={() => router.back()} className="p-2"> 
-          <ArrowLeft size={24} color="black" />
-        </TouchableOpacity>
-        <Text className="text-2xl font-bold">Budget</Text>
+      <View className="flex-row items-center justify-between mb-4 pt-8">
+        <View className="flex-row items-center gap-2">
+          <TouchableOpacity onPress={() => router.back()} className="p-2"> 
+            <ArrowLeft size={24} color="black" />
+          </TouchableOpacity>
+          <Text className="text-2xl font-bold">Budget</Text>
+        </View>
       </View>
+      <Text className="text-xl font-bold text-center text-gray-700">Total Spent: ${totalSpent.toFixed(2)}</Text>
 
       {/* Pie Chart */}
       <View className="items-center py-4 ">
@@ -186,17 +193,7 @@ export default function BudgetView() {
                 </G>
               );
             })}
-            <SvgText
-              x="0"
-              y="0"
-              fontSize="20"
-              fill="black"
-              textAnchor="middle"
-              alignmentBaseline="middle"
-              fontWeight="bold"
-            >
-              ${totalSpent.toFixed(2)}
-            </SvgText>
+            
           </G>
         </Svg>
       </View>

@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
 import { ArrowLeft, ChevronRight } from "lucide-react-native";
 import categoryMappings from '@/data/categoryMappings.json';
+import transactionsData from '@/data/transactions.json';
 
 interface CategoryAmounts {
   [key: string]: number;
@@ -15,32 +16,35 @@ interface Transaction {
   amount: string;
 }
 
+interface TransactionsData {
+  transactions: Transaction[];
+}
+
 export default function SettingsView() {
   const router = useRouter();
   const [categoryAmounts, setCategoryAmounts] = useState<CategoryAmounts>({});
 
   useEffect(() => {
-    fetch('http://localhost:3000/transactions')
-      .then(response => response.json())
-      .then((data: Transaction[]) => {
-        const amounts: CategoryAmounts = {};
+    const processTransactions = () => {
+      const amounts: CategoryAmounts = {};
 
-        data.forEach((transaction: Transaction) => {
-          const category = categoryMappings.categories.find(cat =>
-            cat.transactions.includes(transaction.name)
-          );
+      (transactionsData as TransactionsData).transactions.forEach((transaction: Transaction) => {
+        const category = categoryMappings.categories.find(cat =>
+          cat.transactions.includes(transaction.name)
+        );
 
-          if (category) {
-            if (!amounts[category.label]) {
-              amounts[category.label] = 0;
-            }
-            amounts[category.label] += parseFloat(transaction.amount);
+        if (category) {
+          if (!amounts[category.label]) {
+            amounts[category.label] = 0;
           }
-        });
+          amounts[category.label] += parseFloat(transaction.amount);
+        }
+      });
 
-        setCategoryAmounts(amounts);
-      })
-      .catch(error => console.error('Error fetching transactions:', error));
+      setCategoryAmounts(amounts);
+    };
+
+    processTransactions();
   }, []);
 
   return (

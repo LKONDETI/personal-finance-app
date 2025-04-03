@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Card } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Feather';
 import categoryMappings from '@/data/categoryMappings.json';
+import transactionsData from '@/data/transactions.json';
 
 const findCategoryForTransaction = (transactionName: string) => {
   return categoryMappings.categories.find(category => 
@@ -18,15 +19,17 @@ interface Transaction {
   amount: string;
 }
 
+interface TransactionsData {
+  transactions: Transaction[];
+}
+
 export default function Dashboard() {
   const navigation = useNavigation();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   useEffect(() => {
-    fetch('http://localhost:3000/transactions')
-      .then(response => response.json())
-      .then(data => setTransactions(data))
-      .catch(error => console.error('Error fetching transactions:', error));
+    // Use local transactions data directly
+    setTransactions((transactionsData as TransactionsData).transactions);
   }, []);
 
   // Calculate totals by category and overall
