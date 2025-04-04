@@ -28,9 +28,8 @@ const Chatbot = () => {
   };
 
   return (
-    <View style={{ flex: 1, padding: 20 }}>
-      <ScrollView>
-        <View className="p-4 flex-row items-center justify-row pt-10">
+    <View className="flex-1 p-5 bg-white">
+        <View className="flex-row items-center justify-row pt-10">
           <View className="flex-row items-center mb-4">
             <TouchableOpacity onPress={() => router.push('/(tabs)/(Settings)/settings')}>
               <ArrowLeft size={24} color="black" />
@@ -40,11 +39,21 @@ const Chatbot = () => {
           <Text className="text-xl font-bold mb-4"> Chat with us</Text>
         </View>
 
+      <ScrollView>
+        <View className="border border-gray-300 rounded-lg p-4 mb-4 shadow-md">
+        <Text className="font-bold text-lg">Ask Me Anything!</Text>
+          <Text className="mt-2">This chatbot has limited access to the information in the app. It can help you with budgeting tips, expense tracking, financial advice, setting up limits, and general inquiries about personal finance</Text>
+          <Text className="mt-2">Frequently asked questions:</Text>
+          <Text className="mt-1">Tips on how to save money?</Text>
+          <Text className="mt-1">How to track my expenses?</Text>
+          <Text className="mt-1">How to set up limits?</Text>
+          <Text className="mt-1">General inquiries about personal finance?</Text>
+        </View>
+
         {messages.map((msg, index) => (
           <View key={index}>
             <Text style={{ fontWeight: 'bold' }}>You: {msg.user}</Text>
             <View style={{ 
-              backgroundColor: '#f0f0f0',
               borderRadius: 8,
               padding: 10,
               marginVertical: 5,
@@ -61,7 +70,7 @@ const Chatbot = () => {
         value={input}
         onChangeText={setInput}
         placeholder="Type your message..."
-        style={{ borderWidth: 1, borderColor: 'gray', padding: 10, marginBottom: 10 }}
+        className="border border-gray-300 p-2 mb-2"
       />
       <Button title="Send" onPress={handleSend} />
     </View>

@@ -149,7 +149,7 @@ export default function BudgetView() {
       <Text className="text-xl font-bold text-center text-gray-700">Total Spent: ${totalSpent.toFixed(2)}</Text>
 
       {/* Pie Chart */}
-      <View className="items-center py-4 ">
+      <View className="items-center py-4">
         <Svg height="400" width="400" viewBox="-200 -200 400 400">
           <G>
             {pieChartData.map((item, index) => {

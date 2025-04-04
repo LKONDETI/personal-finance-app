@@ -14,7 +14,7 @@
       "icon": "home",
       "color": "#AFE1AF",
       "limit": "1200",
-      "transactions": ["Rent", "Mortgage", "Housing"]
+      "transactions": ["Rent to AB Apartments", "Mortgage to PSE&G", "Housing"]
     },
     {
       "id": 3,
@@ -30,7 +30,7 @@
       "icon": "zap",
       "color": "#FFBF00",
       "limit": "1000",
-      "transactions": ["Electric Bill", "Water Bill", "Gas Bill", "Internet", "Cable", "Phone Bill", "Trash", "Wifi", "Health Insurance", "Car Insurance"]
+      "transactions": ["Electric Bill to PSE&G", "Water Bill to PSE&G", "Gas Bill to PSE&G", "Internet to Spectrum", "Cable to Spectrum", "Phone Bill to Verizon", "Trash to PSE&G", "Wifi to Spectrum", "Health Insurance to Aetna", "Car Insurance to Geico"]
     },
     {
       "id": 5,
