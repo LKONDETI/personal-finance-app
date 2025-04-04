@@ -5,41 +5,41 @@ A React Native app built with Expo for managing personal finances, budgets, and 
 ## Screenshots
 
 ### Dashboard View
-![Dashboard Screenshot](./assets/screenshots/dashboard.png)
+<img src="./assets/screenshots/dashboard.png" width="300" alt="Dashboard Screenshot"/>
 - Real-time overview of total balance
 - Income and expense tracking
 - Chronological list of recent transactions
 - Category-based transaction organization
 
 ### Budget View
-![Budget Screenshot](./assets/screenshots/budget.png)
+<img src="./assets/screenshots/budget.png" width="300" alt="Budget Screenshot"/>
 - Interactive pie chart visualization
 - Category-wise budget breakdown
 - Progress bars for budget utilization
 - Color-coded spending indicators
 
 ### Budget Limits
-![Budget Limits Screenshot](./assets/screenshots/budgetLimits.png)
+<img src="./assets/screenshots/budgetLimits.png" width="300" alt="Budget Limits Screenshot"/>
 - Customizable monthly limits per category
 - Easy-to-use input interface
 - Visual category indicators
 - Real-time limit updates
 
 ### Settings
-![Settings Screenshot](./assets/screenshots/settings.png)
+<img src="./assets/screenshots/settings.png" width="300" alt="Settings Screenshot"/>
 - App configuration options
 - Budget management tools
 - Category customization
 - Account settings
 
 ### Payment Status
-![Paid Screenshot](./assets/screenshots/paid.png)
+<img src="./assets/screenshots/paid.png" width="300" alt="Paid Screenshot"/>
 - Transaction status tracking
 - Payment confirmations
 - Historical payment records
 
 ### Requests
-![Requests Screenshot](./assets/screenshots/requests.png)
+<img src="./assets/screenshots/requests.png" width="300" alt="Requests Screenshot"/>
 - Pending payment requests
 - Request management
 - Transaction details
