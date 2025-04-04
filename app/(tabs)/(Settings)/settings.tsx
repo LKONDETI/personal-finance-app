@@ -90,6 +90,13 @@ export default function SettingsView() {
           <Text className="text-xl">Notifications</Text>
           <ChevronRight size={20} color="#9CA3AF" />
         </TouchableOpacity>
+
+        <TouchableOpacity className="bg-white px-4 py-4 border-b border-gray-100 flex-row justify-between items-center"
+          onPress={() => router.push('/(tabs)/(Settings)/chatbot')}
+          >
+          <Text className="text-xl">Chat with us</Text>
+          <ChevronRight size={20} color="#9CA3AF" />
+        </TouchableOpacity>
       </View>
 
       {/* Divider */}

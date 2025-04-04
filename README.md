@@ -1,15 +1,15 @@
-# FLOWWISE - A Finance Mobile App 📊
+# Mobile Banking App with AI 📊
 
-A React Native app built with Expo for managing personal finances, budgets, and tracking expenses.
+A React Native app built with Expo for managing personal finances, budgets, tracking expenses with built-in chat assistant.
 
 <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
-    <img src="./assets/screenshots/dashboard.png" width="230" margin = "5px" alt="Dashboard Screenshot"/>
-    <img src="./assets/screenshots/budget.png" width="230" margin = "5px" alt="Budget Screenshot"/>
-    <img src="./assets/screenshots/requests.png" width="230" margin = "5px" alt="Requests Screenshot"/>
-    <img src="./assets/screenshots/pay-now.png" width="230" margin = "5px" alt="Pay Now Screenshot"/>
-    <img src="./assets/screenshots/paid.png" width="230" margin = "5px" alt="Paid Screenshot"/>
-    <img src="./assets/screenshots/settings.png" width="230" margin = "5px" alt="Settings Screenshot"/>
-    <img src="./assets/screenshots/budgetLimits.png" width="230" margin = "5px" alt="Budget Limits Screenshot"/>
+    <img src="./assets/screenshots/dashboard.png" width="230" alt="Dashboard Screenshot"/>
+    <img src="./assets/screenshots/budget.png" width="230" alt="Budget Screenshot"/>
+    <img src="./assets/screenshots/requests.png" width="230" alt="Requests Screenshot"/>
+    <img src="./assets/screenshots/pay-now.png" width="230" alt="Pay Now Screenshot"/>
+    <img src="./assets/screenshots/paid.png" width="230" alt="Paid Screenshot"/>
+    <img src="./assets/screenshots/settings.png" width="230" alt="Settings Screenshot"/>
+    <img src="./assets/screenshots/budgetLimits.png" width="230" alt="Budget Limits Screenshot"/>
 </div>
 
 ## Features
