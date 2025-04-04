@@ -2,7 +2,6 @@ import { View, Text, TouchableOpacity, ScrollView, TextInput } from "react-nativ
 import { useRouter } from "expo-router";
 import { ArrowLeft } from "lucide-react-native";
 import { useState, useEffect } from "react";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import categoryMappings from '@/data/categoryMappings.json';
 
 interface BudgetItem {
@@ -18,53 +17,25 @@ interface BudgetItem {
   icon: string;
 }
 
-export default function BudgetLimitsView() {
+export default function BudgetLimits() {
   const router = useRouter();
-  const [budgetItems, setBudgetItems] = useState<BudgetItem[]>([]);
+  const [budgetItems, setBudgetItems] = useState<BudgetItem[]>(
+    // Initialize with data from categoryMappings.json
+    categoryMappings.categories.map(item => ({
+      categoryId: item.id,
+      label: item.label,
+      icon: item.icon,
+      limit: item.limit,
+      color: item.color,
+      value: 0,
+      amount: `$0 / $${item.limit}`,
+      status: 'Under',
+      spent: '0',
+      textColor: undefined,
+    }))
+  );
 
-  // Load saved limits on component mount
-  useEffect(() => {
-    loadSavedLimits();
-  }, []);
-
-  const loadSavedLimits = async () => {
-    try {
-      const savedLimits = await AsyncStorage.getItem('categoryLimits');
-      const initialItems = categoryMappings.categories.map(item => ({
-        categoryId: item.id,
-        label: item.label,
-        icon: item.icon,
-        limit: savedLimits ? JSON.parse(savedLimits)[item.id] || item.limit : item.limit,
-        color: item.color,
-        value: 0,
-        amount: '',
-        status: '',
-        spent: '0',
-        textColor: undefined,
-      }));
-      setBudgetItems(initialItems);
-    } catch (error) {
-      console.error('Error loading saved limits:', error);
-    }
-  };
-
-  const updateCategoryLimits = async (newItems: BudgetItem[]) => {
-    try {
-      // Create a map of category ID to limit
-      const limitsMap = newItems.reduce((acc, item) => ({
-        ...acc,
-        [item.categoryId]: item.limit
-      }), {});
-
-      // Save to AsyncStorage
-      await AsyncStorage.setItem('categoryLimits', JSON.stringify(limitsMap));
-      console.log('Updated category limits in AsyncStorage');
-    } catch (error) {
-      console.error('Error updating category limits:', error);
-    }
-  };
-
-  const handleLimitChange = async (index: number, value: string) => {
+  const handleLimitChange = (index: number, value: string) => {
     const newItems = [...budgetItems];
     const spent = parseInt(newItems[index].spent);
     const newLimit = parseInt(value) || 0;
@@ -78,7 +49,6 @@ export default function BudgetLimitsView() {
     };
     
     setBudgetItems(newItems);
-    await updateCategoryLimits(newItems);
   };
 
   return (
@@ -98,12 +68,15 @@ export default function BudgetLimitsView() {
             key={index} 
             className="mb-6 bg-gray-50 rounded-lg p-4 border border-gray-200"
           >
-            <View className="flex-row items-center gap-2 mb-2">
-              <View 
-                className="h-3 w-3 rounded-full" 
-                style={{ backgroundColor: item.color }} 
-              />
-              <Text className="text-lg font-medium">{item.label}</Text>
+            <View className="flex-row items-center justify-between mb-2">
+              <View className="flex-row items-center gap-2">
+                <View 
+                  className="h-3 w-3 rounded-full" 
+                  style={{ backgroundColor: item.color }} 
+                />
+                <Text className="text-lg font-medium">{item.label}</Text>
+              </View>
+              <Text className="text-sm text-gray-500">Current: ${item.limit}</Text>
             </View>
             
             <View className="mt-2">
@@ -111,7 +84,7 @@ export default function BudgetLimitsView() {
               <View className="flex-row items-center bg-white border border-gray-200 rounded-lg p-2">
                 <Text className="text-lg mr-1">$</Text>
                 <TextInput
-                  className="text-lg"
+                  className="text-lg flex-1"
                   keyboardType="numeric"
                   value={item.limit}
                   onChangeText={(value) => handleLimitChange(index, value)}
@@ -123,7 +96,7 @@ export default function BudgetLimitsView() {
         ))}
       </View>
 
-      {/* Back Button */}
+      {/* Save Button */}
       <View className="p-4">
         <TouchableOpacity 
           className="bg-blue-500 py-4 rounded-lg"

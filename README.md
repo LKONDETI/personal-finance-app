@@ -16,13 +16,8 @@ A React Native app built with Expo for managing personal finances, budgets, and 
    ```bash
    npm install
    ```
-
-2. Install required packages
-   ```bash
-   npx expo install @react-native-async-storage/async-storage
-   ```
-
-3. Start the app
+   
+2. Start the app
    ```bash
    npx expo start
    ```
