@@ -1,9 +1,8 @@
 import { View, Text, TouchableOpacity, ScrollView, TextInput } from "react-native";
 import { useRouter } from "expo-router";
 import { ArrowLeft } from "lucide-react-native";
-import { useState } from "react";
-import * as FileSystem from 'expo-file-system';
-import { Platform } from 'react-native';
+import { useState, useEffect } from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import categoryMappings from '@/data/categoryMappings.json';
 
 interface BudgetItem {
@@ -21,20 +20,49 @@ interface BudgetItem {
 
 export default function BudgetLimitsView() {
   const router = useRouter();
-  const [budgetItems, setBudgetItems] = useState<BudgetItem[]>(
-    categoryMappings.categories.map(item => ({
-      categoryId: item.id,
-      label: item.label,
-      icon: item.icon,
-      limit: item.limit,
-      color: item.color,
-      value: 0,
-      amount: '',
-      status: '',
-      spent: '0',
-      textColor: undefined,
-    }))
-  );
+  const [budgetItems, setBudgetItems] = useState<BudgetItem[]>([]);
+
+  // Load saved limits on component mount
+  useEffect(() => {
+    loadSavedLimits();
+  }, []);
+
+  const loadSavedLimits = async () => {
+    try {
+      const savedLimits = await AsyncStorage.getItem('categoryLimits');
+      const initialItems = categoryMappings.categories.map(item => ({
+        categoryId: item.id,
+        label: item.label,
+        icon: item.icon,
+        limit: savedLimits ? JSON.parse(savedLimits)[item.id] || item.limit : item.limit,
+        color: item.color,
+        value: 0,
+        amount: '',
+        status: '',
+        spent: '0',
+        textColor: undefined,
+      }));
+      setBudgetItems(initialItems);
+    } catch (error) {
+      console.error('Error loading saved limits:', error);
+    }
+  };
+
+  const updateCategoryLimits = async (newItems: BudgetItem[]) => {
+    try {
+      // Create a map of category ID to limit
+      const limitsMap = newItems.reduce((acc, item) => ({
+        ...acc,
+        [item.categoryId]: item.limit
+      }), {});
+
+      // Save to AsyncStorage
+      await AsyncStorage.setItem('categoryLimits', JSON.stringify(limitsMap));
+      console.log('Updated category limits in AsyncStorage');
+    } catch (error) {
+      console.error('Error updating category limits:', error);
+    }
+  };
 
   const handleLimitChange = async (index: number, value: string) => {
     const newItems = [...budgetItems];
@@ -45,35 +73,12 @@ export default function BudgetLimitsView() {
       ...newItems[index],
       limit: value,
       amount: `$${spent} / $${value}`,
-      status: getStatus(spent, newLimit),
       value: spent / newLimit,
       textColor: spent >= newLimit ? "text-red-500" : undefined
     };
     
     setBudgetItems(newItems);
-  };
-
-  const getStatus = (spent: number, limit: number): string => {
-    if (spent >= limit) return "Over";
-    if (spent === limit) return "On track";
-    return "Under";
-  };
-
-  const handleSave = async () => {
-    try {
-      if (Platform.OS === 'web') {
-        localStorage.setItem('budgetData', JSON.stringify({ categories: budgetItems }));
-      } else {
-        const jsonPath = FileSystem.documentDirectory + 'budgetData.json';
-        await FileSystem.writeAsStringAsync(
-          jsonPath,
-          JSON.stringify({ categories: budgetItems }, null, 2)
-        );
-      }
-      router.back();
-    } catch (error) {
-      console.error('Error saving budget data:', error);
-    }
+    await updateCategoryLimits(newItems);
   };
 
   return (
@@ -106,7 +111,7 @@ export default function BudgetLimitsView() {
               <View className="flex-row items-center bg-white border border-gray-200 rounded-lg p-2">
                 <Text className="text-lg mr-1">$</Text>
                 <TextInput
-                  className="flex-1 text-lg"
+                  className="text-lg"
                   keyboardType="numeric"
                   value={item.limit}
                   onChangeText={(value) => handleLimitChange(index, value)}
@@ -118,11 +123,11 @@ export default function BudgetLimitsView() {
         ))}
       </View>
 
-      {/* Save Button */}
+      {/* Back Button */}
       <View className="p-4">
         <TouchableOpacity 
           className="bg-blue-500 py-4 rounded-lg"
-          onPress={handleSave}
+          onPress={() => router.back()}
         >
           <Text className="text-white text-center text-lg font-medium">
             Save Limits
