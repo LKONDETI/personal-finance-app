@@ -2,6 +2,16 @@
 
 A React Native app built with Expo for managing personal finances, budgets, and tracking expenses.
 
+<div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+    <img src="./assets/screenshots/dashboard.png" width="230" margin = "5px" alt="Dashboard Screenshot"/>
+    <img src="./assets/screenshots/budget.png" width="230" margin = "5px" alt="Budget Screenshot"/>
+    <img src="./assets/screenshots/requests.png" width="230" margin = "5px" alt="Requests Screenshot"/>
+    <img src="./assets/screenshots/pay-now.png" width="230" margin = "5px" alt="Pay Now Screenshot"/>
+    <img src="./assets/screenshots/paid.png" width="230" margin = "5px" alt="Paid Screenshot"/>
+    <img src="./assets/screenshots/settings.png" width="230" margin = "5px" alt="Settings Screenshot"/>
+    <img src="./assets/screenshots/budgetLimits.png" width="230" margin = "5px" alt="Budget Limits Screenshot"/>
+</div>
+
 ## Features
 
 - 📈 Budget tracking with dynamic pie chart visualization
@@ -9,19 +19,6 @@ A React Native app built with Expo for managing personal finances, budgets, and 
 - 🎯 Customizable budget limits for different categories
 - 📱 Cross-platform support (iOS, Android, Web)
 - 💾 Persistent storage of user preferences and budget data
-
-## Layout
-
-### App View
-<div style="display: flex; flex-direction: row; flex-wrap: wrap;">
-    <img src="./assets/screenshots/dashboard.png" width="250" alt="Dashboard Screenshot"/>
-    <img src="./assets/screenshots/budget.png" width="250" alt="Budget Screenshot"/>
-    <img src="./assets/screenshots/requests.png" width="250" alt="Requests Screenshot"/>
-    <img src="./assets/screenshots/pay-now.png" width="250" alt="Pay Now Screenshot"/>
-    <img src="./assets/screenshots/paid.png" width="250" alt="Paid Screenshot"/>
-    <img src="./assets/screenshots/settings.png" width="250" alt="Settings Screenshot"/>
-    <img src="./assets/screenshots/budgetLimits.png" width="250" alt="Budget Limits Screenshot"/>
-</div>
 
 
 ## Getting Started
