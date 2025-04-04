@@ -14,12 +14,13 @@ A React Native app built with Expo for managing personal finances, budgets, and 
 
 ### App View
 <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
-    <img src="./assets/screenshots/dashboard.png" width="250"/>
-    <img src="./assets/screenshots/budget.png" width="250"/>
-    <img src="./assets/screenshots/budgetLimits.png" width="250"/>
-    <img src="./assets/screenshots/settings.png" width="250"/>
-    <img src="./assets/screenshots/paid.png" width="250"/>
-    <img src="./assets/screenshots/requests.png" width="250"/>
+    <img src="./assets/screenshots/dashboard.png" width="250" alt="Dashboard Screenshot"/>
+    <img src="./assets/screenshots/budget.png" width="250" alt="Budget Screenshot"/>
+    <img src="./assets/screenshots/requests.png" width="250" alt="Requests Screenshot"/>
+    <img src="./assets/screenshots/pay-now.png" width="250" alt="Pay Now Screenshot"/>
+    <img src="./assets/screenshots/paid.png" width="250" alt="Paid Screenshot"/>
+    <img src="./assets/screenshots/settings.png" width="250" alt="Settings Screenshot"/>
+    <img src="./assets/screenshots/budgetLimits.png" width="250" alt="Budget Limits Screenshot"/>
 </div>
 
 
