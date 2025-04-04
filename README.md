@@ -10,6 +10,7 @@ A React Native app built with Expo for managing personal finances, budgets, trac
     <img src="./assets/screenshots/paid.png" width="230" alt="Paid Screenshot"/>
     <img src="./assets/screenshots/settings.png" width="230" alt="Settings Screenshot"/>
     <img src="./assets/screenshots/budgetLimits.png" width="230" alt="Budget Limits Screenshot"/>
+     <img src="./assets/screenshots/chatbot.png" width="230" alt="chat assistant Screenshot"/>
 </div>
 
 ## Features

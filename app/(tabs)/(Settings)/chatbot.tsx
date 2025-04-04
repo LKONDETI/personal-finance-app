@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, ScrollView, TouchableOpacity } from 'react-native';
-import { ArrowLeft, Bot, MessageSquare } from 'lucide-react-native';
+import { ArrowLeft, Bot, BotMessageSquare } from 'lucide-react-native';
 import axios from 'axios';
 
 const Chatbot = () => {
@@ -51,7 +51,7 @@ const Chatbot = () => {
               flexDirection: 'row',
               alignItems: 'center'
             }}>
-              <MessageSquare size={20} color="gray" style={{ marginRight: 8 }} />
+              <BotMessageSquare size={20} color="gray" style={{ marginRight: 8 }} />
               <Text style={{ color: 'gray', flex: 1 }}>Bot: {msg.bot}</Text>
             </View>
           </View>
