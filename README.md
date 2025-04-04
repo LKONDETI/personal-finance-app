@@ -1,6 +1,6 @@
 # Mobile Banking App with AI 📊
 
-A React Native app built with Expo for managing personal finances, budgets, tracking expenses, and with built-in chat assistant.
+A React Native app built with Expo for managing personal finances, budgets, tracking expenses with built-in chat assistant.
 
 <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
     <img src="./assets/screenshots/dashboard.png" width="230" alt="Dashboard Screenshot"/>
