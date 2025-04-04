@@ -2,6 +2,49 @@
 
 A React Native app built with Expo for managing personal finances, budgets, and tracking expenses.
 
+## Screenshots
+
+### Dashboard View
+![Dashboard Screenshot](./assets/screenshots/dashboard.png)
+- Real-time overview of total balance
+- Income and expense tracking
+- Chronological list of recent transactions
+- Category-based transaction organization
+
+### Budget View
+![Budget Screenshot](./assets/screenshots/budget.png)
+- Interactive pie chart visualization
+- Category-wise budget breakdown
+- Progress bars for budget utilization
+- Color-coded spending indicators
+
+### Budget Limits
+![Budget Limits Screenshot](./assets/screenshots/budgetLimits.png)
+- Customizable monthly limits per category
+- Easy-to-use input interface
+- Visual category indicators
+- Real-time limit updates
+
+### Settings
+![Settings Screenshot](./assets/screenshots/settings.png)
+- App configuration options
+- Budget management tools
+- Category customization
+- Account settings
+
+### Payment Status
+![Paid Screenshot](./assets/screenshots/paid.png)
+- Transaction status tracking
+- Payment confirmations
+- Historical payment records
+
+### Requests
+![Requests Screenshot](./assets/screenshots/requests.png)
+- Pending payment requests
+- Request management
+- Transaction details
+- Payment scheduling
+
 ## Features
 
 - 📈 Budget tracking with dynamic pie chart visualization
@@ -17,7 +60,12 @@ A React Native app built with Expo for managing personal finances, budgets, and 
    npm install
    ```
    
-2. Start the app
+2. Install required packages
+   ```bash
+   npx expo install @react-native-async-storage/async-storage
+   ```
+   
+3. Start the app
    ```bash
    npx expo start
    ```
@@ -32,6 +80,8 @@ A React Native app built with Expo for managing personal finances, budgets, and 
 - `data/` - JSON data files
   - `categoryMappings.json` - Category definitions and transaction mappings
   - `transactions.json` - Transaction data
+- `assets/` - Images and other static assets
+  - `screenshots/` - Application screenshots
 
 ## Usage
 
@@ -49,6 +99,7 @@ A React Native app built with Expo for managing personal finances, budgets, and 
 
 - [Expo](https://expo.dev)
 - [React Native](https://reactnative.dev)
+- [AsyncStorage](https://react-native-async-storage.github.io/async-storage/)
 - [React Navigation](https://reactnavigation.org)
 
 ## Development
