@@ -13,7 +13,7 @@ A React Native app built with Expo for managing personal finances, budgets, and 
 ## Layout
 
 ### App View
-<div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
+<div style="display: flex; flex-wrap: wrap;">
   <div style="margin: 5px;">
     <img src="./assets/screenshots/dashboard.png" width="300" heigth = "200"/>
   </div>
@@ -21,16 +21,16 @@ A React Native app built with Expo for managing personal finances, budgets, and 
     <img src="./assets/screenshots/budget.png" width="300" heigth = "200"/>
   </div>
   <div style="margin: 5px;">
-    <img src="./assets/screenshots/budgetLimits.png" width="300" heigth = "200"/>
+    <img src="./assets/screenshots/budgetLimits.png" width="200"/>
   </div>
   <div style="margin: 5px;">
-    <img src="./assets/screenshots/settings.png" width="300" heigth = "200"/>
+    <img src="./assets/screenshots/settings.png" width="200"/>
   </div>
   <div style="margin: 5px;">
-    <img src="./assets/screenshots/paid.png" width="300" heigth = "200"/>
+    <img src="./assets/screenshots/paid.png" width="200"/>
   </div>
   <div style="margin: 5px;">
-    <img src="./assets/screenshots/requests.png" width="300" heigth = "200"/>
+    <img src="./assets/screenshots/requests.png" width="200"/>
   </div>
 </div>
 
