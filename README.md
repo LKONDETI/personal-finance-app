@@ -10,78 +10,30 @@ A React Native app built with Expo for managing personal finances, budgets, and 
 - 📱 Cross-platform support (iOS, Android, Web)
 - 💾 Persistent storage of user preferences and budget data
 
-## Screenshots
+## Layout
 
-### Dashboard View
+### App View
 <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
-  <div style="margin: 10px;">
-    <img src="./assets/screenshots/dashboard.png" width="300" alt="Dashboard Screenshot"/>
-    <p>Real-time overview of total balance</p>
+  <div style="margin: 5px;">
+    <img src="./assets/screenshots/dashboard.png" width="300" heigth = "200"/>
   </div>
-  <div style="margin: 10px;">
-    <img src="./assets/screenshots/budget.png" width="300" alt="Budget Screenshot"/>
-    <p>Interactive pie chart visualization</p>
+  <div style="margin: 5px;">
+    <img src="./assets/screenshots/budget.png" width="300" heigth = "200"/>
   </div>
-  <div style="margin: 10px;">
-    <img src="./assets/screenshots/budgetLimits.png" width="300" alt="Budget Limits Screenshot"/>
-    <p>Customizable monthly limits per category</p>
+  <div style="margin: 5px;">
+    <img src="./assets/screenshots/budgetLimits.png" width="300" heigth = "200"/>
   </div>
-  <div style="margin: 10px;">
-    <img src="./assets/screenshots/settings.png" width="300" alt="Settings Screenshot"/>
-    <p>App configuration options</p>
+  <div style="margin: 5px;">
+    <img src="./assets/screenshots/settings.png" width="300" heigth = "200"/>
   </div>
-  <div style="margin: 10px;">
-    <img src="./assets/screenshots/paid.png" width="300" alt="Paid Screenshot"/>
-    <p>Transaction status tracking</p>
+  <div style="margin: 5px;">
+    <img src="./assets/screenshots/paid.png" width="300" heigth = "200"/>
   </div>
-  <div style="margin: 10px;">
-    <img src="./assets/screenshots/requests.png" width="300" alt="Requests Screenshot"/>
-    <p>Pending payment requests</p>
+  <div style="margin: 5px;">
+    <img src="./assets/screenshots/requests.png" width="300" heigth = "200"/>
   </div>
 </div>
 
-## Layout
-
-### Dashboard View
-<img src="./assets/screenshots/dashboard.png" width="300" alt="Dashboard Screenshot"/>
-- Real-time overview of total balance
-- Income and expense tracking
-- Chronological list of recent transactions
-- Category-based transaction organization
-
-### Budget View
-<img src="./assets/screenshots/budget.png" width="300" alt="Budget Screenshot"/>
-- Interactive pie chart visualization
-- Category-wise budget breakdown
-- Progress bars for budget utilization
-- Color-coded spending indicators
-
-### Requests
-<img src="./assets/screenshots/requests.png" width="300" alt="Requests Screenshot"/>
-- Pending payment requests
-- Request management
-- Transaction details
-- Payment scheduling
-
-### Payment Status
-<img src="./assets/screenshots/paid.png" width="300" alt="Paid Screenshot"/>
-- Transaction status tracking
-- Payment confirmations
-- Historical payment records
-
-### Settings
-<img src="./assets/screenshots/settings.png" width="300" alt="Settings Screenshot"/>
-- App configuration options
-- Budget management tools
-- Category customization
-- Account settings
-
-### Budget Limits
-<img src="./assets/screenshots/budgetLimits.png" width="300" alt="Budget Limits Screenshot"/>
-- Customizable monthly limits per category
-- Easy-to-use input interface
-- Visual category indicators
-- Real-time limit updates
 
 ## Getting Started
 
