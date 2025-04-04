@@ -13,7 +13,7 @@ A React Native app built with Expo for managing personal finances, budgets, and 
 ## Layout
 
 ### App View
-<div style="display: flex; flex-wrap: wrap;">
+<div style="display: flex; flex-direction: row; flex-wrap: wrap;">
   <div style="margin: 5px;">
     <img src="./assets/screenshots/dashboard.png" width="300" heigth = "200"/>
   </div>
