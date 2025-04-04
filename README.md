@@ -1,46 +1,73 @@
-# Welcome to your Expo app 👋
+# FLOWWISE - A Finance Mobile App 📊
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A React Native app built with Expo for managing personal finances, budgets, and tracking expenses.
 
-## Get started
+## Features
+
+- 📈 Budget tracking with dynamic pie chart visualization
+- 💰 Transaction management and categorization
+- 🎯 Customizable budget limits for different categories
+- 📱 Cross-platform support (iOS, Android, Web)
+- 💾 Persistent storage of user preferences and budget data
+
+## Getting Started
 
 1. Install dependencies
-
    ```bash
    npm install
    ```
 
-2. Start the app
-
+2. Install required packages
    ```bash
-    npx expo start
+   npx expo install @react-native-async-storage/async-storage
    ```
 
-In the output, you'll find options to open the app in a
+3. Start the app
+   ```bash
+   npx expo start
+   ```
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Project Structure
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- `app/` - Main application code
+  - `(tabs)/` - Tab-based navigation
+    - `(Budget)/` - Budget visualization and management
+    - `(Transactions)/` - Transaction listing and tracking
+    - `(Settings)/` - App settings and budget limits
+- `data/` - JSON data files
+  - `categoryMappings.json` - Category definitions and transaction mappings
+  - `transactions.json` - Transaction data
 
-## Get a fresh project
+## Usage
 
-When you're ready, run:
+### Managing Budget Limits
+1. Navigate to Settings > Budget Limits
+2. Enter monthly limits for each category
+3. Click "Save Limits" to store your preferences
 
-```bash
-npm run reset-project
-```
+### Viewing Transactions
+- Recent transactions are automatically categorized
+- View spending patterns in the Budget tab
+- Track expenses against category limits
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Technologies Used
 
-## Learn more
+- [Expo](https://expo.dev)
+- [React Native](https://reactnative.dev)
+- [React Navigation](https://reactnavigation.org)
 
-To learn more about developing your project with Expo, look at the following resources:
+## Development
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+To modify category mappings or add new features:
+
+1. Edit category definitions in `data/categoryMappings.json`
+2. Update transaction data in `data/transactions.json`
+3. Modify component code in the respective tab directories
+
+## Learn More
+
+- [Expo Documentation](https://docs.expo.dev/)
+- [React Native Documentation](https://reactnative.dev/docs/getting-started)
 
 ## Join the community
 
