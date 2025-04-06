@@ -6,8 +6,9 @@ export default function Layout() {
       screenOptions={{
         headerShown: false,
       }}>
-      
-     
+      <Stack.Screen name="settings" />
+      <Stack.Screen name="chatbot" />
+      <Stack.Screen name="budgetLimits" />
     </Stack>
   );
 }

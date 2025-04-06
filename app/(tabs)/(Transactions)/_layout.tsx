@@ -11,7 +11,8 @@ export default function RootLayout() {
           headerShown: false,
         }}
         >
-          
+          <Stack.Screen name="dashboard" />
+          <Stack.Screen name="transactions" />
         </Stack>
    
   );

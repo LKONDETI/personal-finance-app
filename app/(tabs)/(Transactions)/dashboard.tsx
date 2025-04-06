@@ -1,7 +1,6 @@
 import React, { useMemo, useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Card } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Feather';
 import categoryMappings from '@/data/categoryMappings.json';
 import transactionsData from '@/data/transactions.json';

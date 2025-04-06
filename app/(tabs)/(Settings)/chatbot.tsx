@@ -53,9 +53,9 @@ const Chatbot = () => {
     >
       <ScrollView className="flex-1 px-4">
         {/* Header */}
-        <View className="flex-row items-center justify-between pt-8 pb-4">
+        <View className="flex-row items-center justify-between pt-11 pb-4">
           <TouchableOpacity 
-            onPress={() => router.back()} 
+            onPress={() => router.push('/(tabs)/(Settings)/settings')} 
             className="p-2"
           >
             <ArrowLeft size={24} color="black" />

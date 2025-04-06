@@ -50,9 +50,9 @@ export default function SettingsView() {
   return (
     <ScrollView className="flex-1 bg-white ">
       {/* Header */}
-      <View className="p-4 flex-row items-center justify-row pt-10">
+      <View className="flex-row items-center justify-row pt-11 px-4">
         <View className="flex-row items-center mb-4">
-          <TouchableOpacity onPress={() => router.back()}>
+          <TouchableOpacity onPress={() => router.push('/(tabs)/(Transactions)/dashboard')}>
             <ArrowLeft size={24} color="black" />
           </TouchableOpacity>
         </View>
@@ -62,7 +62,7 @@ export default function SettingsView() {
       {/* Menu Items */}
       <View>
         {/* Bank Accounts */}
-        <TouchableOpacity className="bg-white px-4 py-3 border-b border-gray-100">
+        <TouchableOpacity className="bg-white px-4 border-b border-gray-100">
           <Text className="text-xl mb-1">Bank Accounts</Text>
           <Text className="text-gray-500">Connect your bank to import transactions</Text>
           <View className="absolute right-4 top-1/2 -translate-y-1/2">
