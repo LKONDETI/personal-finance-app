@@ -5,22 +5,22 @@ import axios from 'axios';
 import showAlert from '@/components/utility/ShowAlert';
 
 // API endpoint that will be replaced with environment variable
-const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000/api';
+const API_URL = 'http://localhost:3000/api';
 
 export default function LoginScreen() {
-  const [customerName, setCustomerName] = useState('');
+  const [email, setEmail] = useState('');
   //const [customerMnemonic, setCustomerMnemonic] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async () => {
-    if (!customerName.trim()) {
-      showAlert('Error', 'Please enter your customer ID');
+    if (!email.trim()) {
+      showAlert('Error', 'Please enter your email');
       return;
     }
 
     setIsLoading(true);
     try {
-      const response = await axios.get(`${API_URL}/customers/${customerName}`);
+      const response = await axios.get(`${API_URL}/customers?email=${email}`);
 
       if (response.data) {
         // Store the token in AsyncStorage or secure storage
@@ -52,14 +52,14 @@ export default function LoginScreen() {
 
           {/* Login Form */}
           <View className="space-y-6">
-            {/* Customer ID Input */}
+            {/* Email Input */}
             <View>
-              <Text className="text-sm font-medium text-gray-700 mb-2">Customer ID</Text>
+              <Text className="text-sm font-medium text-gray-700 mb-2">Email</Text>
               <TextInput
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                placeholder="Enter your customer ID"
-                value={customerName}
-                onChangeText={setCustomerName}
+                placeholder="Enter your email"
+                value={email}
+                onChangeText={setEmail}
                 autoCapitalize="none"
                 keyboardType="email-address"
               />
@@ -88,12 +88,6 @@ export default function LoginScreen() {
               </Text>
             </TouchableOpacity>
 
-            {/* Demo Credentials */}
-            <View className="mt-4">
-              <Text className="text-center text-gray-500 text-sm">
-                Demo credentials: demo / demo123
-              </Text>
-            </View>
           </View>
         </View>
       </ScrollView>

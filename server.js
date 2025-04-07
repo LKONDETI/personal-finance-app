@@ -8,10 +8,30 @@ app.use(cors());
 app.use(express.json());
 
 // Proxy endpoint for Temenos API
-app.get('/api/customers/:customerName', async (req, res) => {
+app.get('/api/customers', async (req, res) => {
   try {
-    const { customerName } = req.params;
-    const response = await axios.get(``);
+    console.log('Received request from client:', req.query);
+    
+    // Using the exact API URL format
+    const temenosApiUrl = process.env.TEMENOS_PUBLIC_API_URL;
+    const fullUrl = `${temenosApiUrl}?email=${req.query.email}`;
+    
+    console.log('Forwarding request to Temenos API:', fullUrl);
+    
+    let data = '';
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: fullUrl,
+      headers: { 
+        'Content-Type': 'application/json', 
+        'apikey': process.env.TEMENOS_API_KEY
+      },
+      data: data
+    };
+
+    const response = await axios.request(config);
+    console.log('Received response from Temenos API:', JSON.stringify(response.data));
     res.json(response.data);
   } catch (error) {
     console.error('Proxy Error:', error.response?.data || error.message);
@@ -20,17 +40,6 @@ app.get('/api/customers/:customerName', async (req, res) => {
     });
   }
 });
-
-// Add more proxy endpoints as needed
-// Example for another external API:
-// app.get('/api/other-endpoint', async (req, res) => {
-//   try {
-//     const response = await axios.get('https://other-api.com/endpoint');
-//     res.json(response.data);
-//   } catch (error) {
-//     res.status(500).json({ message: 'Failed to fetch data' });
-//   }
-// });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
