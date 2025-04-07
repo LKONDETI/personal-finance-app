@@ -87,7 +87,6 @@ export default function LoginScreen() {
                 {isLoading ? 'Signing in...' : 'Sign In'}
               </Text>
             </TouchableOpacity>
-
           </View>
         </View>
       </ScrollView>
