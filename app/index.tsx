@@ -4,8 +4,8 @@ import { router } from 'expo-router';
 import axios from 'axios';
 import showAlert from '@/components/utility/ShowAlert';
 
-// API endpoint that will be replaced with environment variable
-const API_URL = 'http://localhost:3000/api';
+// API endpoint from server.js
+const API_URL = 'http://localhost:3000/api/customers';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -20,18 +20,30 @@ export default function LoginScreen() {
 
     setIsLoading(true);
     try {
-      const response = await axios.get(`${API_URL}/customers?email=${email}`);
-
-      if (response.data) {
-        // Store the token in AsyncStorage or secure storage
-        // For demo purposes, we'll just navigate
+      // Make request to our proxy server
+      const response = await axios.get(`${API_URL}?email=${email}`);
+      
+      // Check if we have valid customer data
+      if (response.data && response.data.customer) {
+        // Store customer data if needed
+        // For now, just navigate to dashboard
         router.replace('/(tabs)/(Transactions)/dashboard');
       } else {
         showAlert('Error', 'Customer not found');
       }
     } catch (error: any) {
-      console.error('Login Error:', error.response?.data || error.message);
-      showAlert('Error', error?.response?.data?.message || 'Failed to login. Please try again.');
+      console.error('Login Error:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status
+      });
+      
+      // Show more detailed error message
+      const errorMessage = error.response?.data?.details || 
+                          error.response?.data?.message || 
+                          error.message || 
+                          'Failed to login. Please try again.';
+      showAlert('Error', errorMessage);
     } finally {
       setIsLoading(false);
     }
