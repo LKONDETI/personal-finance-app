@@ -50,6 +50,10 @@ class ErrorResponse(BaseModel):
     message: str
     details: str | None = None
 
+class LogoutResponse(BaseModel):
+    success: bool
+    message: str
+
 @app.get("/")
 async def root():
     return {"message": "Welcome to the Customer API"}
@@ -89,6 +93,22 @@ async def get_all_customers():
         raise HTTPException(
             status_code=500,
             detail={"message": "Failed to fetch customers", "details": str(e)}
+        )
+
+@app.post("/logout", response_model=LogoutResponse)
+async def logout():
+    try:
+        # In a real app, you might want to invalidate tokens or perform other cleanup
+        # For this simple example, we'll just return a success message
+        return {
+            "success": True,
+            "message": "Successfully logged out"
+        }
+    except Exception as e:
+        print(f"Error during logout: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail={"message": "Failed to logout", "details": str(e)}
         )
 
 if __name__ == "__main__":
