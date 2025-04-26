@@ -1,0 +1,96 @@
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, EmailStr
+from supabase import create_client, Client
+from dotenv import load_dotenv
+import os
+import uuid
+
+# Load environment variables
+load_dotenv()
+
+# Initialize FastAPI app
+app = FastAPI(title="Customer API", description="API for customer management with Supabase")
+
+# Configure CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
+
+# Initialize Supabase client
+supabase_url: str = os.getenv("SUPABASE_URL")
+supabase_key: str = os.getenv("SUPABASE_ANON_KEY")
+
+if not supabase_url or not supabase_key:
+    raise ValueError("Missing Supabase environment variables")
+
+supabase: Client = create_client(supabase_url, supabase_key)
+
+# Pydantic models for request/response
+class Customer(BaseModel):
+    id: int  # Changed from str to int to match database
+    email: EmailStr
+    name: str | None = None
+    phone: str | None = None
+    created_at: str | None = None
+
+class CustomerCreate(BaseModel):
+    email: EmailStr
+    name: str | None = None
+    phone: str | None = None
+
+class CustomerResponse(BaseModel):
+    customer: Customer | None = None
+
+class ErrorResponse(BaseModel):
+    message: str
+    details: str | None = None
+
+@app.get("/")
+async def root():
+    return {"message": "Welcome to the Customer API"}
+
+@app.get("/customer", response_model=CustomerResponse, responses={404: {"model": ErrorResponse}})
+async def get_customer(email: str):
+    try:
+        # Query Supabase for customer data
+        response = supabase.table("customers").select("*").eq("email", email).execute()
+        
+        # Check if we have any data
+        if not response.data or len(response.data) == 0:
+            raise HTTPException(
+                status_code=404,
+                detail={"message": "Customer not found", "details": f"No customer found with email: {email}"}
+            )
+        
+        # Return the first customer found
+        return {"customer": response.data[0]}
+    except HTTPException:
+        # Re-raise HTTP exceptions
+        raise
+    except Exception as e:
+        print(f"Error fetching customer: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail={"message": "Failed to fetch customer data", "details": str(e)}
+        )
+
+@app.get("/customers", response_model=list[Customer])
+async def get_all_customers():
+    try:
+        response = supabase.table("customers").select("*").execute()
+        return response.data
+    except Exception as e:
+        print(f"Error fetching all customers: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail={"message": "Failed to fetch customers", "details": str(e)}
+        )
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000) 

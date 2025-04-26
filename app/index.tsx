@@ -4,8 +4,8 @@ import { router } from 'expo-router';
 import axios from 'axios';
 import showAlert from '@/components/utility/ShowAlert';
 
-// API endpoint from server.js
-const API_URL = 'http://localhost:3000/api/customers';
+// API endpoint from FastAPI
+const API_URL = 'http://localhost:8000/customer';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -20,7 +20,7 @@ export default function LoginScreen() {
 
     setIsLoading(true);
     try {
-      // Make request to our proxy server
+      // Make request to FastAPI server
       const response = await axios.get(`${API_URL}?email=${email}`);
       
       // Check if we have valid customer data
@@ -38,12 +38,21 @@ export default function LoginScreen() {
         status: error.response?.status
       });
       
-      // Show more detailed error message
-      const errorMessage = error.response?.data?.details || 
-                          error.response?.data?.message || 
-                          error.message || 
-                          'Failed to login. Please try again.';
-      showAlert('Error', errorMessage);
+      // Handle different error status codes
+      if (error.response?.status === 404) {
+        // Customer not found - show a more helpful message
+        showAlert(
+          'Customer Not Found', 
+          'No account found with this email. Please check your email or create a new account.'
+        );
+      } else {
+        // Other errors
+        const errorMessage = error.response?.data?.detail?.message || 
+                            error.response?.data?.detail?.details || 
+                            error.message || 
+                            'Failed to login. Please try again.';
+        showAlert('Error', errorMessage);
+      }
     } finally {
       setIsLoading(false);
     }

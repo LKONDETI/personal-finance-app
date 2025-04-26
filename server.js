@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const axios = require('axios');
+const { createClient } = require('@supabase/supabase-js');
 require('dotenv').config();
 
 const app = express();
@@ -9,72 +9,79 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Proxy endpoint for Temenos API
+// Debug environment variables
+console.log('Environment Variables Debug:');
+console.log('SUPABASE_URL:', process.env.SUPABASE_URL ? 'Present' : 'Missing');
+console.log('SUPABASE_ANON_KEY:', process.env.SUPABASE_ANON_KEY ? 'Present' : 'Missing');
+console.log('Current working directory:', process.cwd());
+console.log('NODE_ENV:', process.env.NODE_ENV);
+
+// Initialize Supabase client
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+  console.error('Missing Supabase environment variables');
+  console.error('Please ensure your .env file exists and contains:');
+  console.error('SUPABASE_URL=your_project_url');
+  console.error('SUPABASE_ANON_KEY=your_anon_key');
+  process.exit(1);
+}
+
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+// Endpoint to fetch customer data from Supabase
 app.get('/api/customers', async (req, res) => {
   try {
     console.log('Received request from client:', req.query);
     
-    // Using environment variables for API configuration
-    const temenosApiUrl = process.env.TEMENOS_PUBLIC_API_URL;
-    const temenosApiKey = process.env.TEMENOS_API_KEY;
+    const { email } = req.query;
     
-    if (!temenosApiUrl || !temenosApiKey) {
-      console.error('Missing environment variables:', {
-        temenosApiUrl: !!temenosApiUrl,
-        temenosApiKey: !!temenosApiKey
+    if (!email) {
+      return res.status(400).json({
+        message: 'Email parameter is required'
       });
-      throw new Error('Temenos API configuration is missing in environment variables');
     }
 
-    const fullUrl = `${temenosApiUrl}?email=${req.query.email}`;
-    console.log('Forwarding request to Temenos API:', fullUrl);
-    
-    let data = '';
-    let config = {
-      method: 'get',
-      maxBodyLength: Infinity,
-      url: fullUrl,
-      headers: { 
-        'Content-Type': 'application/json', 
-        'apikey': temenosApiKey
-      },
-      data: data
-    };
+    // Query Supabase for customer data
+    const { data, error } = await supabase
+      .from('customers')
+      .select('*')
+      .eq('email', email)
+      .single();
 
-    console.log('Request config:', {
-      url: config.url,
-      method: config.method,
-      headers: {
-        ...config.headers,
-        apikey: '***' // Hide the actual API key in logs
-      }
-    });
+    if (error) {
+      console.error('Supabase Error:', error);
+      throw error;
+    }
 
-    const response = await axios.request(config);
-    console.log('Received response from Temenos API:', JSON.stringify(response.data));
-    res.json(response.data);
+    if (!data) {
+      return res.status(404).json({
+        message: 'Customer not found'
+      });
+    }
+
+    console.log('Retrieved customer data from Supabase:', data);
+    res.json(data);
   } catch (error) {
-    console.error('Proxy Error Details:', {
+    console.error('Error Details:', {
       message: error.message,
-      response: error.response?.data,
-      status: error.response?.status,
-      headers: error.response?.headers
+      details: error.details,
+      hint: error.hint
     });
     
-    // Send more detailed error response
-    res.status(error.response?.status || 500).json({
-      message: error.response?.data?.message || 'Failed to fetch customer data',
-      details: error.message,
-      status: error.response?.status || 500
+    res.status(500).json({
+      message: 'Failed to fetch customer data',
+      details: error.message
     });
   }
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Proxy server running on http://localhost:${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
   console.log('Environment check:', {
-    TEMENOS_PUBLIC_API_URL: process.env.TEMENOS_PUBLIC_API_URL ? 'Set' : 'Not Set',
-    TEMENOS_API_KEY: process.env.TEMENOS_API_KEY ? 'Set' : 'Not Set'
+    SUPABASE_URL: process.env.SUPABASE_URL ? 'Set' : 'Not Set',
+    SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY ? 'Set' : 'Not Set'
   });
 }); 
