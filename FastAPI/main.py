@@ -54,6 +54,25 @@ class LogoutResponse(BaseModel):
     success: bool
     message: str
 
+class Account(BaseModel):
+    id: int
+    account_name: str
+    account_number: int
+    product_id: str
+    currency: str
+    created_at: str
+    # add other fields as needed
+
+class Transaction(BaseModel):
+    id: int
+    debit_account_number: int
+    debit_currency: str
+    transaction_type: str
+    transaction_time: str
+    credit_account_number: int
+    debit_amount: float
+    accountId: int
+
 @app.get("/")
 async def root():
     return {"message": "Welcome to the Customer API"}
@@ -109,6 +128,30 @@ async def logout():
         raise HTTPException(
             status_code=500,
             detail={"message": "Failed to logout", "details": str(e)}
+        )
+
+@app.get("/accounts", response_model=list[Account])
+async def get_accounts():
+    try:
+        response = supabase.table("accounts").select("*").execute()
+        return response.data
+    except Exception as e:
+        print(f"Error fetching accounts: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail={"message": "Failed to fetch accounts", "details": str(e)}
+        )
+
+@app.get("/transactions", response_model=list[Transaction])
+async def get_transactions(account_id: int):
+    try:
+        response = supabase.table("transactions").select("*").eq("accountId", account_id).execute()
+        return response.data
+    except Exception as e:
+        print(f"Error fetching transactions: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail={"message": "Failed to fetch transactions", "details": str(e)}
         )
 
 if __name__ == "__main__":

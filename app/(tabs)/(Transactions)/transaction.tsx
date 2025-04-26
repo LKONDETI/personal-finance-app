@@ -1,50 +1,76 @@
-import { View, Text, TextInput, FlatList, TouchableOpacity } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { ArrowLeft, MoreVertical, ShoppingBag, Home, ShoppingCart, Coffee } from "lucide-react-native";
+import { View, Text, TextInput, FlatList, TouchableOpacity, ActivityIndicator } from "react-native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { ArrowLeft, MoreVertical } from "lucide-react-native";
+import React, { useEffect, useState } from "react";
 
-const transactions = [
-  { id: "1", category: "Groceries", date: "Apr 21", amount: "$150", icon: ShoppingBag, bg: "bg-gray-100", color: "text-gray-500" },
-  { id: "2", category: "Rent", date: "Apr 20", amount: "$1,200", icon: Home, bg: "bg-orange-100", color: "text-orange-500" },
-  { id: "3", category: "Shopping", date: "Apr 16", amount: "$80", icon: ShoppingCart, bg: "bg-blue-100", color: "text-blue-500" },
-  { id: "4", category: "Coffee", date: "Apr 14", amount: "$12", icon: Coffee, bg: "bg-purple-100", color: "text-purple-500" }
-];
+interface Transaction {
+  id: number;
+  debit_account_number: number;
+  debit_currency: string;
+  debit_account: string;
+  transaction_type: string;
+  transaction_time: string;
+  credit_account_number: number;
+}
 
 export default function TransactionsView() {
   const navigation = useNavigation();
-  
+  const route = useRoute();
+  const { accountId } = (route.params || {}) as { accountId?: number };
+
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!accountId) return;
+    const fetchTransactions = async () => {
+      try {
+        const response = await fetch(`http://localhost:8000/transactions?account_id=${accountId}`);
+        const data = await response.json();
+        setTransactions(data);
+      } catch (error) {
+        console.error("Failed to fetch transactions:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTransactions();
+  }, [accountId]);
+
   return (
-    <View className="p-4 space-y-6"> 
-      <View className="flex-row justify-between items-center"> 
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+    <View className="p-4 space-y-6">
+      <View className="flex-row justify-between items-center">
+        <TouchableOpacity onPress={() => navigation.navigate('dashboard')}>
           <ArrowLeft size={24} />
         </TouchableOpacity>
         <Text className="text-2xl font-bold">Transactions</Text>
         <MoreVertical size={24} />
       </View>
-      
+
       <TextInput
         placeholder="Search transactions"
         className="border rounded-full px-4 py-2 bg-gray-100"
       />
-      
-      <FlatList
-        data={transactions}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <TouchableOpacity className="flex-row justify-between items-center p-4 border-b"> 
-            <View className="flex-row items-center gap-3"> 
-              <View className={`${item.bg} p-2 rounded-md`}>
-                <item.icon size={24} className={item.color} />
-              </View>
+
+      {loading ? (
+        <ActivityIndicator size="large" color="#4B7BF5" />
+      ) : (
+        <FlatList
+          data={transactions}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <TouchableOpacity className="flex-row justify-between items-center p-4 border-b">
               <View>
-                <Text className="font-medium">{item.category}</Text>
-                <Text className="text-gray-500 text-sm">{item.date}</Text>
+                <Text className="font-medium">{item.transaction_type}</Text>
+                <Text className="text-gray-500 text-sm">{item.transaction_time}</Text>
+                <Text className="text-gray-500 text-xs">Debit: {item.debit_account_number} | Credit: {item.credit_account_number}</Text>
               </View>
-            </View>
-            <Text className="font-semibold">{item.amount}</Text>
-          </TouchableOpacity>
-        )}
-      />
+              <Text className="font-semibold">{item.debit_amount}</Text>
+              <Text className="font-semibold">{item.debit_currency}</Text>
+            </TouchableOpacity>
+          )}
+        />
+      )}
     </View>
   );
 }

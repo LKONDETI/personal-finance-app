@@ -1,5 +1,5 @@
 import React, { useMemo, useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Feather';
 import categoryMappings from '@/data/categoryMappings.json';
@@ -22,13 +22,44 @@ interface TransactionsData {
   transactions: Transaction[];
 }
 
+const API_URL = 'http://localhost:8000/accounts';
+
+interface Account {
+  id: number;
+  account_name: string;
+  account_number: number;
+  product_id: string;
+  currency: string;
+  created_at: string;
+  balance?: number;
+  available_balance?: number;
+  // add other fields as needed
+}
+
 export default function Dashboard() {
   const navigation = useNavigation();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [accounts, setAccounts] = useState<Account[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Use local transactions data directly
     setTransactions((transactionsData as TransactionsData).transactions);
+  }, []);
+
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      try {
+        const response = await fetch(API_URL);
+        const data = await response.json();
+        setAccounts(data);
+      } catch (error) {
+        console.error('Failed to fetch accounts:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAccounts();
   }, []);
 
   // Calculate totals by category and overall
@@ -53,29 +84,41 @@ export default function Dashboard() {
     };
   }, [transactions]);
 
+  const handleAccountPress = (accountId: number) => {
+    (navigation as any).navigate('transaction', { accountId: accountId });
+  };
+
   return (
     <ScrollView className="p-4 bg-white">
       <View className="flex-row items-center justify-between mb-4 pt-9">
         <Text className="text-2xl font-bold">Dashboard</Text>
         <Icon name="file-text" size={24} />
       </View>
-      
-      <View className="mb-4">
-        <Text className="text-sm text-gray-500">Total balance</Text>
-        <Text className="text-4xl font-bold">$900</Text>
-      </View>
-      
-      <View className="flex-row justify-between mb-4">
-        <View>
-          <Text className="text-sm text-gray-500">Income</Text>
-          <Text className="text-xl font-bold">$1,800</Text>
-        </View>
-        <View>
-          <Text className="text-sm text-gray-500">Expenses</Text>
-          <Text className="text-xl font-bold">${totalExpenses.toFixed(2)}</Text>
-        </View>
-      </View>
 
+      {/* Accounts Section */}
+      <Text className="text-lg font-semibold mb-2">Accounts</Text>
+      {loading ? (
+        <ActivityIndicator size="large" color="#4B7BF5" />
+      ) : accounts.length === 0 ? (
+        <Text className="text-gray-500">No accounts found.</Text>
+      ) : (
+        accounts.map((account) => (
+          <TouchableOpacity
+            key={account.id}
+            className="mb-4 bg-white rounded-xl shadow p-4 border border-blue-100"
+            onPress={() => handleAccountPress(account.id)}
+          >
+            
+            <View className="flex-row items-center justify-between">
+              <Text className="text-xl font-bold">{account.account_name}</Text>
+              <Text className="text-2xl font-bold">
+                ${account.available_balance?.toFixed(2) ?? account.balance?.toFixed(2) ?? '--'}
+              </Text>
+            </View>
+            <Text className="text-xs text-gray-500 mt-1">Available balance</Text>
+          </TouchableOpacity>
+        ))
+      )}
 
       <Text className="text-lg font-semibold mb-2">Recent Transactions</Text>
       {transactions.map((item) => {
