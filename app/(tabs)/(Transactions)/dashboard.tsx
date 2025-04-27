@@ -85,7 +85,7 @@ export default function Dashboard() {
   }, [transactions]);
 
   const handleAccountPress = (accountId: number) => {
-    (navigation as any).navigate('transaction', { accountId: accountId });
+    (navigation as any).navigate('accountDetails', { accountId });
   };
 
   return (
