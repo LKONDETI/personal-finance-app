@@ -18,11 +18,33 @@ interface Transaction {
   id: number;
   transaction_type: string;
   transaction_time: string;
-  debit_amount: number;
-  debit_currency: string;
-  credit_amount?: number;
+  debit_amount: number | null;
+  credit_amount: number | null;
+  debit_currency: string | null;
   // add other fields as needed
 }
+
+const getTransactionAmount = (transaction: Transaction) => {
+  if (transaction.credit_amount !== null) {
+    return {
+      amount: transaction.credit_amount.toFixed(2),
+      isPositive: true,
+      currency: transaction.debit_currency || '$'
+    };
+  }
+  if (transaction.debit_amount !== null) {
+    return {
+      amount: transaction.debit_amount.toFixed(2),
+      isPositive: false,
+      currency: transaction.debit_currency || '$'
+    };
+  }
+  return {
+    amount: "0.00",
+    isPositive: true,
+    currency: '$'
+  };
+};
 
 export default function AccountDetails() {
   const navigation = useNavigation();
@@ -81,15 +103,20 @@ export default function AccountDetails() {
       {transactions.length === 0 ? (
         <Text className="text-gray-500">No transactions found.</Text>
       ) : (
-        transactions.map((tx) => (
-          <View key={tx.id} className="flex-row justify-between items-center border-b py-2">
-            <View>
-              <Text className="font-medium">{tx.transaction_type}</Text>
-              <Text className="text-gray-500 text-xs">{tx.transaction_time}</Text>
+        transactions.map((tx) => {
+          const { amount, isPositive, currency } = getTransactionAmount(tx);
+          return (
+            <View key={tx.id} className="flex-row justify-between items-center border-b py-2">
+              <View>
+                <Text className="font-medium">{tx.transaction_type}</Text>
+                <Text className="text-gray-500 text-xs">{tx.transaction_time}</Text>
+              </View>
+              <Text className={`font-semibold ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
+                {isPositive ? '+' : '-'}{currency}{amount}
+              </Text>
             </View>
-            <Text className="font-semibold text-red-500">-${tx.debit_amount.toFixed(2)}</Text>
-          </View>
-        ))
+          );
+        })
       )}
 
       {/* See all transactions button */}

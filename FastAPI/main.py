@@ -65,12 +65,13 @@ class Account(BaseModel):
 
 class Transaction(BaseModel):
     id: int
-    debit_account_number: int
-    debit_currency: str
+    debit_account_number: int | None = None
+    credit_account_number: int | None = None
+    debit_amount: float | None = None
+    credit_amount: float | None = None
+    debit_currency: str | None = None
     transaction_type: str
     transaction_time: str
-    credit_account_number: int
-    debit_amount: float
     accountId: int
 
 @app.get("/")
@@ -146,6 +147,7 @@ async def get_accounts():
 async def get_transactions(account_id: int):
     try:
         response = supabase.table("transactions").select("*").eq("accountId", account_id).execute()
+        print("Transactions data:", response.data)  # Debug log
         return response.data
     except Exception as e:
         print(f"Error fetching transactions: {str(e)}")
