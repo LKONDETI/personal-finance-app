@@ -13,18 +13,7 @@ interface Transaction {
   description?: string;
 }
 
-const getTransactionIcon = (type: string) => {
-  switch (type.toLowerCase()) {
-    case 'groceries':
-      return <Home size={24} className="text-gray-600" />;
-    case 'shopping':
-      return <ShoppingBag size={24} className="text-blue-600" />;
-    case 'coffee':
-      return <Coffee size={24} className="text-orange-600" />;
-    default:
-      return <Home size={24} className="text-gray-600" />;
-  }
-};
+
 
 const getTransactionAmount = (transaction: Transaction) => {
   if (transaction.credit_amount !== null) {
@@ -113,9 +102,9 @@ export default function TransactionsView() {
               return (
                 <TouchableOpacity className="flex-row items-center py-4 border-b border-gray-100">
                   <View className="w-12 h-12 rounded-full bg-gray-100 items-center justify-center mr-4">
-                    {isPositive ? 
-                      <ArrowDownRight size={24} className="text-green-600" /> :
-                      <ArrowUpRight size={24} className="text-red-600" />
+                    {isPositive ?
+                      <ArrowDownRight size={24} className="text-red-600" /> :
+                      <ArrowUpRight size={24} className="text-green-600" />
                     }
                   </View>
                   <View className="flex-1">

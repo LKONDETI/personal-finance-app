@@ -112,7 +112,7 @@ export default function Dashboard() {
             <View className="flex-row items-center justify-between">
               <Text className="text-xl font-bold">{account.account_name}</Text>
               <Text className="text-2xl font-bold">
-                ${account.available_balance?.toFixed(2) ?? account.balance?.toFixed(2) ?? '--'}
+                ${account.available_balance?.toFixed(2) ?? account.balance?.toFixed(2) ?? '0'}
               </Text>
             </View>
             <Text className="text-xs text-gray-500 mt-1">Available balance</Text>

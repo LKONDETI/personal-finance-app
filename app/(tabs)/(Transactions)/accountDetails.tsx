@@ -46,13 +46,23 @@ const getTransactionAmount = (transaction: Transaction) => {
   };
 };
 
+const calculateBalance = (transactions: Transaction[]) => {
+  let balance = 0;
+  transactions.forEach((txn) => {
+    balance += txn.credit_amount || 0;
+    balance -= txn.debit_amount || 0;
+  });
+  return balance;
+};
+
 export default function AccountDetails() {
   const navigation = useNavigation();
   const route = useRoute();
   const { accountId } = (route.params || {}) as { accountId?: number };
-
-  const [account, setAccount] = useState<Account | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const balance = calculateBalance(transactions);
+  
+  const [account, setAccount] = useState<Account | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -91,7 +101,9 @@ export default function AccountDetails() {
       {/* Account Details */}
       <Text className="text-2xl font-bold mb-2">{account.account_name}</Text>
       <Text className="text-gray-500 mb-1">Available balance</Text>
-      <Text className="text-3xl font-bold mb-2">${account.available_balance?.toFixed(2) ?? account.balance?.toFixed(2) ?? '--'}</Text>
+      <Text className="text-3xl font-bold mb-2">
+        {transactions.length === 0 ? '$--' : `$${balance.toFixed(2)}`}
+      </Text>
       <View className="mb-4">
         <Text className="text-gray-500">Account number: {account.account_number}</Text>
         <Text className="text-gray-500">Currency: {account.currency}</Text>

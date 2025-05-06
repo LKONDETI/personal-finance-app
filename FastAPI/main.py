@@ -156,6 +156,29 @@ async def get_transactions(account_id: int):
             detail={"message": "Failed to fetch transactions", "details": str(e)}
         )
 
+def update_account_balance(account_id: int):
+    txns = supabase.table('transactions').select('*').eq('accountId', account_id).execute().data
+    balance = 0
+    for txn in txns:
+        balance += txn.get('credit_amount', 0) or 0
+        balance -= txn.get('debit_amount', 0) or 0
+    supabase.table('accounts').update({'balance': balance}).eq('id', account_id).execute()
+
+@app.post("/transactions")
+async def add_transaction(transaction: Transaction):
+    try:
+        # Insert the transaction
+        supabase.table("transactions").insert(transaction.dict()).execute()
+        # Update the account balance
+        update_account_balance(transaction.accountId)
+        return {"success": True}
+    except Exception as e:
+        print(f"Error adding transaction: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail={"message": "Failed to add transaction", "details": str(e)}
+        )
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000) 
