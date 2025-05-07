@@ -58,7 +58,7 @@ const calculateBalance = (transactions: Transaction[]) => {
 export default function AccountDetails() {
   const navigation = useNavigation();
   const route = useRoute();
-  const { accountId } = (route.params || {}) as { accountId?: number };
+  const { accountId, party_id } = route.params as { accountId: number, party_id: number };
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const balance = calculateBalance(transactions);
   

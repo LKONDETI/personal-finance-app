@@ -132,9 +132,12 @@ async def logout():
         )
 
 @app.get("/accounts", response_model=list[Account])
-async def get_accounts():
+async def get_accounts(party_id: int = None):
     try:
-        response = supabase.table("accounts").select("*").execute()
+        query = supabase.table("accounts").select("*")
+        if party_id is not None:
+            query = query.eq("party_id", party_id)
+        response = query.execute()
         return response.data
     except Exception as e:
         print(f"Error fetching accounts: {str(e)}")
@@ -144,17 +147,14 @@ async def get_accounts():
         )
 
 @app.get("/transactions", response_model=list[Transaction])
-async def get_transactions(account_id: int):
-    try:
-        response = supabase.table("transactions").select("*").eq("accountId", account_id).execute()
-        print("Transactions data:", response.data)  # Debug log
-        return response.data
-    except Exception as e:
-        print(f"Error fetching transactions: {str(e)}")
-        raise HTTPException(
-            status_code=500,
-            detail={"message": "Failed to fetch transactions", "details": str(e)}
-        )
+async def get_transactions(account_id: int = None, party_id: int = None):
+    query = supabase.table("transactions").select("*")
+    if account_id is not None:
+        query = query.eq("accountId", account_id)
+    if party_id is not None:
+        query = query.eq("partyId", party_id)
+    response = query.execute()
+    return response.data
 
 def update_account_balance(account_id: int):
     txns = supabase.table('transactions').select('*').eq('accountId', account_id).execute().data

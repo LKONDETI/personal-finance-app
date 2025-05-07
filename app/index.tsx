@@ -49,9 +49,9 @@ export default function LoginScreen() {
         // Other errors
         const errorMessage = error.response?.data?.detail?.message || 
                             error.response?.data?.detail?.details || 
-                            error.message || 
-                            'Failed to login. Please try again.';
-        showAlert('Error', errorMessage);
+                          error.message || 
+                          'Failed to login. Please try again.';
+      showAlert('Error', errorMessage);
       }
     } finally {
       setIsLoading(false);
