@@ -153,7 +153,7 @@ export default function Dashboard() {
       {/* Recent Transactions */}
       <Text className="text-lg font-semibold mb-2">Recent transactions</Text>
       <View className="bg-white rounded-2xl shadow mb-6">
-        {transactions.map((txn, idx) => (
+        {transactions.slice(-5).map((txn, idx) => (
           <View key={txn.id} className="flex-row items-center justify-between px-4 py-3 border-b border-gray-100">
             <View className="flex-row items-center">
               <View>

@@ -138,11 +138,12 @@ export default function AccountDetails() {
         {transactions.length === 0 ? (
           <Text className="text-gray-500 p-4">No transactions found.</Text>
         ) : (
-          transactions
+          [...transactions]
             .filter(tx =>
               tx.transaction_type?.toLowerCase().includes(searchQuery.toLowerCase()) ||
               tx.transaction_time?.toLowerCase().includes(searchQuery.toLowerCase())
             )
+            .reverse()
             .map((tx) => {
               const { amount, isPositive, currency } = getTransactionAmount(tx);
               return (
@@ -158,9 +159,7 @@ export default function AccountDetails() {
                       <Text className="text-gray-500 text-xs">{tx.transaction_time}</Text>
                     </View>
                   </View>
-                  <Text className={`font-semibold ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
-                    ${amount}
-                  </Text>
+                  <Text className={`font-semibold ${isPositive ? 'text-green-500' : 'text-red-500'}`}>${amount}</Text>
                 </View>
               );
             })
