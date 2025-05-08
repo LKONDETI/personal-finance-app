@@ -25,9 +25,11 @@ export default function LoginScreen() {
       
       // Check if we have valid customer data
       if (response.data && response.data.customer) {
-        // Store customer data if needed
-        // For now, just navigate to dashboard
-        router.replace('/(tabs)/(Transactions)/dashboard');
+        const party_id = response.data.customer.id;
+        router.replace({
+          pathname: '/(tabs)/(Transactions)/dashboard',
+          params: { party_id }
+        });
       } else {
         showAlert('Error', 'Customer not found');
       }

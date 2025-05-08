@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, TextInput } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { ArrowDownRight, ArrowLeft, ArrowUpRight, MoreVertical } from "lucide-react-native";
 
 interface Account {
   id: number;
@@ -61,6 +62,7 @@ export default function AccountDetails() {
   const { accountId, party_id } = route.params as { accountId: number, party_id: number };
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const balance = calculateBalance(transactions);
+  const [searchQuery, setSearchQuery] = useState("");
   
   const [account, setAccount] = useState<Account | null>(null);
   const [loading, setLoading] = useState(true);
@@ -75,10 +77,10 @@ export default function AccountDetails() {
         const found = accData.find((a: Account) => a.id === accountId);
         setAccount(found);
 
-        // Fetch recent transactions (limit 3 for preview)
-        const txRes = await fetch(`http://localhost:8000/transactions?account_id=${accountId}`);
+        // Fetch all transactions for this account
+        const txRes = await fetch(`http://localhost:8000/transactions?account_id=${accountId}&party_id=${party_id}`);
         const txData = await txRes.json();
-        setTransactions(txData.slice(0, 3));
+        setTransactions(txData);
       } catch (error) {
         console.error("Failed to fetch account details or transactions:", error);
       } finally {
@@ -97,47 +99,73 @@ export default function AccountDetails() {
   }
 
   return (
-    <ScrollView className="p-4 bg-white">
-      {/* Account Details */}
-      <Text className="text-2xl font-bold mb-2">{account.account_name}</Text>
-      <Text className="text-gray-500 mb-1">Available balance</Text>
-      <Text className="text-3xl font-bold mb-2">
-        {transactions.length === 0 ? '$--' : `$${balance.toFixed(2)}`}
-      </Text>
-      <View className="mb-4">
-        <Text className="text-gray-500">Account number: {account.account_number}</Text>
-        <Text className="text-gray-500">Currency: {account.currency}</Text>
-        <Text className="text-gray-500">Created: {account.created_at}</Text>
+    <ScrollView className="flex-1 bg-white">
+      {/* Header */}
+      <View className="flex-row justify-between items-center px-4 pt-8 pb-4 bg-white">
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <ArrowLeft size={24} />
+        </TouchableOpacity>
+        
+        <TouchableOpacity>
+          <MoreVertical size={24} />
+        </TouchableOpacity>
       </View>
 
-      {/* Recent Transactions Preview */}
-      <Text className="text-lg font-semibold mb-2">Recent Transactions</Text>
-      {transactions.length === 0 ? (
-        <Text className="text-gray-500">No transactions found.</Text>
-      ) : (
-        transactions.map((tx) => {
-          const { amount, isPositive, currency } = getTransactionAmount(tx);
-          return (
-            <View key={tx.id} className="flex-row justify-between items-center border-b py-2">
-              <View>
-                <Text className="font-medium">{tx.transaction_type}</Text>
-                <Text className="text-gray-500 text-xs">{tx.transaction_time}</Text>
-              </View>
-              <Text className={`font-semibold ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
-                {isPositive ? '+' : '-'}{currency}{amount}
-              </Text>
-            </View>
-          );
-        })
-      )}
+      {/* Account Card */}
+      <View className="bg-white rounded-2xl shadow p-4 mx-4 mb-4 mt-2 border border-gray-100">
+        <Text className="text-lg font-semibold mb-1">{account.account_name}</Text>
+        <Text className="text-gray-500 text-xs mb-2">Account #{account.account_number} • {account.currency}</Text>
+        <Text className="text-gray-500 text-xs mb-2">Created: {account.created_at}</Text>
+        <Text className="text-gray-500 mb-1">Available balance</Text>
+        <Text className="text-3xl font-bold text-blue-600 mb-1">
+          {transactions.length === 0 ? '$--' : `$${balance.toFixed(2)}`}
+        </Text>
+      </View>
 
-      {/* See all transactions button */}
-      <TouchableOpacity
-        className="mt-4 bg-blue-500 py-3 rounded-lg"
-        onPress={() => (navigation as any).navigate('transaction', { accountId })}
-      >
-        <Text className="text-white text-center text-lg font-medium">See all transactions</Text>
-      </TouchableOpacity>
+      {/* Search Bar */}
+      <View className="px-4 mb-2">
+        <TextInput
+          placeholder="Search transactions"
+          className="border rounded-full px-4 py-2 bg-gray-100"
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+        />
+      </View>
+
+      {/* Transactions List */}
+      <Text className="text-lg font-semibold px-4 mb-2 mt-2">All Transactions</Text>
+      <View className="bg-white rounded-2xl shadow mx-4 mb-8 border border-gray-100">
+        {transactions.length === 0 ? (
+          <Text className="text-gray-500 p-4">No transactions found.</Text>
+        ) : (
+          transactions
+            .filter(tx =>
+              tx.transaction_type?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              tx.transaction_time?.toLowerCase().includes(searchQuery.toLowerCase())
+            )
+            .map((tx) => {
+              const { amount, isPositive, currency } = getTransactionAmount(tx);
+              return (
+                <View key={tx.id} className="flex-row justify-between items-center border-b border-gray-100 px-4 py-3">
+                  <View className="flex-row items-center">
+                    {isPositive ? (
+                      <ArrowDownRight size={20} color="#22c55e" style={{ marginRight: 8 }} />
+                    ) : (
+                      <ArrowUpRight size={20} color="#ef4444" style={{ marginRight: 8 }} />
+                    )}
+                    <View>
+                      <Text className="font-medium">{tx.transaction_type}</Text>
+                      <Text className="text-gray-500 text-xs">{tx.transaction_time}</Text>
+                    </View>
+                  </View>
+                  <Text className={`font-semibold ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
+                    ${amount}
+                  </Text>
+                </View>
+              );
+            })
+        )}
+      </View>
     </ScrollView>
   );
 }

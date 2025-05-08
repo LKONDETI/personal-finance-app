@@ -148,13 +148,20 @@ async def get_accounts(party_id: int = None):
 
 @app.get("/transactions", response_model=list[Transaction])
 async def get_transactions(account_id: int = None, party_id: int = None):
-    query = supabase.table("transactions").select("*")
-    if account_id is not None:
-        query = query.eq("accountId", account_id)
-    if party_id is not None:
-        query = query.eq("partyId", party_id)
-    response = query.execute()
-    return response.data
+    try:
+        query = supabase.table("transactions").select("*")
+        if account_id is not None:
+            query = query.eq("accountId", account_id)
+        if party_id is not None:
+            query = query.eq("party_id", party_id)
+        response = query.execute()
+        return response.data
+    except Exception as e:
+        print(f"Error fetching transactions: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail={"message": "Failed to fetch transactions", "details": str(e)}
+        )
 
 def update_account_balance(account_id: int):
     txns = supabase.table('transactions').select('*').eq('accountId', account_id).execute().data
@@ -163,13 +170,12 @@ def update_account_balance(account_id: int):
         balance += txn.get('credit_amount', 0) or 0
         balance -= txn.get('debit_amount', 0) or 0
     supabase.table('accounts').update({'balance': balance}).eq('id', account_id).execute()
+    print(f"Updated account {account_id} balance to {balance}")
 
 @app.post("/transactions")
 async def add_transaction(transaction: Transaction):
     try:
-        # Insert the transaction
         supabase.table("transactions").insert(transaction.dict()).execute()
-        # Update the account balance
         update_account_balance(transaction.accountId)
         return {"success": True}
     except Exception as e:
