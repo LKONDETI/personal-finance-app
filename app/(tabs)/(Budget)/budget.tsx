@@ -5,7 +5,6 @@ import * as Progress from "react-native-progress";
 import { ArrowLeft } from "lucide-react-native";
 import { useState, useEffect } from "react";
 import categoryMappings from '@/data/categoryMappings.json';
-import transactionsData from '@/data/transactions.json';
 
 interface BudgetItem {
   label: string;
@@ -78,12 +77,16 @@ export default function BudgetView() {
   const router = useRouter();
   const [activeSlice, setActiveSlice] = useState<number | null>(null);
   const [budgetItems, setBudgetItems] = useState<BudgetItem[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   useEffect(() => {
-    const processTransactions = () => {
+    const fetchTransactions = async () => {
+      const res = await fetch('http://localhost:8000/transactions?party_id=YOUR_PARTY_ID');
+      const data = await res.json();
+      setTransactions(data);
       const amounts: { [key: string]: number } = {};
 
-      (transactionsData as TransactionsData).transactions.forEach((transaction: Transaction) => {
+      (data as TransactionsData).transactions.forEach((transaction: Transaction) => {
         const category = categoryMappings.categories.find(cat =>
           cat.transactions.includes(transaction.name)
         );
@@ -109,7 +112,7 @@ export default function BudgetView() {
       setBudgetItems(updatedBudgetItems);
     };
 
-    processTransactions();
+    fetchTransactions();
   }, []);
 
   const calculatePieChartData = (data: BudgetItem[]): BudgetItem[] => {

@@ -95,7 +95,7 @@ export default function Dashboard() {
               ? (-txn.debit_amount).toString()
               : '0'
         }));
-
+      
         if (isMounted) setTransactions(mapped);
       } catch (error) {
         if (isMounted) console.error("Failed to fetch transactions:", error);
@@ -123,7 +123,7 @@ export default function Dashboard() {
         <Text className="text-2xl font-bold">Dashboard</Text>
         <Icon name="file-text" size={24} />
       </View>
-
+      
       {/* Accounts Section */}
       <Text className="text-lg font-semibold mb-2">Accounts</Text>
       {loading ? (
@@ -137,13 +137,13 @@ export default function Dashboard() {
             className="mb-4 bg-white rounded-xl shadow p-4 border border-blue-100"
             onPress={() => handleAccountPress(account.id)}
           >
-            
+      
             <View className="flex-row items-center justify-between">
               <Text className="text-xl font-bold">{account.account_name}</Text>
               <Text className="text-2xl font-bold">
                 ${account.available_balance?.toFixed(2) ?? account.balance?.toFixed(2) ?? '0'}
               </Text>
-            </View>
+        </View>
             <Text className="text-xs text-gray-500 mt-1">Available balance</Text>
           </TouchableOpacity>
         ))
