@@ -28,23 +28,6 @@ interface Account {
   // add other fields as needed
 }
 
-// Helper to calculate total balance, income, and expenses
-const calculateSummary = (transactions: Transaction[]) => {
-  let income = 0, expenses = 0;
-  transactions.forEach(txn => {
-    const amt = parseFloat(txn.amount);
-    if (amt > 0) income += amt;
-    else expenses += Math.abs(amt);
-  });
-  return {
-    total: income - expenses,
-    income,
-    expenses
-  };
-};
-
-
-
 export default function Dashboard() {
   const route = useRoute();
   const party_id = (route.params as { party_id?: number })?.party_id;

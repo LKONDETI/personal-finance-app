@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, TouchableOpacity, Pressable } from "react-native";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import Svg, { Path, G, Text as SvgText } from "react-native-svg";
 import * as Progress from "react-native-progress";
 import { ArrowLeft } from "lucide-react-native";
@@ -78,27 +78,31 @@ export default function BudgetView() {
   const [activeSlice, setActiveSlice] = useState<number | null>(null);
   const [budgetItems, setBudgetItems] = useState<BudgetItem[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const { party_id } = useLocalSearchParams();
 
   useEffect(() => {
+    if (!party_id) {
+      router.replace({ pathname: "/(tabs)/(Budget)/budget", params: { party_id: 1 } });
+    }
+
     const fetchTransactions = async () => {
-      const res = await fetch('http://localhost:8000/transactions?party_id=YOUR_PARTY_ID');
+      const res = await fetch(`http://localhost:8000/transactions?party_id=${party_id}`);
       const data = await res.json();
       setTransactions(data);
-      const amounts: { [key: string]: number } = {};
 
-      (data as TransactionsData).transactions.forEach((transaction: Transaction) => {
+      // Calculate category spending
+      const amounts: { [key: string]: number } = {};
+      data.forEach((transaction: Transaction) => {
         const category = categoryMappings.categories.find(cat =>
           cat.transactions.includes(transaction.name)
         );
-
         if (category) {
-          if (!amounts[category.label]) {
-            amounts[category.label] = 0;
-          }
+          if (!amounts[category.label]) amounts[category.label] = 0;
           amounts[category.label] += parseFloat(transaction.amount);
         }
       });
 
+      // Build budget items for the pie chart
       const updatedBudgetItems = categoryMappings.categories.map(cat => ({
         label: cat.label,
         color: cat.color,
@@ -113,7 +117,7 @@ export default function BudgetView() {
     };
 
     fetchTransactions();
-  }, []);
+  }, [party_id]);
 
   const calculatePieChartData = (data: BudgetItem[]): BudgetItem[] => {
     // Calculate total spent across all categories
@@ -137,6 +141,10 @@ export default function BudgetView() {
 
   const pieChartData = calculatePieChartData(budgetItems);
   const totalSpent = budgetItems.reduce((sum, item) => sum + parseFloat(item.spent), 0);
+
+  if (!party_id) {
+    return <Text>Please select a party or log in.</Text>;
+  }
 
   return (
     <ScrollView className="flex-1 p-4 bg-white">

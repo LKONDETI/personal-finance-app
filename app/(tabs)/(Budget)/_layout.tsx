@@ -6,8 +6,7 @@ export default function Layout() {
       screenOptions={{
         headerShown: false,
       }}>
-      {/* Optionally configure static options outside the route.
-      <Stack.Screen name="Auth" options={{}} />*/}
+      {/* No navigation logic or buttons here */}
     </Stack>
   );
 }
