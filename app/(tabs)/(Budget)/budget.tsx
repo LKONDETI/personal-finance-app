@@ -6,6 +6,7 @@ import { ArrowLeft } from "lucide-react-native";
 import { useState, useEffect } from "react";
 import categoryMappings from '@/data/categoryMappings.json';
 
+
 interface BudgetItem {
   label: string;
   color: string;
@@ -83,6 +84,8 @@ export default function BudgetView() {
   useEffect(() => {
     if (!party_id) {
       router.replace({ pathname: "/(tabs)/(Budget)/budget", params: { party_id: 1 } });
+
+      return;
     }
 
     const fetchTransactions = async () => {
@@ -160,54 +163,56 @@ export default function BudgetView() {
       <Text className="text-xl font-bold text-center text-gray-700">Total Spent: ${totalSpent.toFixed(2)}</Text>
 
       {/* Pie Chart */}
-      <View className="items-center py-4">
-        <Svg height="400" width="400" viewBox="-200 -200 400 400">
-          <G>
-            {pieChartData.map((item, index) => {
-              const midAngle = (item.startAngle! + item.endAngle!) / 2;
-              const labelRadius = 150; // Increased for larger chart
-              const labelX = labelRadius * Math.cos(midAngle);
-              const labelY = labelRadius * Math.sin(midAngle);
-              
-              // Calculate line end point (slightly outside pie)
-              const lineEndRadius = 120; // Increased for larger chart
-              const lineEndX = lineEndRadius * Math.cos(midAngle);
-              const lineEndY = lineEndRadius * Math.sin(midAngle);
+      {totalSpent > 0 && (
+        <View className="items-center py-4">
+          <Svg height="400" width="400" viewBox="-200 -200 400 400">
+            <G>
+              {pieChartData.map((item, index) => {
+                const midAngle = (item.startAngle! + item.endAngle!) / 2;
+                const labelRadius = 150; // Increased for larger chart
+                const labelX = labelRadius * Math.cos(midAngle);
+                const labelY = labelRadius * Math.sin(midAngle);
+                
+                // Calculate line end point (slightly outside pie)
+                const lineEndRadius = 120; // Increased for larger chart
+                const lineEndX = lineEndRadius * Math.cos(midAngle);
+                const lineEndY = lineEndRadius * Math.sin(midAngle);
 
-              return (
-                <G key={index}>
-                  <PieSlice
-                    cx={0}
-                    cy={0}
-                    radius={100} 
-                    startAngle={item.startAngle!}
-                    endAngle={item.endAngle!}
-                    color={item.color}
-                    onPress={() => setActiveSlice(index)}
-                    isActive={activeSlice === index}
-                  />
-                  <Path
-                    d={`M ${lineEndX} ${lineEndY} L ${labelX} ${labelY}`}
-                    stroke={item.color}
-                    strokeWidth="1"
-                  />
-                  <SvgText
-                    x={labelX}
-                    y={labelY}
-                    fontSize="14"
-                    fill={item.color}
-                    textAnchor={labelX > 0 ? "start" : "end"}
-                    alignmentBaseline="middle"
-                  >
-                    {item.label}
-                  </SvgText>
-                </G>
-              );
-            })}
-            
-          </G>
-        </Svg>
-      </View>
+                return (
+                  <G key={index}>
+                    <PieSlice
+                      cx={0}
+                      cy={0}
+                      radius={100} 
+                      startAngle={item.startAngle!}
+                      endAngle={item.endAngle!}
+                      color={item.color}
+                      onPress={() => setActiveSlice(index)}
+                      isActive={activeSlice === index}
+                    />
+                    <Path
+                      d={`M ${lineEndX} ${lineEndY} L ${labelX} ${labelY}`}
+                      stroke={item.color}
+                      strokeWidth="1"
+                    />
+                    <SvgText
+                      x={labelX}
+                      y={labelY}
+                      fontSize="14"
+                      fill={item.color}
+                      textAnchor={labelX > 0 ? "start" : "end"}
+                      alignmentBaseline="middle"
+                    >
+                      {item.label}
+                    </SvgText>
+                  </G>
+                );
+              })}
+              
+            </G>
+          </Svg>
+        </View>
+      )}
 
       {/* Budget Categories */}
       {budgetItems.map((item: BudgetItem, index: number) => (
