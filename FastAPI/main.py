@@ -73,6 +73,7 @@ class Transaction(BaseModel):
     transaction_type: str
     transaction_time: str
     accountId: int
+    party_id: int | None = None
 
 @app.get("/")
 async def root():
@@ -161,6 +162,21 @@ async def get_transactions(account_id: int = None, party_id: int = None):
         raise HTTPException(
             status_code=500,
             detail={"message": "Failed to fetch transactions", "details": str(e)}
+        )
+
+@app.get("/budget-transactions", response_model=list[Transaction])
+async def get_budget_transactions(party_id: int, transaction_type: str = None):
+    try:
+        query = supabase.table("transactions").select("*").eq("party_id", party_id)
+        if transaction_type:
+            query = query.eq("transaction_type", transaction_type)
+        response = query.execute()
+        return response.data
+    except Exception as e:
+        print(f"Error fetching budget transactions: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail={"message": "Failed to fetch budget transactions", "details": str(e)}
         )
 
 def update_account_balance(account_id: int):

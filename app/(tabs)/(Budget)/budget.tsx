@@ -6,6 +6,14 @@ import { ArrowLeft } from "lucide-react-native";
 import { useState, useEffect } from "react";
 import categoryMappings from '@/data/categoryMappings.json';
 
+interface CategoryMapping {
+  id: number;
+  label: string;
+  icon: string;
+  color: string;
+  limit: string;
+  transactions: string[];
+}
 
 interface BudgetItem {
   label: string;
@@ -25,6 +33,9 @@ interface Transaction {
   name: string;
   date: string;
   amount: string;
+  transaction_type: string;
+  debit_amount?: number;
+  credit_amount?: number;
 }
 
 interface TransactionsData {
@@ -84,39 +95,48 @@ export default function BudgetView() {
   useEffect(() => {
     if (!party_id) {
       router.replace({ pathname: "/(tabs)/(Budget)/budget", params: { party_id: 1 } });
-
       return;
     }
 
     const fetchTransactions = async () => {
-      const res = await fetch(`http://localhost:8000/transactions?party_id=${party_id}`);
-      const data = await res.json();
-      setTransactions(data);
+      try {
+        // Fetch transactions with transaction_type
+        const res = await fetch(`http://localhost:8000/budget-transactions?party_id=${party_id}`);
+        const data = await res.json();
+        setTransactions(data);
 
-      // Calculate category spending
-      const amounts: { [key: string]: number } = {};
-      data.forEach((transaction: Transaction) => {
-        const category = categoryMappings.categories.find(cat =>
-          cat.transactions.includes(transaction.name)
-        );
-        if (category) {
-          if (!amounts[category.label]) amounts[category.label] = 0;
-          amounts[category.label] += parseFloat(transaction.amount);
-        }
-      });
+        // Calculate category spending
+        const amounts: { [key: string]: number } = {};
+        data.forEach((transaction: Transaction) => {
+          const category = categoryMappings.categories.find(cat =>
+            cat.transactions.includes(transaction.name)
+          );
+          if (category) {
+            if (!amounts[category.label]) amounts[category.label] = 0;
+            // Use debit_amount for expenses, credit_amount for income
+            const amount = transaction.transaction_type === 'expense' 
+              ? (transaction.debit_amount || 0)
+              : (transaction.credit_amount || 0);
+            amounts[category.label] += amount;
+          }
+        });
 
-      // Build budget items for the pie chart
-      const updatedBudgetItems = categoryMappings.categories.map(cat => ({
-        label: cat.label,
-        color: cat.color,
-        value: amounts[cat.label] / parseFloat(cat.limit),
-        amount: `$${amounts[cat.label] || 0} / $${cat.limit}`,
-        status: amounts[cat.label] >= parseFloat(cat.limit) ? 'Over' : 'Under',
-        limit: cat.limit,
-        spent: (amounts[cat.label] || 0).toString(),
-      }));
+        // Build budget items for the pie chart
+        const updatedBudgetItems = categoryMappings.categories.map(cat => ({
+          label: cat.label,
+          color: cat.color,
+          value: amounts[cat.label] / parseFloat(cat.limit),
+          amount: `$${amounts[cat.label] || 0} / $${cat.limit}`,
+          status: amounts[cat.label] >= parseFloat(cat.limit) ? 'Over' : 'Under',
+          limit: cat.limit,
+          spent: (amounts[cat.label] || 0).toString(),
+          textColor: amounts[cat.label] >= parseFloat(cat.limit) ? '#ef4444' : '#22c55e'
+        }));
 
-      setBudgetItems(updatedBudgetItems);
+        setBudgetItems(updatedBudgetItems);
+      } catch (error) {
+        console.error('Error fetching transactions:', error);
+      }
     };
 
     fetchTransactions();
