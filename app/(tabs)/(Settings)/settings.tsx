@@ -88,7 +88,10 @@ export default function SettingsView() {
       {/* Menu Items */}
       <View>
         {/* Bank Accounts */}
-        <TouchableOpacity className="bg-white px-4 border-b border-gray-100">
+        <TouchableOpacity 
+          className="bg-white px-4 border-b border-gray-100"
+          onPress={() => router.push('/(tabs)/(Settings)/bankAccounts')}
+        >
           <Text className="text-xl mb-1">Bank Accounts</Text>
           <Text className="text-gray-500">Connect your bank to import transactions</Text>
           <View className="absolute right-4 top-1/2 -translate-y-1/2">
