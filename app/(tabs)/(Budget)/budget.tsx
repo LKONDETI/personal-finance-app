@@ -5,6 +5,7 @@ import * as Progress from "react-native-progress";
 import { ArrowLeft } from "lucide-react-native";
 import { useState, useEffect } from "react";
 import categoryMappings from '@/data/categoryMappings.json';
+import transactionsData from '@/data/transactions.json';
 
 interface CategoryMapping {
   id: number;
@@ -33,9 +34,6 @@ interface Transaction {
   name: string;
   date: string;
   amount: string;
-  transaction_type: string;
-  debit_amount?: number;
-  credit_amount?: number;
 }
 
 interface TransactionsData {
@@ -89,7 +87,6 @@ export default function BudgetView() {
   const router = useRouter();
   const [activeSlice, setActiveSlice] = useState<number | null>(null);
   const [budgetItems, setBudgetItems] = useState<BudgetItem[]>([]);
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const { party_id } = useLocalSearchParams();
 
   useEffect(() => {
@@ -98,48 +95,39 @@ export default function BudgetView() {
       return;
     }
 
-    const fetchTransactions = async () => {
-      try {
-        // Fetch transactions with transaction_type
-        const res = await fetch(`http://localhost:8000/budget-transactions?party_id=${party_id}`);
-        const data = await res.json();
-        setTransactions(data);
+    const processTransactions = () => {
+      // Calculate category spending
+      const amounts: { [key: string]: number } = {};
+      
+      (transactionsData as TransactionsData).transactions.forEach((transaction: Transaction) => {
+        const category = categoryMappings.categories.find(cat =>
+          cat.transactions.some(t => 
+            transaction.name.toLowerCase().includes(t.toLowerCase())
+          )
+        );
 
-        // Calculate category spending
-        const amounts: { [key: string]: number } = {};
-        data.forEach((transaction: Transaction) => {
-          const category = categoryMappings.categories.find(cat =>
-            cat.transactions.includes(transaction.name)
-          );
-          if (category) {
-            if (!amounts[category.label]) amounts[category.label] = 0;
-            // Use debit_amount for expenses, credit_amount for income
-            const amount = transaction.transaction_type === 'expense' 
-              ? (transaction.debit_amount || 0)
-              : (transaction.credit_amount || 0);
-            amounts[category.label] += amount;
-          }
-        });
+        if (category) {
+          if (!amounts[category.label]) amounts[category.label] = 0;
+          amounts[category.label] += parseFloat(transaction.amount);
+        }
+      });
 
-        // Build budget items for the pie chart
-        const updatedBudgetItems = categoryMappings.categories.map(cat => ({
-          label: cat.label,
-          color: cat.color,
-          value: amounts[cat.label] / parseFloat(cat.limit),
-          amount: `$${amounts[cat.label] || 0} / $${cat.limit}`,
-          status: amounts[cat.label] >= parseFloat(cat.limit) ? 'Over' : 'Under',
-          limit: cat.limit,
-          spent: (amounts[cat.label] || 0).toString(),
-          textColor: amounts[cat.label] >= parseFloat(cat.limit) ? '#ef4444' : '#22c55e'
-        }));
+      // Build budget items for the pie chart
+      const updatedBudgetItems = categoryMappings.categories.map(cat => ({
+        label: cat.label,
+        color: cat.color,
+        value: amounts[cat.label] / parseFloat(cat.limit),
+        amount: `$${amounts[cat.label] || 0} / $${cat.limit}`,
+        status: amounts[cat.label] >= parseFloat(cat.limit) ? 'Over' : 'Under',
+        limit: cat.limit,
+        spent: (amounts[cat.label] || 0).toString(),
+        textColor: amounts[cat.label] >= parseFloat(cat.limit) ? '#ef4444' : '#22c55e'
+      }));
 
-        setBudgetItems(updatedBudgetItems);
-      } catch (error) {
-        console.error('Error fetching transactions:', error);
-      }
+      setBudgetItems(updatedBudgetItems);
     };
 
-    fetchTransactions();
+    processTransactions();
   }, [party_id]);
 
   const calculatePieChartData = (data: BudgetItem[]): BudgetItem[] => {
@@ -189,12 +177,11 @@ export default function BudgetView() {
             <G>
               {pieChartData.map((item, index) => {
                 const midAngle = (item.startAngle! + item.endAngle!) / 2;
-                const labelRadius = 150; // Increased for larger chart
+                const labelRadius = 150;
                 const labelX = labelRadius * Math.cos(midAngle);
                 const labelY = labelRadius * Math.sin(midAngle);
                 
-                // Calculate line end point (slightly outside pie)
-                const lineEndRadius = 120; // Increased for larger chart
+                const lineEndRadius = 120;
                 const lineEndX = lineEndRadius * Math.cos(midAngle);
                 const lineEndY = lineEndRadius * Math.sin(midAngle);
 
@@ -228,7 +215,6 @@ export default function BudgetView() {
                   </G>
                 );
               })}
-              
             </G>
           </Svg>
         </View>

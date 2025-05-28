@@ -1,9 +1,10 @@
-# Mobile Banking App with AI 📊
+# Personal Finance App 💰
 
-A React Native app built with Expo for managing personal finances, budgets, tracking expenses, and featuring an AI-powered financial assistant.
+A React Native app built with Expo for managing personal finances, tracking expenses, and managing bank accounts with a modern, intuitive interface.
 
 <div style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 15px; justify-content: center;">
     <img src="./assets/screenshots/dashboard.png" width="230" alt="Dashboard Screenshot"/>
+    <img src="./assets/screenshots/transactions.png" width="230" alt="Transactions Screenshot"/>
     <img src="./assets/screenshots/budget.png" width="230" alt="Budget Screenshot"/>
     <img src="./assets/screenshots/requests.png" width="230" alt="Requests Screenshot"/>
     <img src="./assets/screenshots/pay-now.png" width="230" alt="Pay Now Screenshot"/>
@@ -15,102 +16,131 @@ A React Native app built with Expo for managing personal finances, budgets, trac
 
 ## Features
 
-- 📈 Budget tracking with dynamic pie chart visualization
-- 💰 Transaction management and categorization
-- 🎯 Customizable budget limits for different categories
-- 🤖 AI-powered financial assistant for personalized advice
-- 📱 Cross-platform support (iOS, Android, Web)
-- 💾 Persistent storage of user preferences and budget data
-- 💬 Real-time chat interface for financial guidance
-- 📊 Interactive spending analytics and insights
+### Dashboard
+- 📊 Overview of all bank accounts
+- 💳 Quick access to account balances
+- 📈 Recent transactions summary
+- 🔄 Real-time balance updates
 
-## AI Financial Assistant
+### Budget Management
+- 📈 Interactive pie chart visualization
+- 🎯 Category-based spending tracking
+- 💰 Customizable budget limits
+- 🚨 Visual alerts for over-budget categories
+- 📊 Detailed spending breakdown
 
-Our built-in AI assistant helps you with:
-- Personalized budgeting advice
-- Expense tracking strategies
-- Investment recommendations
-- Debt management tips
-- Savings goals planning
-- General financial education
+### Bank Accounts
+- 🏦 Multiple account support
+- 💳 Account balance tracking
+- 🔄 Transaction history
+- 📱 Easy account management
+- 🔒 Secure account information
+
+### Transactions
+- 📝 Detailed transaction history
+- 🏷️ Automatic categorization
+- 🔍 Search and filter capabilities
+- 📅 Date-based organization
+- 💰 Amount tracking
 
 ## Getting Started
 
-1. Install dependencies
+1. Clone the repository
+   ```bash
+   git clone [repository-url]
+   cd pf-app
+   ```
+
+2. Install dependencies
    ```bash
    npm install
    ```
-   
-2. Configure environment variables
-   ```bash
-   # Create a .env file and add:
-   EXPO_PUBLIC_CHATBOT_API_KEY=your_api_key
-   EXPO_PUBLIC_CHATBOT_API_URL=your_api_url
-   ```
-   
-4. Start the app
+
+3. Start the development server
    ```bash
    npx expo start
    ```
 
 ## Project Structure
 
-- `app/` - Main application code
-  - `(tabs)/` - Tab-based navigation
-    - `(Budget)/` - Budget visualization and management
-    - `(Transactions)/` - Transaction listing and tracking
-    - `(Settings)/` - App settings and budget limits
-      - `chatbot.tsx` - AI Financial Assistant interface
-- `data/` - JSON data files
-  - `categoryMappings.json` - Category definitions and transaction mappings
-  - `transactions.json` - Transaction data
-- `assets/` - Images and other static assets
-  - `screenshots/` - Application screenshots
+```
+pf-app/
+├── app/
+│   ├── (tabs)/
+│   │   ├── (Budget)/
+│   │   │   └── budget.tsx
+│   │   ├── (Transactions)/
+│   │   │   └── dashboard.tsx
+│   │   └── (Settings)/
+│   │       ├── settings.tsx
+│   │       ├── bankAccounts.tsx
+│   │       ├── addAccount.tsx
+│   │       └── budgetLimits.tsx
+├── data/
+│   ├── categoryMappings.json
+│   └── transactions.json
+└── assets/
+    └── screenshots/
+```
 
-## Usage
+## Key Components
 
-### Managing Budget Limits
-1. Navigate to Settings > Budget Limits
-2. Enter monthly limits for each category
-3. Click "Save Limits" to store your preferences
+### Budget Management
+- Dynamic pie chart visualization
+- Category-based spending tracking
+- Progress bars for budget limits
+- Color-coded status indicators
 
-### Using the AI Financial Assistant
-1. Access the chatbot from the Settings menu
-2. Ask questions about your finances
-3. Get personalized advice and recommendations
-4. Learn about budgeting and financial management
+### Bank Account Management
+- Account creation and management
+- Balance tracking
+- Transaction history
+- Secure account information
 
-### Viewing Transactions
-- Recent transactions are automatically categorized
-- View spending patterns in the Budget tab
-- Track expenses against category limits
+### Settings
+- Budget limit configuration
+- Account management
+- Category customization
+- App preferences
 
 ## Technologies Used
 
-- [Expo](https://expo.dev)
-- [React Native](https://reactnative.dev)
-- [React Navigation](https://reactnavigation.org)
-- [NativeWind](https://www.nativewind.dev)
-- [OpenAI API](https://openai.com) (or your chosen AI provider)
+- [Expo](https://expo.dev) - React Native framework
+- [React Native](https://reactnative.dev) - Mobile app development
+- [NativeWind](https://www.nativewind.dev) - Styling
+- [React Native SVG](https://github.com/react-native-svg/react-native-svg) - Chart visualization
+- [React Native Progress](https://github.com/oblador/react-native-progress) - Progress indicators
 
 ## Development
 
-To modify category mappings or add new features:
+### Adding New Features
+1. Create new components in the appropriate directory
+2. Update the navigation structure if needed
+3. Add any required data to the JSON files
+4. Test thoroughly on both iOS and Android
 
-1. Edit category definitions in `data/categoryMappings.json`
-2. Update transaction data in `data/transactions.json`
-3. Modify component code in the respective tab directories
-4. Configure AI assistant parameters in the chatbot component
+### Modifying Categories
+1. Edit `data/categoryMappings.json`
+2. Update transaction mappings
+3. Adjust budget limits as needed
 
-## Learn More
+### Styling
+- Uses NativeWind for styling
+- Follows the existing design system
+- Maintains consistent spacing and typography
 
-- [Expo Documentation](https://docs.expo.dev/)
-- [React Native Documentation](https://reactnative.dev/docs/getting-started)
-- [NativeWind Documentation](https://www.nativewind.dev/overview/)
+## Contributing
 
-## Join the community
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
 
-Join our community of developers creating universal apps.
+## License
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Support
+
+For support, please open an issue in the GitHub repository or contact the development team.
