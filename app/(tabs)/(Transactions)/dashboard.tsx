@@ -1,6 +1,6 @@
 import React, { useMemo, useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import Icon from 'react-native-vector-icons/Feather';
 
 interface Transaction {
@@ -29,10 +29,8 @@ interface Account {
 }
 
 export default function Dashboard() {
-  const route = useRoute();
-  const party_id = (route.params as { party_id?: number })?.party_id;
-
-  const navigation = useNavigation();
+  const router = useRouter();
+  const { party_id } = useLocalSearchParams<{ party_id: string }>();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [loading, setLoading] = useState(true);
@@ -89,7 +87,10 @@ export default function Dashboard() {
   }, [party_id]);
   
   const handleAccountPress = (accountId: number) => {
-    (navigation as any).navigate('accountDetails', { accountId, party_id });
+    router.push({
+      pathname: '/(tabs)/(Transactions)/accountDetails',
+      params: { accountId, party_id }
+    });
   };
 
   if (!party_id) {
@@ -104,7 +105,14 @@ export default function Dashboard() {
     <ScrollView className="p-4 bg-white">
       <View className="flex-row items-center justify-between mb-4 pt-9">
         <Text className="text-2xl font-bold">Dashboard</Text>
-        <Icon name="file-text" size={24} />
+        <TouchableOpacity 
+          onPress={() => {
+            console.log('Navigating to settings with party_id:', party_id);
+            router.push(`/settings?party_id=${party_id}`);
+          }}
+        >
+          <Icon name="settings" size={24} />
+        </TouchableOpacity>
       </View>
       
       {/* Accounts Section */}
@@ -120,18 +128,16 @@ export default function Dashboard() {
             className="mb-4 bg-white rounded-xl shadow p-4 border border-blue-100"
             onPress={() => handleAccountPress(account.id)}
           >
-      
             <View className="flex-row items-center justify-between">
               <Text className="text-xl font-bold">{account.account_name}</Text>
               <Text className="text-2xl font-bold">
                 ${account.available_balance?.toFixed(2) ?? account.balance?.toFixed(2) ?? '0'}
               </Text>
-        </View>
+            </View>
             <Text className="text-xs text-gray-500 mt-1">Available balance</Text>
           </TouchableOpacity>
         ))
       )}
-
 
       {/* Recent Transactions */}
       <Text className="text-lg font-semibold mb-2">Recent transactions</Text>
@@ -148,8 +154,6 @@ export default function Dashboard() {
           </View>
         ))}
       </View>
-
-
     </ScrollView>
   );
 }

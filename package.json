@@ -8,12 +8,11 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "test": "jest --watchAll",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
     "lint": "expo lint",
     "server": "node server.js"
-  },
-  "jest": {
-    "preset": "jest-expo"
   },
   "dependencies": {
     "@expo/server": "^0.5.1",
@@ -67,8 +66,9 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
-    "@testing-library/react-native": "^12.6.0",
-    "@types/jest": "^29.5.12",
+    "@testing-library/jest-native": "^5.4.3",
+    "@testing-library/react-native": "^12.9.0",
+    "@types/jest": "^29.5.14",
     "@types/react": "~18.3.12",
     "@types/react-test-renderer": "^18.0.7",
     "chai": "^5.1.1",
