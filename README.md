@@ -1,6 +1,6 @@
 # Personal Finance App 💰
 
-A React Native app built with Expo for managing personal finances, tracking expenses, and managing bank accounts with a modern, intuitive interface.
+A React Native app built with Expo for managing personal finances, tracking expenses, and managing bank accounts with a modern, intuitive interface. The app integrates with a FastAPI backend for secure data management and real-time updates.
 
 <div style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 15px; justify-content: center;">
     <img src="./assets/screenshots/dashboard.png" width="230" alt="Dashboard Screenshot"/>
@@ -21,6 +21,8 @@ A React Native app built with Expo for managing personal finances, tracking expe
 - 💳 Quick access to account balances
 - 📈 Recent transactions summary
 - 🔄 Real-time balance updates
+- 🔐 Secure user authentication
+- 👤 User-specific data with party_id
 
 ### Budget Management
 - 📈 Interactive pie chart visualization
@@ -28,6 +30,7 @@ A React Native app built with Expo for managing personal finances, tracking expe
 - 💰 Customizable budget limits
 - 🚨 Visual alerts for over-budget categories
 - 📊 Detailed spending breakdown
+- 🔄 Real-time budget updates
 
 ### Bank Accounts
 - 🏦 Multiple account support
@@ -35,6 +38,7 @@ A React Native app built with Expo for managing personal finances, tracking expe
 - 🔄 Transaction history
 - 📱 Easy account management
 - 🔒 Secure account information
+- ➕ Add new accounts functionality
 
 ### Transactions
 - 📝 Detailed transaction history
@@ -42,6 +46,15 @@ A React Native app built with Expo for managing personal finances, tracking expe
 - 🔍 Search and filter capabilities
 - 📅 Date-based organization
 - 💰 Amount tracking
+- 🔄 Real-time transaction updates
+
+### Settings
+- 👤 Personal Information management
+- 🏦 Bank account management
+- 💰 Budget limits configuration
+- 🔔 Notification preferences
+- 🔒 Security settings
+- 💬 AI Chatbot support
 
 ## Getting Started
 
@@ -56,7 +69,13 @@ A React Native app built with Expo for managing personal finances, tracking expe
    npm install
    ```
 
-3. Start the development server
+3. Start the backend server
+   ```bash
+   cd backend
+   uvicorn main:app --reload
+   ```
+
+4. Start the development server
    ```bash
    npx expo start
    ```
@@ -70,17 +89,43 @@ pf-app/
 │   │   ├── (Budget)/
 │   │   │   └── budget.tsx
 │   │   ├── (Transactions)/
-│   │   │   └── dashboard.tsx
+│   │   │   ├── dashboard.tsx
+│   │   │   └── accountDetails.tsx
 │   │   └── (Settings)/
 │   │       ├── settings.tsx
 │   │       ├── bankAccounts.tsx
 │   │       ├── addAccount.tsx
 │   │       └── budgetLimits.tsx
+├── __tests__/
+│   ├── components/
+│   │   ├── BudgetView.test.tsx
+│   │   ├── BankAccounts.test.tsx
+│   │   ├── AddAccount.test.tsx
+│   │   ├── Dashboard.test.tsx
+│   │   └── AddTransaction.test.tsx
 ├── data/
 │   ├── categoryMappings.json
 │   └── transactions.json
 └── assets/
     └── screenshots/
+```
+
+## Testing
+
+The project uses Jest for testing. To run tests:
+
+```bash
+# Run all tests
+npm test
+
+# Run tests with coverage
+npm test -- --coverage
+
+# Run specific test file
+npm test -- path/to/test/file.test.tsx
+
+# Run tests in watch mode
+npm test -- --watch
 ```
 
 ## Key Components
@@ -90,18 +135,21 @@ pf-app/
 - Category-based spending tracking
 - Progress bars for budget limits
 - Color-coded status indicators
+- Real-time updates from backend
 
 ### Bank Account Management
 - Account creation and management
 - Balance tracking
 - Transaction history
 - Secure account information
+- Party-specific account views
 
 ### Settings
 - Budget limit configuration
 - Account management
 - Category customization
 - App preferences
+- User profile management
 
 ## Technologies Used
 
@@ -110,6 +158,9 @@ pf-app/
 - [NativeWind](https://www.nativewind.dev) - Styling
 - [React Native SVG](https://github.com/react-native-svg/react-native-svg) - Chart visualization
 - [React Native Progress](https://github.com/oblador/react-native-progress) - Progress indicators
+- [FastAPI](https://fastapi.tiangolo.com) - Backend API
+- [Jest](https://jestjs.io) - Testing framework
+- [Expo Router](https://docs.expo.dev/router/introduction/) - Navigation
 
 ## Development
 
@@ -117,25 +168,29 @@ pf-app/
 1. Create new components in the appropriate directory
 2. Update the navigation structure if needed
 3. Add any required data to the JSON files
-4. Test thoroughly on both iOS and Android
+4. Write tests for new components
+5. Test thoroughly on both iOS and Android
 
-### Modifying Categories
-1. Edit `data/categoryMappings.json`
-2. Update transaction mappings
-3. Adjust budget limits as needed
+### Backend Integration
+1. All API calls use the correct port (8081)
+2. Party ID is passed through navigation
+3. Error handling for API calls
+4. Secure authentication flow
 
 ### Styling
 - Uses NativeWind for styling
 - Follows the existing design system
 - Maintains consistent spacing and typography
+- Responsive design for all screen sizes
 
 ## Contributing
 
 1. Fork the repository
 2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
+3. Write tests for new features
+4. Commit your changes
+5. Push to the branch
+6. Create a Pull Request
 
 ## License
 
