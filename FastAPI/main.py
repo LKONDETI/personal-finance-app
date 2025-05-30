@@ -15,7 +15,7 @@ app = FastAPI(title="Customer API", description="API for customer management wit
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins
+    allow_origins=["*"],  # Or ["http://localhost:8081"]
     allow_credentials=True,
     allow_methods=["*"],  # Allows all methods
     allow_headers=["*"],  # Allows all headers
@@ -74,6 +74,8 @@ class Transaction(BaseModel):
     transaction_time: str
     accountId: int
     party_id: int | None = None
+
+
 
 @app.get("/")
 async def root():
@@ -200,6 +202,17 @@ async def add_transaction(transaction: Transaction):
             status_code=500,
             detail={"message": "Failed to add transaction", "details": str(e)}
         )
+
+@app.get("/customers/{customer_id}")
+async def get_customer_by_id(customer_id: int):
+    try:
+        response = supabase.table("customers").select("*").eq("id", customer_id).execute()
+        if not response.data or len(response.data) == 0:
+            raise HTTPException(status_code=404, detail="Customer not found")
+        return response.data[0]
+    except Exception as e:
+        print(f"Error fetching customer by id: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch customer")
 
 if __name__ == "__main__":
     import uvicorn

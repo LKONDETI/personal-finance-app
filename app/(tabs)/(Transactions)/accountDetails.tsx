@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, TextInput } from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import { ArrowDownRight, ArrowLeft, ArrowUpRight, MoreVertical } from "lucide-react-native";
 
 interface Account {
@@ -57,9 +57,10 @@ const calculateBalance = (transactions: Transaction[]) => {
 };
 
 export default function AccountDetails() {
-  const navigation = useNavigation();
-  const route = useRoute();
-  const { accountId, party_id } = route.params as { accountId: number, party_id: number };
+  const router = useRouter();
+  const { accountId, party_id } = useLocalSearchParams<{ accountId: string, party_id: string }>();
+  const accountIdNum = Number(accountId);
+  const partyIdNum = Number(party_id);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const balance = calculateBalance(transactions);
   const [searchQuery, setSearchQuery] = useState("");
@@ -74,11 +75,11 @@ export default function AccountDetails() {
         // Fetch account details
         const accRes = await fetch(`http://localhost:8000/accounts`);
         const accData = await accRes.json();
-        const found = accData.find((a: Account) => a.id === accountId);
+        const found = accData.find((a: Account) => a.id === accountIdNum);
         setAccount(found);
 
         // Fetch all transactions for this account
-        const txRes = await fetch(`http://localhost:8000/transactions?account_id=${accountId}&party_id=${party_id}`);
+        const txRes = await fetch(`http://localhost:8000/transactions?account_id=${accountIdNum}&party_id=${partyIdNum}`);
         const txData = await txRes.json();
         setTransactions(txData);
       } catch (error) {
@@ -102,7 +103,7 @@ export default function AccountDetails() {
     <ScrollView className="flex-1 bg-white">
       {/* Header */}
       <View className="flex-row justify-between items-center px-4 pt-8 pb-4 bg-white">
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => router.back()}>
           <ArrowLeft size={24} />
         </TouchableOpacity>
         

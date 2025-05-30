@@ -95,64 +95,67 @@ export default function Dashboard() {
 
   if (!party_id) {
     return (
-      <View className="flex-1 items-center justify-center">
+      <View className="flex-1 items-center justify-center bg-gray-50">
         <Text className="text-red-500">No party_id provided. Please log in again.</Text>
       </View>
     );
   }
 
   return (
-    <ScrollView className="p-4 bg-white">
-      <View className="flex-row items-center justify-between mb-4 pt-9">
-        <Text className="text-2xl font-bold">Dashboard</Text>
+    <ScrollView className="flex-1 bg-gray-50">
+      {/* Header */}
+      <View className="flex-row items-center justify-between mb-6 pt-12 px-6">
+        <Text className="text-3xl font-extrabold tracking-tight">Dashboard</Text>
         <TouchableOpacity 
-          onPress={() => {
-            console.log('Navigating to settings with party_id:', party_id);
-            router.push(`/settings?party_id=${party_id}`);
-          }}
+          onPress={() => router.push(`/(tabs)/(Settings)/settings`)}
+          className="bg-white rounded-full p-2 shadow-sm border border-gray-200"
         >
           <Icon name="settings" size={24} />
         </TouchableOpacity>
       </View>
-      
       {/* Accounts Section */}
-      <Text className="text-lg font-semibold mb-2">Accounts</Text>
-      {loading ? (
-        <ActivityIndicator size="large" color="#4B7BF5" />
-      ) : accounts.length === 0 ? (
-        <Text className="text-gray-500">No accounts found.</Text>
-      ) : (
-        accounts.map((account) => (
-          <TouchableOpacity
-            key={account.id}
-            className="mb-4 bg-white rounded-xl shadow p-4 border border-blue-100"
-            onPress={() => handleAccountPress(account.id)}
-          >
-            <View className="flex-row items-center justify-between">
-              <Text className="text-xl font-bold">{account.account_name}</Text>
-              <Text className="text-2xl font-bold">
+      <Text className="text-xl font-bold mb-3 px-6">Accounts</Text>
+      <View className="px-4">
+        {loading ? (
+          <ActivityIndicator size="large" color="#4B7BF5" />
+        ) : accounts.length === 0 ? (
+          <Text className="text-gray-500 text-center">No accounts found.</Text>
+        ) : (
+          accounts.map((account) => (
+            <TouchableOpacity
+              key={account.id}
+              className="mb-4 bg-white rounded-2xl shadow p-5 border border-blue-100 flex-row items-center justify-between"
+              onPress={() => handleAccountPress(account.id)}
+            >
+              <View>
+                <Text className="text-lg font-bold mb-1">{account.account_name}</Text>
+                <Text className="text-xs text-gray-400">Available balance</Text>
+              </View>
+              <Text className="text-2xl font-extrabold text-blue-600">
                 ${account.available_balance?.toFixed(2) ?? account.balance?.toFixed(2) ?? '0'}
               </Text>
-            </View>
-            <Text className="text-xs text-gray-500 mt-1">Available balance</Text>
-          </TouchableOpacity>
-        ))
-      )}
-
+            </TouchableOpacity>
+          ))
+        )}
+      </View>
       {/* Recent Transactions */}
-      <Text className="text-lg font-semibold mb-2">Recent transactions</Text>
-      <View className="bg-white rounded-2xl shadow mb-6">
-        {transactions.slice(-5).map((txn, idx) => (
-          <View key={txn.id} className="flex-row items-center justify-between px-4 py-3 border-b border-gray-100">
-            <View className="flex-row items-center">
+      <Text className="text-xl font-bold mb-3 mt-8 px-6">Recent Transactions</Text>
+      <View className="bg-white rounded-2xl shadow mx-4 mb-8 border border-gray-100">
+        {transactions.length === 0 ? (
+          <Text className="text-gray-400 text-center py-6">No transactions found.</Text>
+        ) : (
+          transactions.slice(-5).map((txn, idx) => (
+            <View key={txn.id} className={`flex-row items-center justify-between px-6 py-4 border-b border-gray-100 ${idx === transactions.slice(-5).length - 1 ? 'border-b-0' : ''}`}>
               <View>
-                <Text className="font-medium">{txn.name}</Text>
-                <Text className="text-gray-500 text-xs">{txn.date}</Text>
+                <Text className="font-medium text-base">{txn.name}</Text>
+                <Text className="text-gray-400 text-xs mt-1">{txn.date}</Text>
               </View>
+              <Text className="font-semibold text-base ${parseFloat(txn.amount) >= 0 ? 'text-green-500' : 'text-red-500'}">
+                ${parseFloat(txn.amount).toLocaleString()}
+              </Text>
             </View>
-            <Text className="font-semibold text-base">${parseFloat(txn.amount).toLocaleString()}</Text>
-          </View>
-        ))}
+          ))
+        )}
       </View>
     </ScrollView>
   );

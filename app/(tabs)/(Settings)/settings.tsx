@@ -1,66 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Alert, Pressable } from "react-native";
-import { useRouter, useLocalSearchParams } from "expo-router";
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, ScrollView, Alert, Pressable, Modal } from "react-native";
+import { useRouter } from "expo-router";
 import { ArrowLeft, ChevronRight, LogOut, CreditCard, Settings as SettingsIcon, MessageCircle, User, Bell, Shield } from "lucide-react-native";
 
 export default function SettingsView() {
   const router = useRouter();
-  const { party_id } = useLocalSearchParams<{ party_id: string }>();
-  const [partyId, setPartyId] = useState<string | null>(party_id || null);
-
-  useEffect(() => {
-    const fetchPartyId = async () => {
-      try {
-        // If we already have party_id from params, use it
-        if (party_id) {
-          console.log('Using party_id from URL:', party_id);
-          setPartyId(party_id);
-          return;
-        }
-
-        // Otherwise try to get it from the dashboard
-        const response = await fetch(`http://localhost:8081/dashboard?party_id=1`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch dashboard data');
-        }
-        const data = await response.json();
-        console.log('Dashboard data:', data);
-        if (data.party_id) {
-          setPartyId(data.party_id.toString());
-        }
-      } catch (error) {
-        console.error('Error fetching party_id:', error);
-        // Don't show alert if we're already on the settings page
-        if (!party_id) {
-          Alert.alert('Error', 'Failed to load user data. Please try again.');
-        }
-      }
-    };
-
-    fetchPartyId();
-  }, [party_id]);
+  const [securityModalVisible, setSecurityModalVisible] = useState(false);
 
   const handleLogout = async () => {
     try {
-      // First, try to clear any session data
-      const response = await fetch('http://localhost:8000/logout', {
+      await fetch('http://localhost:8000/logout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include', // Include cookies if any
+        credentials: 'include',
       });
-
-      // Even if the server request fails, we'll still log the user out locally
-      console.log('Logging out user...');
-      
-      // Clear any local storage or state
-      // Navigate to login page
       router.replace('/');
-      
     } catch (error) {
       console.error('Logout error:', error);
-      // Still navigate to login page even if there's an error
       router.replace('/');
     }
   };
@@ -88,24 +46,13 @@ export default function SettingsView() {
     </TouchableOpacity>
   );
 
-  if (!partyId) {
-    return (
-      <View className="flex-1 items-center justify-center bg-gray-50">
-        <Text className="text-gray-500">Loading...</Text>
-      </View>
-    );
-  }
-
   return (
     <ScrollView className="flex-1 bg-gray-50">
       {/* Header */}
       <View className="flex-col pt-11 px-4 bg-white">
         <View className="flex-row items-center justify-between mb-4">
           <View className="flex-row items-center">
-            <TouchableOpacity onPress={() => {
-              console.log('Navigating back to dashboard with party_id:', partyId);
-              router.push(`/dashboard?party_id=${partyId}`);
-            }}>
+            <TouchableOpacity onPress={() => router.push('/dashboard?party_id=1')}>
               <ArrowLeft size={24} color="black" />
             </TouchableOpacity>
             <Text className="text-2xl font-bold ml-4">Settings</Text>
@@ -123,7 +70,7 @@ export default function SettingsView() {
           <User size={20} color="#4B7BF5" />,
           "Personal Information",
           "Update your profile and preferences",
-          () => router.push(`/bankAccounts?party_id=${partyId}`),
+          () => router.push({ pathname: '/(tabs)/(Settings)/profile' }),
           "bg-blue-100",
           "#4B7BF5"
         )}
@@ -133,10 +80,7 @@ export default function SettingsView() {
           <CreditCard size={20} color="#34D399" />,
           "Bank Accounts",
           "Connect your bank to import transactions",
-          () => {
-            console.log('Navigating to bank accounts with party_id:', partyId);
-            router.push(`/bankAccounts?party_id=${partyId}`);
-          },
+          () => router.push('/bankAccounts?party_id=1'),
           "bg-green-100",
           "#34D399"
         )}
@@ -146,7 +90,7 @@ export default function SettingsView() {
           <SettingsIcon size={20} color="#F59E0B" />,
           "Budget Limits",
           "Set spending limits for categories",
-          () => router.push(`/budgetLimits?party_id=${partyId}`),
+          () => router.push('/budgetLimits?party_id=1'),
           "bg-yellow-100",
           "#F59E0B"
         )}
@@ -156,17 +100,17 @@ export default function SettingsView() {
           <Bell size={20} color="#8B5CF6" />,
           "Notifications",
           "Manage your notification preferences",
-          () => router.push(`/bankAccounts?party_id=${partyId}`),
+          () => router.push('/bankAccounts?party_id=1'),
           "bg-purple-100",
           "#8B5CF6"
         )}
 
-        {/* Security */}
+        {/* Security - show modal instead of routing */}
         {renderMenuItem(
           <Shield size={20} color="#EF4444" />,
           "Security",
           "Manage your security settings",
-          () => router.push(`/bankAccounts?party_id=${partyId}`),
+          () => setSecurityModalVisible(true),
           "bg-red-100",
           "#EF4444"
         )}
@@ -176,11 +120,32 @@ export default function SettingsView() {
           <MessageCircle size={20} color="#A78BFA" />,
           "Chat with us",
           "Get help from our AI assistant",
-          () => router.push(`/chatbot?party_id=${partyId}`),
+          () => router.push('/chatbot?party_id=1'),
           "bg-purple-100",
           "#A78BFA"
         )}
       </View>
+
+      {/* Security Modal */}
+      <Modal
+        visible={securityModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setSecurityModalVisible(false)}
+      >
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.3)', justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ backgroundColor: 'white', padding: 24, borderRadius: 16, alignItems: 'center', minWidth: 250 }}>
+            <Text className="text-lg font-semibold mb-4">Contact the bank</Text>
+            <Text className="text-gray-600 mb-6">To manage your security settings, please contact your bank directly.</Text>
+            <TouchableOpacity
+              onPress={() => setSecurityModalVisible(false)}
+              className="bg-blue-500 px-6 py-2 rounded-full"
+            >
+              <Text className="text-white font-medium">OK</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 }
