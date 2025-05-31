@@ -6,6 +6,7 @@ import { ArrowLeft, ChevronRight, LogOut, CreditCard, Settings as SettingsIcon, 
 export default function SettingsView() {
   const router = useRouter();
   const [securityModalVisible, setSecurityModalVisible] = useState(false);
+  const [notificationsModalVisible, setNotificationsModalVisible] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -100,7 +101,7 @@ export default function SettingsView() {
           <Bell size={20} color="#8B5CF6" />,
           "Notifications",
           "Manage your notification preferences",
-          () => router.push('/bankAccounts?party_id=1'),
+          () => setNotificationsModalVisible(true),
           "bg-purple-100",
           "#8B5CF6"
         )}
@@ -139,6 +140,27 @@ export default function SettingsView() {
             <Text className="text-gray-600 mb-6">To manage your security settings, please contact your bank directly.</Text>
             <TouchableOpacity
               onPress={() => setSecurityModalVisible(false)}
+              className="bg-blue-500 px-6 py-2 rounded-full"
+            >
+              <Text className="text-white font-medium">OK</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Notifications Modal */}
+      <Modal
+        visible={notificationsModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setNotificationsModalVisible(false)}
+      >
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.3)', justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ backgroundColor: 'white', padding: 24, borderRadius: 16, alignItems: 'center', minWidth: 250 }}>
+            <Text className="text-lg font-semibold mb-4">Notifications</Text>
+            <Text className="text-gray-600 mb-6">No notifications at this time.</Text>
+            <TouchableOpacity
+              onPress={() => setNotificationsModalVisible(false)}
               className="bg-blue-500 px-6 py-2 rounded-full"
             >
               <Text className="text-white font-medium">OK</Text>
