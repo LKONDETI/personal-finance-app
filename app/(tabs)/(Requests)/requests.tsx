@@ -130,7 +130,7 @@ export default function RequestsView() {
       status: "Due in 3 days",
       statusVariant: "due3days",
       amount: "$142.50",
-      date: "Apr 25, 2024",
+      date: "June 25, 2025",
       dateLabel: "Due Date",
     },
     {
@@ -142,7 +142,7 @@ export default function RequestsView() {
       status: "Due today",
       statusVariant: "dueToday",
       amount: "$79.99",
-      date: "Apr 22, 2024",
+      date: "June 22, 2025",
       dateLabel: "Due Date",
     },
     {
@@ -154,7 +154,7 @@ export default function RequestsView() {
       status: "Due in 7 days",
       statusVariant: "due7days",
       amount: "$45.00",
-      date: "Apr 29, 2024",
+      date: "June 29, 2025",
       dateLabel: "Due Date",
     },
   ];
@@ -169,7 +169,7 @@ export default function RequestsView() {
       status: "Paid",
       statusVariant: "paid",
       amount: "$138.75",
-      date: "Mar 25, 2024",
+      date: "June 25, 2025",
       dateLabel: "Paid on",
     },
     {
@@ -181,7 +181,7 @@ export default function RequestsView() {
       status: "Paid",
       statusVariant: "paid",
       amount: "$79.99",
-      date: "Mar 22, 2024",
+      date: "June 22, 2025",
       dateLabel: "Paid on",
     },
   ];
