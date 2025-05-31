@@ -169,7 +169,7 @@ export default function RequestsView() {
       status: "Paid",
       statusVariant: "paid",
       amount: "$138.75",
-      date: "June 25, 2025",
+      date: "May 25, 2025",
       dateLabel: "Paid on",
     },
     {
@@ -181,7 +181,7 @@ export default function RequestsView() {
       status: "Paid",
       statusVariant: "paid",
       amount: "$79.99",
-      date: "June 22, 2025",
+      date: "May 22, 2025",
       dateLabel: "Paid on",
     },
   ];
