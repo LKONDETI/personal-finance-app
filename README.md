@@ -1,4 +1,4 @@
-# Personal Finance App 💰
+# MOBILE BANKING APP WITH AI 
 
 A React Native app built with Expo for managing personal finances, tracking expenses, and managing bank accounts with a modern, intuitive interface. The app integrates with a FastAPI backend for secure data management and real-time updates.
 
