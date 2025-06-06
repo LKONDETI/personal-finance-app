@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/45</span>
+                <span class='fraction'>0/46</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/43</span>
+                <span class='fraction'>0/44</span>
             </div>
         
             
@@ -233,7 +233,8 @@
 <a name='L168'></a><a href='#L168'>168</a>
 <a name='L169'></a><a href='#L169'>169</a>
 <a name='L170'></a><a href='#L170'>170</a>
-<a name='L171'></a><a href='#L171'>171</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L171'></a><a href='#L171'>171</a>
+<a name='L172'></a><a href='#L172'>172</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -292,6 +293,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -405,7 +407,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, TextInput } from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import { ArrowDownRight, ArrowLeft, ArrowUpRight, MoreVertical } from "lucide-react-native";
 &nbsp;
 interface Account {
@@ -462,9 +464,10 @@ const calculateBalance = <span class="cstat-no" title="statement not covered" ><
 };
 &nbsp;
 export default function <span class="fstat-no" title="function not covered" >AccountDetails(</span>) {
-  const navigation = <span class="cstat-no" title="statement not covered" >useNavigation();</span>
-  const route = <span class="cstat-no" title="statement not covered" >useRoute();</span>
-  const { accountId, party_id } = <span class="cstat-no" title="statement not covered" >route.params as { accountId: number, party_id: number };</span>
+  const router = <span class="cstat-no" title="statement not covered" >useRouter();</span>
+  const { accountId, party_id } = <span class="cstat-no" title="statement not covered" >useLocalSearchParams&lt;{ accountId: string, party_id: string }&gt;();</span>
+  const accountIdNum = <span class="cstat-no" title="statement not covered" >Number(accountId);</span>
+  const partyIdNum = <span class="cstat-no" title="statement not covered" >Number(party_id);</span>
   const [transactions, setTransactions] = <span class="cstat-no" title="statement not covered" >useState&lt;Transaction[]&gt;([]);</span>
   const balance = <span class="cstat-no" title="statement not covered" >calculateBalance(transactions);</span>
   const [searchQuery, setSearchQuery] = <span class="cstat-no" title="statement not covered" >useState("");</span>
@@ -479,11 +482,11 @@ export default function <span class="fstat-no" title="function not covered" >Acc
         // Fetch account details
         const accRes = <span class="cstat-no" title="statement not covered" >await fetch(`http://localhost:8000/accounts`);</span>
         const accData = <span class="cstat-no" title="statement not covered" >await accRes.json();</span>
-        const found = <span class="cstat-no" title="statement not covered" >accData.find(<span class="fstat-no" title="function not covered" >(a</span>: Account) =&gt; <span class="cstat-no" title="statement not covered" >a.id === accountId)</span>;</span>
+        const found = <span class="cstat-no" title="statement not covered" >accData.find(<span class="fstat-no" title="function not covered" >(a</span>: Account) =&gt; <span class="cstat-no" title="statement not covered" >a.id === accountIdNum)</span>;</span>
 <span class="cstat-no" title="statement not covered" >        setAccount(found);</span>
 &nbsp;
         // Fetch all transactions for this account
-        const txRes = <span class="cstat-no" title="statement not covered" >await fetch(`http://localhost:8000/transactions?account_id=${accountId}&amp;party_id=${party_id}`);</span>
+        const txRes = <span class="cstat-no" title="statement not covered" >await fetch(`http://localhost:8000/transactions?account_id=${accountIdNum}&amp;party_id=${partyIdNum}`);</span>
         const txData = <span class="cstat-no" title="statement not covered" >await txRes.json();</span>
 <span class="cstat-no" title="statement not covered" >        setTransactions(txData);</span>
       } catch (error) {
@@ -507,7 +510,7 @@ export default function <span class="fstat-no" title="function not covered" >Acc
     &lt;ScrollView className="flex-1 bg-white"&gt;
       {/* Header */}
       &lt;View className="flex-row justify-between items-center px-4 pt-8 pb-4 bg-white"&gt;
-        &lt;TouchableOpacity onPress={<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >navigation.goBack()}</span>&gt;
+        &lt;TouchableOpacity onPress={<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >router.back()}</span>&gt;
           &lt;ArrowLeft size={24} /&gt;
         &lt;/TouchableOpacity&gt;
         
@@ -580,7 +583,7 @@ export default function <span class="fstat-no" title="function not covered" >Acc
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-29T22:25:31.846Z
+                at 2025-05-31T17:05:41.461Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

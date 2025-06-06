@@ -119,7 +119,7 @@ export default function AccountDetails() {
         <Text className="text-gray-500 text-xs mb-2">Created: {account.created_at}</Text>
         <Text className="text-gray-500 mb-1">Available balance</Text>
         <Text className="text-3xl font-bold text-blue-600 mb-1">
-          {transactions.length === 0 ? '$--' : `$${balance.toFixed(2)}`}
+          {account?.balance !== undefined ? `$${account.balance.toFixed(2)}` : '$--'}
         </Text>
       </View>
 

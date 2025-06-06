@@ -132,7 +132,7 @@ export default function Dashboard() {
                 <Text className="text-xs text-gray-400">Available balance</Text>
               </View>
               <Text className="text-2xl font-extrabold text-blue-600">
-                ${account.available_balance?.toFixed(2) ?? account.balance?.toFixed(2) ?? '0'}
+                ${account.balance?.toFixed(2) ?? '0.00'}
               </Text>
             </TouchableOpacity>
           ))
@@ -150,8 +150,8 @@ export default function Dashboard() {
                 <Text className="font-medium text-base">{txn.name}</Text>
                 <Text className="text-gray-400 text-xs mt-1">{txn.date}</Text>
               </View>
-              <Text className="font-semibold text-base ${parseFloat(txn.amount) >= 0 ? 'text-green-500' : 'text-red-500'}">
-                ${parseFloat(txn.amount).toLocaleString()}
+              <Text className={`font-semibold text-base ${parseFloat(txn.amount) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                ${Math.abs(parseFloat(txn.amount)).toLocaleString()}
               </Text>
             </View>
           ))

@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">22.64% </span>
+                <span class="strong">23.07% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>12/53</span>
+                <span class='fraction'>12/52</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">6.45% </span>
+                <span class="strong">8.57% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>2/31</span>
+                <span class='fraction'>3/35</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">27.9% </span>
+                <span class="strong">28.57% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>12/43</span>
+                <span class='fraction'>12/42</span>
             </div>
         
             
@@ -221,7 +221,10 @@
 <a name='L156'></a><a href='#L156'>156</a>
 <a name='L157'></a><a href='#L157'>157</a>
 <a name='L158'></a><a href='#L158'>158</a>
-<a name='L159'></a><a href='#L159'>159</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L159'></a><a href='#L159'>159</a>
+<a name='L160'></a><a href='#L160'>160</a>
+<a name='L161'></a><a href='#L161'>161</a>
+<a name='L162'></a><a href='#L162'>162</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -331,7 +334,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -366,7 +368,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -476,64 +482,67 @@ export default function Dashboard() {
 &nbsp;
   <span class="missing-if-branch" title="if path not taken" >I</span>if (!party_id) {
 <span class="cstat-no" title="statement not covered" >    return (</span>
-      &lt;View className="flex-1 items-center justify-center"&gt;
+      &lt;View className="flex-1 items-center justify-center bg-gray-50"&gt;
         &lt;Text className="text-red-500"&gt;No party_id provided. Please log in again.&lt;/Text&gt;
       &lt;/View&gt;
     );
   }
 &nbsp;
   return (
-    &lt;ScrollView className="p-4 bg-white"&gt;
-      &lt;View className="flex-row items-center justify-between mb-4 pt-9"&gt;
-        &lt;Text className="text-2xl font-bold"&gt;Dashboard&lt;/Text&gt;
+    &lt;ScrollView className="flex-1 bg-gray-50"&gt;
+      {/* Header */}
+      &lt;View className="flex-row items-center justify-between mb-6 pt-12 px-6"&gt;
+        &lt;Text className="text-3xl font-extrabold tracking-tight"&gt;Dashboard&lt;/Text&gt;
         &lt;TouchableOpacity 
-          onPress={<span class="fstat-no" title="function not covered" >()</span> =&gt; {
-<span class="cstat-no" title="statement not covered" >            console.log('Navigating to settings with party_id:', party_id);</span>
-<span class="cstat-no" title="statement not covered" >            router.push(`/settings?party_id=${party_id}`);</span>
-          }}
+          onPress={<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >router.push(`/(tabs)/(Settings)/settings`)}</span>
+          className="bg-white rounded-full p-2 shadow-sm border border-gray-200"
         &gt;
           &lt;Icon name="settings" size={24} /&gt;
         &lt;/TouchableOpacity&gt;
       &lt;/View&gt;
-      
       {/* Accounts Section */}
-      &lt;Text className="text-lg font-semibold mb-2"&gt;Accounts&lt;/Text&gt;
-      {loading ? (
-        &lt;ActivityIndicator size="large" color="#4B7BF5" /&gt;
-      ) : <span class="branch-1 cbranch-no" title="branch not covered" >accounts.length === 0 ? (</span>
-        &lt;Text className="text-gray-500"&gt;No accounts found.&lt;/Text&gt;
-      ) : (
-        accounts.map(<span class="fstat-no" title="function not covered" >(a</span>ccount) =&gt; (
-<span class="cstat-no" title="statement not covered" >          &lt;TouchableOpacity</span>
-            key={account.id}
-            className="mb-4 bg-white rounded-xl shadow p-4 border border-blue-100"
-            onPress={<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >handleAccountPress(account.id)}</span>
-          &gt;
-            &lt;View className="flex-row items-center justify-between"&gt;
-              &lt;Text className="text-xl font-bold"&gt;{account.account_name}&lt;/Text&gt;
-              &lt;Text className="text-2xl font-bold"&gt;
+      &lt;Text className="text-xl font-bold mb-3 px-6"&gt;Accounts&lt;/Text&gt;
+      &lt;View className="px-4"&gt;
+        {loading ? (
+          &lt;ActivityIndicator size="large" color="#4B7BF5" /&gt;
+        ) : <span class="branch-1 cbranch-no" title="branch not covered" >accounts.length === 0 ? (</span>
+          &lt;Text className="text-gray-500 text-center"&gt;No accounts found.&lt;/Text&gt;
+        ) : (
+          accounts.map(<span class="fstat-no" title="function not covered" >(a</span>ccount) =&gt; (
+<span class="cstat-no" title="statement not covered" >            &lt;TouchableOpacity</span>
+              key={account.id}
+              className="mb-4 bg-white rounded-2xl shadow p-5 border border-blue-100 flex-row items-center justify-between"
+              onPress={<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >handleAccountPress(account.id)}</span>
+            &gt;
+              &lt;View&gt;
+                &lt;Text className="text-lg font-bold mb-1"&gt;{account.account_name}&lt;/Text&gt;
+                &lt;Text className="text-xs text-gray-400"&gt;Available balance&lt;/Text&gt;
+              &lt;/View&gt;
+              &lt;Text className="text-2xl font-extrabold text-blue-600"&gt;
                 ${account.available_balance?.toFixed(2) ?? account.balance?.toFixed(2) ?? '0'}
               &lt;/Text&gt;
-            &lt;/View&gt;
-            &lt;Text className="text-xs text-gray-500 mt-1"&gt;Available balance&lt;/Text&gt;
-          &lt;/TouchableOpacity&gt;
-        ))
-      )}
-&nbsp;
+            &lt;/TouchableOpacity&gt;
+          ))
+        )}
+      &lt;/View&gt;
       {/* Recent Transactions */}
-      &lt;Text className="text-lg font-semibold mb-2"&gt;Recent transactions&lt;/Text&gt;
-      &lt;View className="bg-white rounded-2xl shadow mb-6"&gt;
-        {transactions.slice(-5).map(<span class="fstat-no" title="function not covered" >(t</span>xn, idx) =&gt; (
-<span class="cstat-no" title="statement not covered" >          &lt;View key={txn.id} className="flex-row items-center justify-between px-4 py-3 border-b border-gray-100"&gt;</span>
-            &lt;View className="flex-row items-center"&gt;
+      &lt;Text className="text-xl font-bold mb-3 mt-8 px-6"&gt;Recent Transactions&lt;/Text&gt;
+      &lt;View className="bg-white rounded-2xl shadow mx-4 mb-8 border border-gray-100"&gt;
+        {transactions.length === 0 ? (
+          &lt;Text className="text-gray-400 text-center py-6"&gt;No transactions found.&lt;/Text&gt;
+        ) : (
+<span class="branch-1 cbranch-no" title="branch not covered" >          transactions.slice(-5).map(<span class="fstat-no" title="function not covered" >(t</span>xn, idx) =&gt; (</span>
+<span class="cstat-no" title="statement not covered" >            &lt;View key={txn.id} className={`flex-row items-center justify-between px-6 py-4 border-b border-gray-100 ${idx === transactions.slice(-5).length - 1 ? 'border-b-0' : ''}`}&gt;</span>
               &lt;View&gt;
-                &lt;Text className="font-medium"&gt;{txn.name}&lt;/Text&gt;
-                &lt;Text className="text-gray-500 text-xs"&gt;{txn.date}&lt;/Text&gt;
+                &lt;Text className="font-medium text-base"&gt;{txn.name}&lt;/Text&gt;
+                &lt;Text className="text-gray-400 text-xs mt-1"&gt;{txn.date}&lt;/Text&gt;
               &lt;/View&gt;
+              &lt;Text className="font-semibold text-base ${parseFloat(txn.amount) &gt;= 0 ? 'text-green-500' : 'text-red-500'}"&gt;
+                ${parseFloat(txn.amount).toLocaleString()}
+              &lt;/Text&gt;
             &lt;/View&gt;
-            &lt;Text className="font-semibold text-base"&gt;${parseFloat(txn.amount).toLocaleString()}&lt;/Text&gt;
-          &lt;/View&gt;
-        ))}
+          ))
+        )}
       &lt;/View&gt;
     &lt;/ScrollView&gt;
   );
@@ -544,7 +553,7 @@ export default function Dashboard() {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-29T22:25:31.846Z
+                at 2025-05-31T17:05:41.461Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

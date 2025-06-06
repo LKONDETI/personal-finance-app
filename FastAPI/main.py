@@ -61,7 +61,8 @@ class Account(BaseModel):
     product_id: str
     currency: str
     created_at: str
-    # add other fields as needed
+    balance: float | None = None
+    
 
 class Transaction(BaseModel):
     id: int

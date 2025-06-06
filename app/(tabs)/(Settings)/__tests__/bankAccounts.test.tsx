@@ -82,11 +82,10 @@ describe('BankAccounts', () => {
     });
   });
 
-  it('navigates to add account screen', () => {
-    const { getByText } = render(<BankAccounts />);
-    
+  it('opens modal when Add Account is pressed', () => {
+    const { getByText, getByTestId } = render(<BankAccounts />);
     fireEvent.press(getByText('Add Account'));
-    expect(mockRouter.push).toHaveBeenCalledWith('/(tabs)/(Settings)/addAccount');
+    expect(getByTestId('add-account-modal')).toBeTruthy();
   });
 
   it('navigates to dashboard when account is pressed', async () => {
