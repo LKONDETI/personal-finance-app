@@ -13,7 +13,7 @@ A React Native app built with Expo for managing personal finances, tracking expe
    <img src="./assets/screenshots/settings.png" width="230" alt="Settings Screenshot"/>
    <img src="./assets/screenshots/profile.png" width="230" alt="Personal Information Screenshot"/>
    <img src="./assets/screenshots/showBankAccounts.png" width="230" alt="Show Bank Accounts Screenshot"/>
-   <img src="./assets/screenshots/addAccount.png" width="230" alt="Add Accounts Screenshot"/>
+   <img src="./assets/screenshots/addAccounts.png" width="230" alt="Add Accounts Screenshot"/>
    <img src="./assets/screenshots/budgetLimits.png" width="230" alt="Budget Limits Screenshot"/>
    <img src="./assets/screenshots/notifications.png" width="230" alt="Notifications Screenshot"/>
    <img src="./assets/screenshots/securitySettings.png" width="230" alt="Security Settings Screenshot"/>

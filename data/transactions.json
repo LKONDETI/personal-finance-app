@@ -1,17 +1,144 @@
 {
   "transactions": [
-      { "id": 1, "name": "Walmart", "date": "Apr 21", "amount": "150" },
-      { "id": 2, "name": "Rent to AB Apartments", "date": "Apr 20", "amount": "1200" },
-      { "id": 3, "name": "AMC", "date": "Apr 16", "amount": "40" },
-      { "id": 4, "name": "Electric Bill to PSE&G", "date": "Apr 18", "amount": "100" },
-      { "id": 5, "name": "Netflix", "date": "Apr 15", "amount": "15" },
-      { "id": 6, "name": "Spotify", "date": "Apr 11", "amount": "9.99" },
-      { "id": 7, "name": "Uber", "date": "Apr 11", "amount": "23" },
-      { "id": 8, "name": "Uber Eats", "date": "Apr 9", "amount": "34.26" },
-      { "id": 9, "name": "Health Insurance to Aetna", "date": "Apr 8", "amount": "400" },
-      { "id": 10, "name": "Amazon Prime", "date": "Apr 5", "amount": "21.99" },
-      { "id": 11, "name": "Costco", "date": "Apr 4", "amount": "87.49" },
-      { "id": 12, "name": "Lyft", "date": "Apr 1", "amount": "12.99" },
-      { "id": 13, "name": "Cafe", "date": "Mar 31", "amount": "14.55" }
+    {
+      "id": 1,
+      "name": "AC",
+      "date": "2025-04-26",
+      "amount": "10000",
+      "type": "credit"
+    },
+    {
+      "id": 6,
+      "name": "Groceries",
+      "date": "2025-04-29",
+      "amount": "-25",
+      "type": "debit"
+    },
+    {
+      "id": 7,
+      "name": "Movies",
+      "date": "2025-05-06",
+      "amount": "-20",
+      "type": "debit"
+    },
+    {
+      "id": 8,
+      "name": "Transportation",
+      "date": "2025-05-06",
+      "amount": "-125.01",
+      "type": "debit"
+    },
+    {
+      "id": 9,
+      "name": "Dining",
+      "date": "2025-05-06",
+      "amount": "-45.75",
+      "type": "debit"
+    },
+    {
+      "id": 10,
+      "name": "Coffee",
+      "date": "2025-05-06",
+      "amount": "-15.20",
+      "type": "debit"
+    },
+    {
+      "id": 11,
+      "name": "Electronics",
+      "date": "2025-05-06",
+      "amount": "-120",
+      "type": "debit"
+    },
+    {
+      "id": 12,
+      "name": "Taxi",
+      "date": "2025-05-07",
+      "amount": "-35",
+      "type": "debit"
+    },
+    {
+      "id": 13,
+      "name": "Clothing",
+      "date": "2025-05-07",
+      "amount": "-59.99",
+      "type": "debit"
+    },
+    {
+      "id": 14,
+      "name": "Streaming",
+      "date": "2025-05-07",
+      "amount": "-9.99",
+      "type": "debit"
+    },
+    {
+      "id": 15,
+      "name": "Groceries",
+      "date": "2025-05-07",
+      "amount": "-80",
+      "type": "debit"
+    },
+    {
+      "id": 16,
+      "name": "Rent",
+      "date": "2025-05-07",
+      "amount": "-200",
+      "type": "debit"
+    },
+    {
+      "id": 17,
+      "name": "Books",
+      "date": "2025-05-07",
+      "amount": "-18.50",
+      "type": "debit"
+    },
+    {
+      "id": 18,
+      "name": "Groceries",
+      "date": "2025-05-07",
+      "amount": "-65",
+      "type": "debit"
+    },
+    {
+      "id": 19,
+      "name": "Pharmacy",
+      "date": "2025-05-07",
+      "amount": "-30",
+      "type": "debit"
+    },
+    {
+      "id": 20,
+      "name": "Utilities",
+      "date": "2025-05-07",
+      "amount": "-110",
+      "type": "debit"
+    },
+    {
+      "id": 21,
+      "name": "Fitness",
+      "date": "2025-05-07",
+      "amount": "-75.49",
+      "type": "debit"
+    },
+    {
+      "id": 22,
+      "name": "Music",
+      "date": "2025-05-07",
+      "amount": "-14.99",
+      "type": "debit"
+    },
+    {
+      "id": 23,
+      "name": "Utilities",
+      "date": "2025-05-07",
+      "amount": "-95",
+      "type": "debit"
+    },
+    {
+      "id": 24,
+      "name": "AC",
+      "date": "2025-05-07",
+      "amount": "5000",
+      "type": "credit"
+    }
   ]
 } 

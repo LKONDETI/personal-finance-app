@@ -34,6 +34,7 @@ interface Transaction {
   name: string;
   date: string;
   amount: string;
+  type: 'credit' | 'debit';
 }
 
 interface TransactionsData {
@@ -100,29 +101,37 @@ export default function BudgetView() {
       const amounts: { [key: string]: number } = {};
       
       (transactionsData as TransactionsData).transactions.forEach((transaction: Transaction) => {
-        const category = categoryMappings.categories.find(cat =>
-          cat.transactions.some(t => 
-            transaction.name.toLowerCase().includes(t.toLowerCase())
-          )
-        );
+        // Only process debit transactions for budget tracking
+        if (transaction.type === 'debit') {
+          const category = categoryMappings.categories.find(cat =>
+            cat.transactions.some(t => 
+              transaction.name.toLowerCase().includes(t.toLowerCase())
+            )
+          );
 
-        if (category) {
-          if (!amounts[category.label]) amounts[category.label] = 0;
-          amounts[category.label] += parseFloat(transaction.amount);
+          if (category) {
+            if (!amounts[category.label]) amounts[category.label] = 0;
+            // Use absolute value for spending calculations
+            amounts[category.label] += Math.abs(parseFloat(transaction.amount));
+          }
         }
       });
 
       // Build budget items for the pie chart
-      const updatedBudgetItems = categoryMappings.categories.map(cat => ({
-        label: cat.label,
-        color: cat.color,
-        value: amounts[cat.label] / parseFloat(cat.limit),
-        amount: `$${amounts[cat.label] || 0} / $${cat.limit}`,
-        status: amounts[cat.label] >= parseFloat(cat.limit) ? 'Over' : 'Under',
-        limit: cat.limit,
-        spent: (amounts[cat.label] || 0).toString(),
-        textColor: amounts[cat.label] >= parseFloat(cat.limit) ? '#ef4444' : '#22c55e'
-      }));
+      const updatedBudgetItems = categoryMappings.categories.map(cat => {
+        const spent = amounts[cat.label] || 0;
+        const limit = parseFloat(cat.limit);
+        return {
+          label: cat.label,
+          color: cat.color,
+          value: spent / limit,
+          amount: `$${spent.toFixed(2)} / $${limit.toFixed(2)}`,
+          status: spent >= limit ? 'Over' : 'Under',
+          limit: limit.toString(),
+          spent: spent.toString(),
+          textColor: spent >= limit ? '#ef4444' : '#22c55e'
+        };
+      });
 
       setBudgetItems(updatedBudgetItems);
     };
@@ -173,50 +182,42 @@ export default function BudgetView() {
       {/* Pie Chart */}
       {totalSpent > 0 && (
         <View className="items-center py-4">
-          <Svg height="400" width="400" viewBox="-200 -200 400 400">
+          <Svg height="300" width="300" viewBox="-150 -150 300 300">
             <G>
-              {pieChartData.map((item, index) => {
-                const midAngle = (item.startAngle! + item.endAngle!) / 2;
-                const labelRadius = 150;
-                const labelX = labelRadius * Math.cos(midAngle);
-                const labelY = labelRadius * Math.sin(midAngle);
-                
-                const lineEndRadius = 120;
-                const lineEndX = lineEndRadius * Math.cos(midAngle);
-                const lineEndY = lineEndRadius * Math.sin(midAngle);
-
-                return (
-                  <G key={index}>
-                    <PieSlice
-                      cx={0}
-                      cy={0}
-                      radius={100} 
-                      startAngle={item.startAngle!}
-                      endAngle={item.endAngle!}
-                      color={item.color}
-                      onPress={() => setActiveSlice(index)}
-                      isActive={activeSlice === index}
-                    />
-                    <Path
-                      d={`M ${lineEndX} ${lineEndY} L ${labelX} ${labelY}`}
-                      stroke={item.color}
-                      strokeWidth="1"
-                    />
-                    <SvgText
-                      x={labelX}
-                      y={labelY}
-                      fontSize="14"
-                      fill={item.color}
-                      textAnchor={labelX > 0 ? "start" : "end"}
-                      alignmentBaseline="middle"
-                    >
-                      {item.label}
-                    </SvgText>
-                  </G>
-                );
-              })}
+              {pieChartData.map((item, index) => (
+                <G key={index}>
+                  <PieSlice
+                    cx={0}
+                    cy={0}
+                    radius={120} 
+                    startAngle={item.startAngle!}
+                    endAngle={item.endAngle!}
+                    color={item.color}
+                    onPress={() => setActiveSlice(index)}
+                    isActive={activeSlice === index}
+                  />
+                </G>
+              ))}
             </G>
           </Svg>
+          {/* Legend */}
+          <View className="flex-row flex-wrap justify-center gap-2 mt-4 px-4">
+            {pieChartData.map((item, index) => (
+              <TouchableOpacity
+                key={index}
+                onPress={() => setActiveSlice(index)}
+                className="flex-row items-center px-3 py-1 rounded-full"
+                style={{ 
+                  backgroundColor: activeSlice === index ? item.color + '20' : 'transparent',
+                  borderWidth: 1,
+                  borderColor: item.color
+                }}
+              >
+                <View className="h-3 w-3 rounded-full mr-2" style={{ backgroundColor: item.color }} />
+                <Text className="text-sm" style={{ color: item.color }}>{item.label}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
         </View>
       )}
 
