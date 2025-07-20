@@ -83,7 +83,7 @@ A React Native app built with Expo for managing personal finances, tracking expe
 
 3. Start the backend server
    ```bash
-   cd backend
+   cd FastAPI
    uvicorn main:app --reload
    ```
 
