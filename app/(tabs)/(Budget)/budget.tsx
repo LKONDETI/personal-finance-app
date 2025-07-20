@@ -170,11 +170,11 @@ export default function BudgetView() {
     <ScrollView className="flex-1 p-4 bg-white">
       {/* Header */}
       <View className="flex-row items-center justify-between mb-4 pt-8">
-        <View className="flex-row items-center gap-2">
-          <TouchableOpacity onPress={() => router.back()} className="p-2"> 
+        <View className="flex-row items-center">
+          <TouchableOpacity className="bg-gray-100 rounded-full p-2 border border-gray-200" onPress={() => router.back()}>
             <ArrowLeft size={24} color="black" />
           </TouchableOpacity>
-          <Text className="text-2xl font-bold">Budget</Text>
+          <Text className="text-2xl font-bold ml-4">Budget</Text>
         </View>
       </View>
       <Text className="text-xl font-bold text-center text-gray-700">Total Spent: ${totalSpent.toFixed(2)}</Text>

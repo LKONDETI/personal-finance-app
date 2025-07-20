@@ -190,11 +190,11 @@ export default function RequestsView() {
     <ScrollView className="flex-1 bg-white">
       <View className="p-4">
         {/* Header */}
-        <View className="flex-row items-center gap-2 mb-6 pt-8">
-          <TouchableOpacity onPress={() => router.back()} className="p-2">
+        <View className="flex-row items-center pt-12">
+          <TouchableOpacity className="bg-gray-100 rounded-full p-2 border border-gray-200" onPress={() => router.back()}>
             <ArrowLeft size={24} color="black" />
           </TouchableOpacity>
-          <Text className="text-2xl font-bold">Requests</Text>
+          <Text className="text-2xl font-bold ml-4">Requests</Text>
         </View>
 
         {/* Tabs */}

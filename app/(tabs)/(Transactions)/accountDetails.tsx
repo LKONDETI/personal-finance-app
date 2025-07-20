@@ -73,13 +73,13 @@ export default function AccountDetails() {
     const fetchData = async () => {
       try {
         // Fetch account details
-        const accRes = await fetch(`http://localhost:8000/accounts`);
+        const accRes = await fetch(`http://192.168.1.183:8000/accounts`);
         const accData = await accRes.json();
         const found = accData.find((a: Account) => a.id === accountIdNum);
         setAccount(found);
 
         // Fetch all transactions for this account
-        const txRes = await fetch(`http://localhost:8000/transactions?account_id=${accountIdNum}&party_id=${partyIdNum}`);
+        const txRes = await fetch(`http://192.168.1.183:8000/transactions?account_id=${accountIdNum}&party_id=${partyIdNum}`);
         const txData = await txRes.json();
         setTransactions(txData);
       } catch (error) {
@@ -102,12 +102,12 @@ export default function AccountDetails() {
   return (
     <ScrollView className="flex-1 bg-white">
       {/* Header */}
-      <View className="flex-row justify-between items-center px-4 pt-8 pb-4 bg-white">
-        <TouchableOpacity onPress={() => router.back()}>
+      <View className="flex-row justify-between items-center px-4 pt-16 pb-4 bg-white">
+        <TouchableOpacity className="bg-gray-100 rounded-full p-2 border border-gray-200" onPress={() => router.back()}>
           <ArrowLeft size={24} />
         </TouchableOpacity>
         
-        <TouchableOpacity>
+        <TouchableOpacity className="bg-gray-100 rounded-full p-2 border border-gray-200">
           <MoreVertical size={24} />
         </TouchableOpacity>
       </View>

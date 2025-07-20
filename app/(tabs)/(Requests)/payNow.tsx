@@ -12,14 +12,11 @@ export default function PayNowScreen() {
   return (
     <ScrollView className="flex-1 bg-white">
       {/* Header */}
-      <View className="flex-row items-center justify-between p-4 border-b border-gray-200">
-        <Pressable onPress={() => router.push('/requests')}>
+      <View className="flex-row items-center pt-16 px-4">
+        <TouchableOpacity className="bg-gray-100 rounded-full p-2 border border-gray-200" onPress={() => router.back()}>
           <ArrowLeft size={24} color="black" />
-        </Pressable>
-        <Text className="text-xl font-semibold">Review</Text>
-        <Pressable onPress={() => router.push('/requests')}>
-          <Text className="text-blue-500">Cancel</Text>
-        </Pressable>
+        </TouchableOpacity>
+        <Text className="text-2xl font-bold ml-4">Pay Now</Text>
       </View>
 
       {/* Recipient Info */}

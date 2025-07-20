@@ -45,7 +45,7 @@ export default function Profile() {
       try {
         setLoading(true);
         setError(null);
-        const response = await fetch('http://localhost:8000/customers/1');
+        const response = await fetch('http://192.168.1.183:8000/customers/1');
         if (!response.ok) throw new Error('Failed to fetch customer');
         const data = await response.json();
         setCustomer(data);
@@ -73,10 +73,10 @@ export default function Profile() {
   return (
     <ScrollView className="flex-1 bg-white">
       {/* Header */}
-      <View className="flex-col pt-11 px-4 bg-white">
+      <View className="flex-col pt-16 px-4 bg-white">
         <View className="flex-row items-center justify-between mb-4">
           <View className="flex-row items-center">
-            <TouchableOpacity onPress={() => router.back()}>
+            <TouchableOpacity className="bg-gray-100 rounded-full p-2 border border-gray-200" onPress={() => router.back()}>
               <ArrowLeft size={24} color="black" />
             </TouchableOpacity>
             <Text className="text-2xl font-bold ml-4">Personal Information</Text>

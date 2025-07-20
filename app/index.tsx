@@ -5,7 +5,7 @@ import axios from 'axios';
 import showAlert from '@/components/utility/ShowAlert';
 
 // API endpoint from FastAPI
-const API_URL = 'http://localhost:8000/customer';
+const API_URL = 'http://192.168.1.183:8000/customer';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -88,28 +88,17 @@ export default function LoginScreen() {
               />
             </View>
 
-            {/* Customer Mnemonic Input 
-            <View>
-              <Text className="text-sm font-medium text-gray-700 mb-2">Customer Mnemonic</Text>
-              <TextInput
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                placeholder="Enter your customer mnemonic"
-                value={customerMnemonic}
-                onChangeText={setCustomerMnemonic}
-                secureTextEntry
-              />
-            </View>*/}
-
-            {/* Login Button */}
-            <TouchableOpacity
-              onPress={handleLogin}
-              disabled={isLoading}
-              className={`w-full py-4 rounded-lg ${isLoading ? 'bg-blue-400' : 'bg-blue-600'}`}
-            >
-              <Text className="text-white text-center font-semibold text-lg">
-                {isLoading ? 'Signing in...' : 'Sign In'}
-              </Text>
-            </TouchableOpacity>
+            <View className="pt-4"> 
+              <TouchableOpacity
+                onPress={handleLogin}
+                disabled={isLoading}
+                className={`w-full py-4 rounded-lg ${isLoading ? 'bg-blue-400' : 'bg-blue-600'}`}
+              >
+                <Text className="text-white text-center font-semibold text-lg">
+                  {isLoading ? 'Signing in...' : 'Sign In'}
+                </Text>
+              </TouchableOpacity> 
+            </View>
           </View>
         </View>
       </ScrollView>

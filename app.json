@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Slot-Application",
-    "slug": "Slot-Application",
+    "name": "Personal-Finance-App",
+    "slug": "Personal-Finance-App",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -13,17 +13,20 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "bundleIdentifier": "com.yourcompany.yourappname",
+      "bundleIdentifier": "com.personal-finance-app.app",
       "supportsTablet": true,
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": true
-        }
+        },
+        "NSCameraUsageDescription": "This app needs access to camera to take photos.",
+        "NSPhotoLibraryUsageDescription": "This app needs access to photo library to select images.",
+        "NSMicrophoneUsageDescription": "This app needs access to microphone for video recording."
       }
     },
     "android": {
-      "package": "com.yourcompany.yourappname",
+      "package": "com.personal-finance-app.app",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -35,7 +38,7 @@
       "favicon": "./assets/images/favicon.png"
     },
     "extra": {
-      "projectId": "your-uuid-project-id",
+      "projectId": "f50f7649-45ac-483b-bfe9-f25aef154a6d",
       "router": {
         "origin": false
       },
@@ -52,6 +55,6 @@
     "experiments": {
       "typedRoutes": true
     },
-    "newArchEnabled": true  
+    "newArchEnabled": true
   }
 }

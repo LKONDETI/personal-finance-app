@@ -10,7 +10,7 @@ export default function SettingsView() {
 
   const handleLogout = async () => {
     try {
-      await fetch('http://localhost:8000/logout', {
+      await fetch('http://192.168.1.183:8000/logout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -43,7 +43,9 @@ export default function SettingsView() {
         <Text className="text-lg font-semibold">{title}</Text>
         <Text className="text-gray-500">{description}</Text>
       </View>
-      <ChevronRight size={20} color="#9CA3AF" />
+      <View className="bg-gray-100 rounded-full p-1 border border-gray-200">
+        <ChevronRight size={20} color="#9CA3AF" />
+      </View>
     </TouchableOpacity>
   );
 
@@ -53,7 +55,7 @@ export default function SettingsView() {
       <View className="flex-col pt-11 px-4 bg-white">
         <View className="flex-row items-center justify-between mb-4">
           <View className="flex-row items-center">
-            <TouchableOpacity onPress={() => router.push('/dashboard?party_id=1')}>
+            <TouchableOpacity className="bg-gray-100 rounded-full p-2 border border-gray-200" onPress={() => router.push('/dashboard?party_id=1')}>
               <ArrowLeft size={24} color="black" />
             </TouchableOpacity>
             <Text className="text-2xl font-bold ml-4">Settings</Text>
