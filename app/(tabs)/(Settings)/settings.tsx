@@ -10,7 +10,7 @@ export default function SettingsView() {
 
   const handleLogout = async () => {
     try {
-      await fetch('http://192.168.1.183:8000/logout', {
+      await fetch('http://127.0.0.1:8000/logout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

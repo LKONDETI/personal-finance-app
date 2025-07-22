@@ -5,7 +5,7 @@ import axios from 'axios';
 import showAlert from '@/components/utility/ShowAlert';
 
 // API endpoint from FastAPI
-const API_URL = 'http://192.168.1.183:8000/customer';
+const API_URL = 'http://127.0.0.1:8000/customer';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
