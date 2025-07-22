@@ -15,10 +15,10 @@ app = FastAPI(title="Customer API", description="API for customer management wit
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Or ["http://localhost:8081"]
+    allow_origins=["*", "http://localhost:8081", "http://192.168.1.183:8081", "exp://192.168.1.183:8081"],
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
-    allow_headers=["*"],  # Allows all headers
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["*"],
 )
 
 # Initialize Supabase client

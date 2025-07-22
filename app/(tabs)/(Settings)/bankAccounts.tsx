@@ -41,7 +41,7 @@ export default function BankAccounts() {
     try {
       setLoading(true);
       setError(null);
-      const response = await fetch(`http://127.0.0.1:8000/accounts?party_id=${party_id}`);
+      const response = await fetch(`http://192.168.1.183:8000/accounts?party_id=${party_id}`);
       if (!response.ok) {
         throw new Error('Failed to fetch accounts');
       }

@@ -6,7 +6,7 @@ export default function Layout() {
       screenOptions={{
         headerShown: false,
       }}>
-      {/* No navigation logic or buttons here */}
+      
     </Stack>
   );
 }

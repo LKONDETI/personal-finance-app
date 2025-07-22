@@ -45,7 +45,7 @@ export default function Profile() {
       try {
         setLoading(true);
         setError(null);
-        const response = await fetch('http://127.0.0.1:8000/customers/1');
+        const response = await fetch('http://192.168.1.183:8000/customers/1');
         if (!response.ok) throw new Error('Failed to fetch customer');
         const data = await response.json();
         setCustomer(data);

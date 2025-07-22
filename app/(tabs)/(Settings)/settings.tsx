@@ -10,16 +10,28 @@ export default function SettingsView() {
 
   const handleLogout = async () => {
     try {
-      await fetch('http://127.0.0.1:8000/logout', {
+      console.log('Attempting logout...');
+      const response = await fetch('http://192.168.1.183:8000/logout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
       });
+      
+      console.log('Logout response status:', response.status);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      console.log('Logout successful:', data);
+      
       router.replace('/');
     } catch (error) {
       console.error('Logout error:', error);
+      // Still navigate to login even if logout fails
       router.replace('/');
     }
   };
