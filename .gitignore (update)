@@ -1,0 +1,6 @@
+playwright-report/
+node_modules/
+*.log
+*.tsbuildinfo
+dist/
+coverage/

@@ -73,13 +73,13 @@ export default function AccountDetails() {
     const fetchData = async () => {
       try {
         // Fetch account details
-        const accRes = await fetch(`http://192.168.1.183:8000/accounts`);
+        const accRes = await fetch(`http://0.0.0.0:8000/accounts`);
         const accData = await accRes.json();
         const found = accData.find((a: Account) => a.id === accountIdNum);
         setAccount(found);
 
         // Fetch all transactions for this account
-        const txRes = await fetch(`http://192.168.1.183:8000/transactions?account_id=${accountIdNum}&party_id=${partyIdNum}`);
+        const txRes = await fetch(`http://0.0.0.0:8000/transactions?account_id=${accountIdNum}&party_id=${partyIdNum}`);
         const txData = await txRes.json();
         setTransactions(txData);
       } catch (error) {

@@ -42,7 +42,7 @@ export default function Dashboard() {
     if (!party_id) return;
     const fetchAccounts = async () => {
       try {
-        const response = await fetch(`http://192.168.1.183:8000/accounts?party_id=${party_id}`);
+        const response = await fetch(`http://0.0.0.0:8000/accounts?party_id=${party_id}`);
         const data = await response.json();
         console.log('Accounts data:', data);
         if (isMounted) setAccounts(data);
@@ -61,7 +61,7 @@ export default function Dashboard() {
     if (!party_id) return;
     const fetchTransactions = async () => {
       try {
-        const response = await fetch(`http://192.168.1.183:8000/transactions?party_id=${party_id}`);
+        const response = await fetch(`http://0.0.0.0:8000/transactions?party_id=${party_id}`);
         const data = await response.json();
         console.log('Transactions data:', data);
 

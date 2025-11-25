@@ -5,14 +5,18 @@
   "scripts": {
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "lint": "expo lint",
-    "server": "node server.js"
+    "server": "node server.js",
+    "test:playwright": "playwright test",
+    "test:playwright:ui": "playwright test --ui",
+    "test:playwright:report": "playwright show-report",
+    "test:playwright:metrics": "node scripts/metrics.js"
   },
   "dependencies": {
     "@expo/server": "^0.6.3",
@@ -64,6 +68,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.28.0",
+    "@playwright/test": "^1.56.1",
     "@testing-library/jest-native": "^5.4.3",
     "@testing-library/react-native": "^13.2.0",
     "@types/jest": "^30.0.0",

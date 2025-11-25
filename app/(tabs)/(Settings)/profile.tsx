@@ -90,17 +90,17 @@ export default function Profile() {
           <Text className="mb-1"><Text className="font-semibold">Mnemonic:</Text> {customer.customer_mnemonic}</Text>
           <Text className="mb-1"><Text className="font-semibold">Gender:</Text> {customer.gender}</Text>
           <Text className="mb-1"><Text className="font-semibold">Date of Birth:</Text> {customer.date_of_birth}</Text>
-          <Text className="mb-1"><Text className="font-semibold">Nationality:</Text> {customer.nationality_name} (ID: {customer.nationality_id})</Text>
-          <Text className="mb-1"><Text className="font-semibold">Residence:</Text> {customer.residence_name} (ID: {customer.residence_id})</Text>
+          <Text className="mb-1"><Text className="font-semibold">Nationality:</Text> {customer.nationality_name}</Text>
+          <Text className="mb-1"><Text className="font-semibold">Residence:</Text> {customer.residence_name}</Text>
           <Text className="mb-1"><Text className="font-semibold">Language:</Text> {customer.language_name}</Text>
-          <Text className="mb-1"><Text className="font-semibold">Status:</Text> {customer.customer_status} ({customer.status_name})</Text>
-          <Text className="mb-1"><Text className="font-semibold">Industry:</Text> {customer.industry_name} (ID: {customer.industry_id})</Text>
-          <Text className="mb-1"><Text className="font-semibold">Sector:</Text> {customer.sector_name} (ID: {customer.sector_id})</Text>
-          <Text className="mb-1"><Text className="font-semibold">Account Officer:</Text> {customer.account_officer_name} (ID: {customer.account_officer_id})</Text>
-          <Text className="mb-1"><Text className="font-semibold">Target:</Text> {customer.target_name} ({customer.target})</Text>
+          <Text className="mb-1"><Text className="font-semibold">Status:</Text> {customer.customer_status} </Text>
+          <Text className="mb-1"><Text className="font-semibold">Industry:</Text> {customer.industry_name} </Text>
+          <Text className="mb-1"><Text className="font-semibold">Sector:</Text> {customer.sector_name}</Text>
+          <Text className="mb-1"><Text className="font-semibold">Account Officer:</Text> {customer.account_officer_name}</Text>
+          <Text className="mb-1"><Text className="font-semibold">Target:</Text> {customer.target_name}</Text>
           <Text className="mb-1"><Text className="font-semibold">Email:</Text> {customer.email}</Text>
           <Text className="mb-1"><Text className="font-semibold">Phone Number:</Text> {customer.phone_number}</Text>
-          <Text className="mb-1"><Text className="font-semibold">Profile Type:</Text> {customer.profile_type_name} ({customer.profile_type})</Text>
+          <Text className="mb-1"><Text className="font-semibold">Profile Type:</Text> {customer.profile_type_name}</Text>
           <Text className="mb-1"><Text className="font-semibold">Profile Name:</Text> {customer.profile_name}</Text>
           <Text className="mb-1"><Text className="font-semibold">Profile:</Text> {customer.profile}</Text>
           <Text className="mb-1"><Text className="font-semibold">Version Number:</Text> {customer.version_number}</Text>
