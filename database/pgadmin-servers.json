@@ -1,0 +1,14 @@
+{
+    "Servers": {
+        "1": {
+            "Name": "Banking PostgreSQL",
+            "Group": "Local Development",
+            "Host": "postgres",
+            "Port": 5432,
+            "MaintenanceDB": "bankingdb",
+            "Username": "bankinguser",
+            "SSLMode": "prefer",
+            "Comment": "Banking app PostgreSQL database"
+        }
+    }
+}

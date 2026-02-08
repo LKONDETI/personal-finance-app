@@ -1,0 +1,50 @@
+# Node modules
+node_modules/
+npm-debug.log
+
+# Expo
+.expo/
+.expo-shared/
+
+# React Native
+.expo/
+dist/
+web-build/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment files (will be handled separately)
+.env.local
+.env.production
+
+# Build outputs
+build/
+coverage/
+playwright-report/
+test-results/
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+*.md
+!README.md
+
+# Python cache
+__pycache__/
+*.pyc
+
+# .NET (for future backend)
+Backend/bin/
+Backend/obj/
+Backend/**/*.user
+Backend/.vs/

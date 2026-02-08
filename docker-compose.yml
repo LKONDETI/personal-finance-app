@@ -1,0 +1,80 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: banking-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: bankinguser
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-SecureP@ssw0rd123}
+      POSTGRES_DB: bankingdb
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - banking-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U bankinguser -d bankingdb" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # pgAdmin - Database Management Tool
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: banking-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@banking.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin123}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+      - ./database/pgadmin-servers.json:/pgadmin4/servers.json
+    networks:
+      - banking-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+  # .NET API (will be added after backend project is created)
+  # Uncomment this after creating the .NET project
+  # api:
+  #   build:
+  #     context: ./Backend
+  #     dockerfile: Dockerfile
+  #   container_name: banking-api
+  #   restart: unless-stopped
+  #   environment:
+  #     - ASPNETCORE_ENVIRONMENT=Development
+  #     - ASPNETCORE_URLS=http://+:5000
+  #     - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=bankingdb;Username=bankinguser;Password=${DB_PASSWORD:-SecureP@ssw0rd123}
+  #     - JwtSettings__SecretKey=${JWT_SECRET}
+  #     - JwtSettings__Issuer=BankingAPI
+  #     - JwtSettings__Audience=BankingApp
+  #   ports:
+  #     - "5000:5000"
+  #   volumes:
+  #     - ./Backend:/app
+  #   networks:
+  #     - banking-network
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+
+  # Named volumes for data persistence
+volumes:
+  postgres_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+
+# Network for service communication
+networks:
+  banking-network:
+    driver: bridge
