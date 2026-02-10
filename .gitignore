@@ -19,3 +19,11 @@ web-build/
 expo-env.d.ts
 # @end expo-cli
 .env
+
+# .NET
+bin/
+obj/
+*.user
+*.suo
+*.cache
+.vs/
