@@ -72,20 +72,27 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Add Swagger/OpenAPI for API documentation
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+// ===== API Services =====
+// Register controllers
+builder.Services.AddControllers();
+
+// Register application services
+builder.Services.AddScoped<BankingAPI.Services.IAuthService, BankingAPI.Services.AuthService>();
+
+// Add Swagger/OpenAPI for API documentation (temporarily disabled)
+// builder.Services.AddEndpointsApiExplorer();
+// builder.Services.AddSwaggerGen();
 
 // ===== Build the App =====
 var app = builder.Build();
 
 // ===== Middleware Pipeline =====
 // Configure the HTTP request pipeline
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// if (app.Environment.IsDevelopment())
+// {
+//     app.UseSwagger();
+//     app.UseSwaggerUI();
+// }
 
 // Security headers
 app.Use(async (context, next) =>
@@ -104,6 +111,21 @@ app.UseAuthorization();
 
 // Map controllers
 app.MapControllers();
+
+// Welcome endpoint at root
+app.MapGet("/", () => new
+{
+    message = "🏦 Banking API is running!",
+    version = "1.0.0",
+    timestamp = DateTime.UtcNow,
+    endpoints = new
+    {
+        health = "/health",
+        register = "POST /api/auth/register",
+        login = "POST /api/auth/login"
+    },
+    documentation = "Use Postman or curl to test the API endpoints"
+}).WithName("Welcome");
 
 // Health check endpoint
 app.MapGet("/health", () => new
