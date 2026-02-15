@@ -78,6 +78,8 @@ builder.Services.AddControllers();
 
 // Register application services
 builder.Services.AddScoped<BankingAPI.Services.IAuthService, BankingAPI.Services.AuthService>();
+builder.Services.AddScoped<BankingAPI.Services.IAccountService, BankingAPI.Services.AccountService>();
+builder.Services.AddScoped<BankingAPI.Services.ITransactionService, BankingAPI.Services.TransactionService>();
 
 // Add Swagger/OpenAPI for API documentation (temporarily disabled)
 // builder.Services.AddEndpointsApiExplorer();
@@ -121,9 +123,30 @@ app.MapGet("/", () => new
     endpoints = new
     {
         health = "/health",
-        register = "POST /api/auth/register",
-        login = "POST /api/auth/login"
+        auth = new
+        {
+            register = "POST /api/auth/register",
+            login = "POST /api/auth/login"
+        },
+        accounts = new
+        {
+            getAll = "GET /api/accounts",
+            getById = "GET /api/accounts/{id}",
+            create = "POST /api/accounts",
+            update = "PUT /api/accounts/{id}",
+            close = "DELETE /api/accounts/{id}",
+            balance = "GET /api/accounts/{id}/balance"
+        },
+        transactions = new
+        {
+            getAll = "GET /api/transactions",
+            getByAccount = "GET /api/transactions/account/{accountId}",
+            getById = "GET /api/transactions/{id}",
+            create = "POST /api/transactions",
+            byCategory = "GET /api/transactions/category/{category}"
+        }
     },
+    note = "🔒 All endpoints except /health and /api/auth require JWT authentication",
     documentation = "Use Postman or curl to test the API endpoints"
 }).WithName("Welcome");
 
