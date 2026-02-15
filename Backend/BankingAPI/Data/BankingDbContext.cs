@@ -101,7 +101,7 @@ public class BankingDbContext : DbContext
             entity.HasKey(b => b.Id);
             entity.Property(b => b.Category).IsRequired().HasMaxLength(100);
             entity.Property(b => b.MonthlyLimit).HasPrecision(18, 2);
-            entity.Property(b => b.CurrentSpent).HasPrecision(18, 2);
+            entity.Property(b => b.CurrentSpending).HasPrecision(18, 2);
             
             // Unique constraint: one budget limit per user per category
             entity.HasIndex(b => new { b.UserId, b.Category }).IsUnique();

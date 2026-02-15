@@ -14,7 +14,11 @@ public class BudgetLimit
     
     public decimal MonthlyLimit { get; set; }
     
-    public decimal CurrentSpent { get; set; } = 0;
+    public decimal CurrentSpending { get; set; } = 0;
+    
+    public int Month { get; set; }  // 1-12
+    
+    public int Year { get; set; }  // e.g. 2026
     
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     

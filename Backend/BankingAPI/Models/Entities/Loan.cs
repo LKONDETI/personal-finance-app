@@ -10,6 +10,8 @@ public class Loan
     
     public int UserId { get; set; }  // Foreign key
     
+    public required string LoanType { get; set; }  // Personal, Home, Auto, Education
+    
     public decimal Amount { get; set; }
     
     public decimal InterestRate { get; set; }  // Annual percentage rate
@@ -19,6 +21,8 @@ public class Loan
     public decimal MonthlyPayment { get; set; }
     
     public decimal OutstandingBalance { get; set; }
+    
+    public string? LoanPurpose { get; set; }  // Purpose of the loan
     
     public LoanStatus Status { get; set; } = LoanStatus.Pending;
     

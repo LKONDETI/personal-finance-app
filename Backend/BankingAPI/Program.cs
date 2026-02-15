@@ -80,6 +80,8 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<BankingAPI.Services.IAuthService, BankingAPI.Services.AuthService>();
 builder.Services.AddScoped<BankingAPI.Services.IAccountService, BankingAPI.Services.AccountService>();
 builder.Services.AddScoped<BankingAPI.Services.ITransactionService, BankingAPI.Services.TransactionService>();
+builder.Services.AddScoped<BankingAPI.Services.IBudgetService, BankingAPI.Services.BudgetService>();
+builder.Services.AddScoped<BankingAPI.Services.ILoanService, BankingAPI.Services.LoanService>();
 
 // Add Swagger/OpenAPI for API documentation (temporarily disabled)
 // builder.Services.AddEndpointsApiExplorer();
@@ -87,6 +89,17 @@ builder.Services.AddScoped<BankingAPI.Services.ITransactionService, BankingAPI.S
 
 // ===== Build the App =====
 var app = builder.Build();
+
+// ===== Database Seeding (Development Only) =====
+if (app.Environment.IsDevelopment())
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+        var context = services.GetRequiredService<BankingDbContext>();
+        await DatabaseSeeder.SeedDataAsync(context);
+    }
+}
 
 // ===== Middleware Pipeline =====
 // Configure the HTTP request pipeline
