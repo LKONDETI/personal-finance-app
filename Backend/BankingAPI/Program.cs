@@ -130,13 +130,18 @@ builder.Services.AddSwaggerGen(options =>
 // ===== Build the App =====
 var app = builder.Build();
 
-// ===== Database Seeding (Development Only) =====
+// ===== Database Migration & Seeding (Development Only) =====
 if (app.Environment.IsDevelopment())
 {
     using (var scope = app.Services.CreateScope())
     {
         var services = scope.ServiceProvider;
         var context = services.GetRequiredService<BankingDbContext>();
+        
+        // Auto-apply pending migrations (creates schema/tables if needed)
+        await context.Database.MigrateAsync();
+        
+        // Seed test data
         await DatabaseSeeder.SeedDataAsync(context);
     }
 }
