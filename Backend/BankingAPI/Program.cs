@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
 using BankingAPI.Data;
 using BankingAPI.Configuration;
@@ -83,9 +84,48 @@ builder.Services.AddScoped<BankingAPI.Services.ITransactionService, BankingAPI.S
 builder.Services.AddScoped<BankingAPI.Services.IBudgetService, BankingAPI.Services.BudgetService>();
 builder.Services.AddScoped<BankingAPI.Services.ILoanService, BankingAPI.Services.LoanService>();
 
-// Add Swagger/OpenAPI for API documentation (temporarily disabled)
-// builder.Services.AddEndpointsApiExplorer();
-// builder.Services.AddSwaggerGen();
+// ===== Swagger / OpenAPI =====
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Banking API",
+        Version = "v1",
+        Description = "Personal Finance Banking API with JWT Authentication. " +
+                      "Use the Authorize button to enter your JWT token.",
+        Contact = new OpenApiContact
+        {
+            Name = "Banking API Support"
+        }
+    });
+
+    // Add JWT Authentication to Swagger UI
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Description = "Enter your JWT token like: Bearer {token}",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
 // ===== Build the App =====
 var app = builder.Build();
@@ -102,12 +142,15 @@ if (app.Environment.IsDevelopment())
 }
 
 // ===== Middleware Pipeline =====
-// Configure the HTTP request pipeline
-// if (app.Environment.IsDevelopment())
-// {
-//     app.UseSwagger();
-//     app.UseSwaggerUI();
-// }
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Banking API v1");
+        options.DocumentTitle = "Banking API - Swagger";
+    });
+}
 
 // Security headers
 app.Use(async (context, next) =>
@@ -159,8 +202,8 @@ app.MapGet("/", () => new
             byCategory = "GET /api/transactions/category/{category}"
         }
     },
-    note = "🔒 All endpoints except /health and /api/auth require JWT authentication",
-    documentation = "Use Postman or curl to test the API endpoints"
+    swagger = "/swagger",
+    note = "🔒 All endpoints except /health and /api/auth require JWT authentication"
 }).WithName("Welcome");
 
 // Health check endpoint
