@@ -1,10 +1,25 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, ActivityIndicator, ViewProps } from 'react-native';
 import { router } from 'expo-router';
-import { BlurView } from 'expo-blur';
+import { GlassView, isLiquidGlassAvailable } from 'expo-glass-effect';
+import type { GlassStyle } from 'expo-glass-effect';
 import { Ionicons } from '@expo/vector-icons';
 import { auth } from '@/services/api';
 import showAlert from '@/components/utility/ShowAlert';
+
+const glassAvailable = isLiquidGlassAvailable();
+
+// Conditional wrapper: uses GlassView on iOS 26+, plain View elsewhere
+function GlassWrapper({ glassStyle = 'regular', tintColor, children, ...viewProps }: ViewProps & { glassStyle?: GlassStyle; tintColor?: string; children: React.ReactNode }) {
+  if (glassAvailable) {
+    return (
+      <GlassView glassEffectStyle={glassStyle} tintColor={tintColor} colorScheme="light" {...viewProps}>
+        {children}
+      </GlassView>
+    );
+  }
+  return <View {...viewProps}>{children}</View>;
+}
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -70,7 +85,7 @@ export default function LoginScreen() {
       className="flex-1"
       style={{ backgroundColor: '#f0f4f8' }}
     >
-      <BlurView intensity={20} tint="light" style={{ flex: 1 }}>
+      <GlassWrapper glassStyle="regular" style={{ flex: 1 }}>
         <ScrollView className="flex-1">
           <View className="flex-1 px-6 pt-20 pb-6">
             {/* Header */}
@@ -80,8 +95,8 @@ export default function LoginScreen() {
             </View>
 
             {/* Login Form */}
-            <BlurView intensity={80} tint="light" className="rounded-3xl overflow-hidden border border-gray-200/50">
-              <View className="p-6 space-y-6" style={{ backgroundColor: 'rgba(255,255,255,0.7)' }}>
+            <GlassWrapper glassStyle="clear" tintColor="rgba(255,255,255,0.6)" className="rounded-3xl overflow-hidden border border-gray-200/50">
+              <View className="p-6 space-y-6" style={!glassAvailable ? { backgroundColor: 'rgba(255,255,255,0.7)' } : undefined}>
                 {/* Email Input */}
                 <View>
                   <Text className="text-sm font-semibold text-gray-700 mb-2">Email Address</Text>
@@ -158,7 +173,7 @@ export default function LoginScreen() {
                   </Text>
                 </View>
               </View>
-            </BlurView>
+            </GlassWrapper>
 
             {/* Footer */}
             <View className="mt-8">
@@ -168,7 +183,7 @@ export default function LoginScreen() {
             </View>
           </View>
         </ScrollView>
-      </BlurView>
+      </GlassWrapper>
     </KeyboardAvoidingView>
   );
 }
