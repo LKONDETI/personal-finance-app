@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, RefreshControl } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { accounts, transactions, loans } from '@/services/api';
 import type { Account, Transaction, Loan } from '@/services/api';
 
 export default function Dashboard() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const { party_id, user_name } = useLocalSearchParams<{ party_id: string; user_name?: string }>();
   
   const [accountsList, setAccountsList] = useState<Account[]>([]);
@@ -97,7 +99,7 @@ export default function Dashboard() {
       }
     >
       {/* Header */}
-      <View className="flex-row items-center justify-between mb-6 pt-12 px-6">
+      <View className="flex-row items-center justify-between mb-6 px-6" style={{ paddingTop: insets.top + 12 }}>
         <View>
           <Text className="text-3xl font-extrabold tracking-tight">Dashboard</Text>
           {user_name && <Text className="text-gray-500 mt-1">Welcome, {user_name}</Text>}
@@ -229,7 +231,10 @@ export default function Dashboard() {
         ) : (
           transactionsList.map((txn, idx) => {
             const isCredit = txn.transactionType === 'Credit';
-            const formattedDate = new Date(txn.transactionDate).toLocaleDateString();
+            const dateObj = new Date(txn.transactionDate);
+            const formattedDate = isNaN(dateObj.getTime()) 
+              ? txn.transactionDate?.toString().slice(0, 10) ?? '—'
+              : dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
             
             return (
               <View 
