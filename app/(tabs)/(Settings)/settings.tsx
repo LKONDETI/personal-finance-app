@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Alert, Pressable, Modal } from "react-native";
 import { useRouter } from "expo-router";
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ArrowLeft, ChevronRight, LogOut, CreditCard, Settings as SettingsIcon, MessageCircle, User, Bell, Shield } from "lucide-react-native";
 
 export default function SettingsView() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [securityModalVisible, setSecurityModalVisible] = useState(false);
   const [notificationsModalVisible, setNotificationsModalVisible] = useState(false);
 
@@ -64,7 +66,7 @@ export default function SettingsView() {
   return (
     <ScrollView className="flex-1 bg-gray-50">
       {/* Header */}
-      <View className="flex-col pt-11 px-4 bg-white">
+      <View className="flex-col px-4 bg-white" style={{ paddingTop: insets.top + 8 }}>
         <View className="flex-row items-center justify-between mb-4">
           <View className="flex-row items-center">
             <TouchableOpacity className="bg-gray-100 rounded-full p-2 border border-gray-200" onPress={() => router.push('/dashboard?party_id=1')}>

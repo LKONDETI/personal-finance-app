@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, RefreshControl } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { loans } from '@/services/api';
 import type { Loan } from '@/services/api';
 
 export default function AllLoans() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [loansList, setLoansList] = useState<Loan[]>([]);
   const [filteredLoans, setFilteredLoans] = useState<Loan[]>([]);
   const [loading, setLoading] = useState(true);
@@ -71,7 +73,7 @@ export default function AllLoans() {
   return (
     <View className="flex-1 bg-gray-50">
       {/* Header */}
-      <View className="bg-white pt-12 pb-4 px-6 shadow-sm">
+      <View className="bg-white pb-4 px-6 shadow-sm" style={{ paddingTop: insets.top + 8 }}>
         <View className="flex-row items-center justify-between mb-4">
           <View className="flex-row items-center">
             <TouchableOpacity 

@@ -1,10 +1,12 @@
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ArrowLeft, Bot, Send, BotMessageSquare, User } from 'lucide-react-native';
 import axios from 'axios';
 
 const Chatbot = () => {
+  const insets = useSafeAreaInsets();
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<{ user: string; bot: string }[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -53,7 +55,7 @@ const Chatbot = () => {
     >
       <ScrollView className="flex-1 px-4">
         {/* Header */}
-        <View className="flex-row items-center pt-16">
+        <View className="flex-row items-center" style={{ paddingTop: insets.top + 8 }}>
           <TouchableOpacity className="bg-gray-100 rounded-full p-2 border border-gray-200" onPress={() => router.back()}>
             <ArrowLeft size={24} color="black" />
           </TouchableOpacity>

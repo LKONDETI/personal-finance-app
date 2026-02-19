@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { loans } from '@/services/api';
 import showAlert from '@/components/utility/ShowAlert';
@@ -10,6 +11,7 @@ const TERM_OPTIONS = [12, 24, 36, 48, 60];
 
 export default function ApplyLoan() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [loanType, setLoanType] = useState('Personal');
   const [amount, setAmount] = useState('');
   const [termMonths, setTermMonths] = useState(36);
@@ -99,7 +101,7 @@ export default function ApplyLoan() {
       className="flex-1 bg-gray-50"
     >
       {/* Header */}
-      <View className="bg-purple-600 pt-12 pb-6 px-6">
+      <View className="bg-purple-600 pb-6 px-6" style={{ paddingTop: insets.top + 8 }}>
         <TouchableOpacity 
           onPress={() => router.back()}
           className="bg-purple-700 rounded-full p-2 mb-4 self-start"

@@ -1,10 +1,12 @@
 import { View, Text, TouchableOpacity, ScrollView, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ArrowLeft } from 'lucide-react-native';
 import { Avatar } from '@/components/ui/avatar';
 
 export default function PayNowScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const currentDate = new Date();
   const futureDate = new Date();
   futureDate.setDate(currentDate.getDate() + 7); // Set to 7 days from now
@@ -12,7 +14,7 @@ export default function PayNowScreen() {
   return (
     <ScrollView className="flex-1 bg-white">
       {/* Header */}
-      <View className="flex-row items-center pt-16 px-4">
+      <View className="flex-row items-center px-4" style={{ paddingTop: insets.top + 8 }}>
         <TouchableOpacity className="bg-gray-100 rounded-full p-2 border border-gray-200" onPress={() => router.back()}>
           <ArrowLeft size={24} color="black" />
         </TouchableOpacity>

@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { loans } from '@/services/api';
 import type { Loan } from '@/services/api';
 
 export default function LoanDetails() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const { loanId } = useLocalSearchParams<{ loanId: string }>();
   const [loan, setLoan] = useState<Loan | null>(null);
   const [loading, setLoading] = useState(true);
@@ -79,7 +81,7 @@ export default function LoanDetails() {
   return (
     <View className="flex-1 bg-gray-50">
       {/* Header */}
-      <View className="bg-purple-600 pt-12 pb-6 px-6">
+      <View className="bg-purple-600 pb-6 px-6" style={{ paddingTop: insets.top + 8 }}>
         <TouchableOpacity 
           onPress={() => router.back()}
           className="bg-purple-700 rounded-full p-2 mb-4 self-start"

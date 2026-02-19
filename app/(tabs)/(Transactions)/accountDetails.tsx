@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, TextInput } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ArrowDownRight, ArrowLeft, ArrowUpRight, MoreVertical } from "lucide-react-native";
 
 interface Account {
@@ -58,6 +59,7 @@ const calculateBalance = (transactions: Transaction[]) => {
 
 export default function AccountDetails() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const { accountId, party_id } = useLocalSearchParams<{ accountId: string, party_id: string }>();
   const accountIdNum = Number(accountId);
   const partyIdNum = Number(party_id);
@@ -102,7 +104,7 @@ export default function AccountDetails() {
   return (
     <ScrollView className="flex-1 bg-white">
       {/* Header */}
-      <View className="flex-row justify-between items-center px-4 pt-16 pb-4 bg-white">
+      <View className="flex-row justify-between items-center px-4 pb-4 bg-white" style={{ paddingTop: insets.top + 8 }}>
         <TouchableOpacity className="bg-gray-100 rounded-full p-2 border border-gray-200" onPress={() => router.back()}>
           <ArrowLeft size={24} />
         </TouchableOpacity>

@@ -1,5 +1,6 @@
 import { View, Text, ScrollView, TouchableOpacity, Pressable } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Path, G, Text as SvgText } from "react-native-svg";
 import * as Progress from "react-native-progress";
 import { ArrowLeft } from "lucide-react-native";
@@ -86,6 +87,7 @@ const PieSlice = ({
 
 export default function BudgetView() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [activeSlice, setActiveSlice] = useState<number | null>(null);
   const [budgetItems, setBudgetItems] = useState<BudgetItem[]>([]);
   const { party_id } = useLocalSearchParams();
@@ -169,7 +171,7 @@ export default function BudgetView() {
   return (
     <ScrollView className="flex-1 p-4 bg-white">
       {/* Header */}
-      <View className="flex-row items-center justify-between mb-4 pt-8">
+      <View className="flex-row items-center justify-between mb-4" style={{ paddingTop: insets.top + 8 }}>
         <View className="flex-row items-center">
           <TouchableOpacity className="bg-gray-100 rounded-full p-2 border border-gray-200" onPress={() => router.back()}>
             <ArrowLeft size={24} color="black" />

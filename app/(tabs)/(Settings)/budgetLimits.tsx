@@ -1,5 +1,6 @@
 import { View, Text, TouchableOpacity, ScrollView, TextInput } from "react-native";
 import { useRouter } from "expo-router";
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ArrowLeft } from "lucide-react-native";
 import { useState, useEffect } from "react";
 import categoryMappings from '@/data/categoryMappings.json';
@@ -19,6 +20,7 @@ interface BudgetItem {
 
 export default function BudgetLimits() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [budgetItems, setBudgetItems] = useState<BudgetItem[]>(
     // Initialize with data from categoryMappings.json
     categoryMappings.categories.map(item => ({
@@ -54,7 +56,7 @@ export default function BudgetLimits() {
   return (
     <ScrollView className="flex-1 bg-white">
       {/* Header */}
-      <View className="p-4 flex-row items-center gap-4 pt-20">
+      <View className="p-4 flex-row items-center gap-4" style={{ paddingTop: insets.top + 8 }}>
         <View className="flex-row items-center">
           <TouchableOpacity className="bg-gray-100 rounded-full p-2 border border-gray-200" onPress={() => router.back()}>
             <ArrowLeft size={24} color="black" />

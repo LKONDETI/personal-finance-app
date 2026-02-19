@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface Customer {
   id: number;
@@ -36,6 +37,7 @@ interface Customer {
 
 export default function Profile() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -73,7 +75,7 @@ export default function Profile() {
   return (
     <ScrollView className="flex-1 bg-white">
       {/* Header */}
-      <View className="flex-col pt-16 px-4 bg-white">
+      <View className="flex-col px-4 bg-white" style={{ paddingTop: insets.top + 8 }}>
         <View className="flex-row items-center justify-between mb-4">
           <View className="flex-row items-center">
             <TouchableOpacity className="bg-gray-100 rounded-full p-2 border border-gray-200" onPress={() => router.back()}>

@@ -1,5 +1,6 @@
 import { View, Text, ScrollView, TouchableOpacity, Pressable } from "react-native";
 import { useRouter } from "expo-router";
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ArrowLeft, Wifi, Phone, ShoppingBag } from "lucide-react-native";
 import { useState } from "react";
 
@@ -105,6 +106,7 @@ const RequestCard = ({
 
 export default function RequestsView() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [activeTab, setActiveTab] = useState("pending");
 
   type RequestData = {
@@ -190,7 +192,7 @@ export default function RequestsView() {
     <ScrollView className="flex-1 bg-white">
       <View className="p-4">
         {/* Header */}
-        <View className="flex-row items-center pt-12">
+        <View className="flex-row items-center" style={{ paddingTop: insets.top + 8 }}>
           <TouchableOpacity className="bg-gray-100 rounded-full p-2 border border-gray-200" onPress={() => router.back()}>
             <ArrowLeft size={24} color="black" />
           </TouchableOpacity>

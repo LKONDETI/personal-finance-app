@@ -1,5 +1,6 @@
 import { View, Text, ScrollView, TouchableOpacity, Pressable, ActivityIndicator, Modal } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ArrowLeft, Plus } from "lucide-react-native";
 import { useState, useEffect } from "react";
 
@@ -18,6 +19,7 @@ interface Account {
 
 export default function BankAccounts() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const { party_id } = useLocalSearchParams<{ party_id: string }>();
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [loading, setLoading] = useState(true);
@@ -73,7 +75,7 @@ export default function BankAccounts() {
   return (
     <ScrollView className="flex-1 bg-white">
       {/* Header */}
-      <View className="flex-col pt-16 px-4 bg-white">
+      <View className="flex-col px-4 bg-white" style={{ paddingTop: insets.top + 8 }}>
         <View className="flex-row items-center justify-between mb-4">
           <View className="flex-row items-center">
             <TouchableOpacity className="bg-gray-100 rounded-full p-2 border border-gray-200" onPress={() => router.back()}>
