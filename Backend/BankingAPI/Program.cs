@@ -62,14 +62,24 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins(
-                "http://localhost:8081",           // Expo default port
-                "exp://localhost:8081",            // Expo URL scheme
-                "http://192.168.1.183:8081"        // Local network (update with your IP)
-            )
-            .AllowAnyMethod()
-            .AllowAnyHeader()
-            .AllowCredentials();
+        if (builder.Environment.IsDevelopment())
+        {
+            // In development, allow any origin for easy testing
+            policy.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        }
+        else
+        {
+            // In production, restrict to specific origins
+            policy.WithOrigins(
+                    "http://localhost:8081",
+                    "exp://localhost:8081"
+                )
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials();
+        }
     });
 });
 
@@ -137,6 +147,11 @@ if (app.Environment.IsDevelopment())
     {
         var services = scope.ServiceProvider;
         var context = services.GetRequiredService<BankingDbContext>();
+        
+        // Ensure the 'banking' schema exists before running migrations
+        // (fresh PostgreSQL containers won't have it)
+        await context.Database.ExecuteSqlRawAsync(
+            "CREATE SCHEMA IF NOT EXISTS banking");
         
         // Auto-apply pending migrations (creates schema/tables if needed)
         await context.Database.MigrateAsync();

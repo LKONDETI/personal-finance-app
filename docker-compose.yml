@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # PostgreSQL Database
   postgres:
@@ -22,25 +20,6 @@ services:
       timeout: 5s
       retries: 5
 
-  # pgAdmin - Database Management UI
-  pgadmin:
-    image: dpage/pgadmin4:latest
-    container_name: banking-pgadmin
-    restart: unless-stopped
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
-      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
-    ports:
-      - "5050:80"
-    volumes:
-      - pgadmin_data:/var/lib/pgadmin
-    networks:
-      - banking-network
-    depends_on:
-      - postgres
-
   # .NET Backend API
   backend:
     build:
@@ -51,11 +30,11 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://+:5200
-      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=${DB_NAME};Username=${DB_USER};Password=${DB_PASSWORD}"
-      Jwt__Secret: ${JWT_SECRET}
-      Jwt__Issuer: "BankingAPI"
-      Jwt__Audience: "BankingApp"
-      Jwt__ExpirationMinutes: "60"
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=${DB_NAME};Username=${DB_USER};Password=${DB_PASSWORD};SearchPath=banking"
+      JwtSettings__SecretKey: ${JWT_SECRET}
+      JwtSettings__Issuer: "BankingAPI"
+      JwtSettings__Audience: "BankingApp"
+      JwtSettings__ExpirationMinutes: "60"
     ports:
       - "5200:5200"
     networks:
@@ -63,19 +42,9 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    volumes:
-      - ./Backend/BankingAPI:/app/src
-    command: >
-      sh -c "
-        echo 'Waiting for database to be ready...' &&
-        sleep 5 &&
-        dotnet BankingAPI.dll
-      "
 
 volumes:
   postgres_data:
-    driver: local
-  pgadmin_data:
     driver: local
 
 networks:

@@ -22,4 +22,4 @@ EXPOSE 5200
 ENV ASPNETCORE_URLS=http://+:5200
 ENV ASPNETCORE_ENVIRONMENT=Development
 
-ENTRYPOINT ["dotnet", "BankingAPI.dll"]
+CMD ["dotnet", "BankingAPI.dll"]
