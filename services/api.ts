@@ -3,7 +3,9 @@ import axios, { AxiosError, AxiosInstance } from 'axios';
 import * as SecureStore from 'expo-secure-store';
 
 // API Configuration
-const API_BASE_URL = 'http://localhost:5200';
+// Use env variable, or fall back to localhost for simulator access
+const API_BASE_URL = 'http://127.0.0.1:5200';
+console.log('🔗 API_BASE_URL:', API_BASE_URL);
 const TOKEN_KEY = 'jwt_token';
 const USER_KEY = 'user_data';
 
