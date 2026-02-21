@@ -28,4 +28,6 @@ public class User
     public ICollection<BudgetLimit> BudgetLimits { get; set; } = new List<BudgetLimit>();
     
     public ICollection<Loan> Loans { get; set; } = new List<Loan>();
+    
+    public ICollection<PaymentRequest> PaymentRequests { get; set; } = new List<PaymentRequest>();
 }

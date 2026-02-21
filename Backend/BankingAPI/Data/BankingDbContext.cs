@@ -20,6 +20,7 @@ public class BankingDbContext : DbContext
     public DbSet<BudgetLimit> BudgetLimits { get; set; }
     public DbSet<Loan> Loans { get; set; }
     public DbSet<AuditLog> AuditLogs { get; set; }
+    public DbSet<PaymentRequest> PaymentRequests { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -53,6 +54,11 @@ public class BankingDbContext : DbContext
             entity.HasMany(u => u.Loans)
                 .WithOne(l => l.User)
                 .HasForeignKey(l => l.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+                
+            entity.HasMany(u => u.PaymentRequests)
+                .WithOne(pr => pr.User)
+                .HasForeignKey(pr => pr.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
@@ -140,6 +146,30 @@ public class BankingDbContext : DbContext
                 .WithMany()
                 .HasForeignKey(a => a.UserId)
                 .OnDelete(DeleteBehavior.SetNull);  // Keep audit logs even if user is deleted
+        });
+
+        // ===== PaymentRequest Configuration =====
+        modelBuilder.Entity<PaymentRequest>(entity =>
+        {
+            entity.ToTable("payment_requests");
+            entity.HasKey(pr => pr.Id);
+            entity.Property(pr => pr.PayeeName).IsRequired().HasMaxLength(255);
+            entity.Property(pr => pr.PayeeCategory).IsRequired().HasMaxLength(255);
+            entity.Property(pr => pr.Amount).HasPrecision(18, 2);
+            entity.Property(pr => pr.AmountPaid).HasPrecision(18, 2);
+            entity.Property(pr => pr.Notes).HasMaxLength(500);
+            
+            // Indexes for common queries
+            entity.HasIndex(pr => pr.UserId);
+            entity.HasIndex(pr => pr.Status);
+            entity.HasIndex(pr => pr.DueDate);
+            entity.HasIndex(pr => new { pr.UserId, pr.Status });
+            
+            // Relationship to Account (optional - set when paid)
+            entity.HasOne(pr => pr.Account)
+                .WithMany()
+                .HasForeignKey(pr => pr.AccountId)
+                .OnDelete(DeleteBehavior.SetNull);
         });
     }
 }

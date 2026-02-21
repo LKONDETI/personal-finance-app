@@ -423,11 +423,83 @@ public static class DatabaseSeeder
         context.Loans.AddRange(loans);
         await context.SaveChangesAsync();
 
+        // Create payment requests
+        var paymentRequests = new List<PaymentRequest>
+        {
+            // John's pending payment requests
+            new PaymentRequest
+            {
+                UserId = users[0].Id,
+                PayeeName = "City Utilities",
+                PayeeCategory = "Water & Electricity",
+                Amount = 142.50m,
+                DueDate = DateTime.UtcNow.AddDays(3),
+                Status = PaymentRequestStatus.Pending,
+                CreatedAt = DateTime.UtcNow.AddDays(-10),
+                UpdatedAt = DateTime.UtcNow.AddDays(-10)
+            },
+            new PaymentRequest
+            {
+                UserId = users[0].Id,
+                PayeeName = "MobileNet",
+                PayeeCategory = "Monthly Plan",
+                Amount = 79.99m,
+                DueDate = DateTime.UtcNow.Date,  // Due today
+                Status = PaymentRequestStatus.Pending,
+                CreatedAt = DateTime.UtcNow.AddDays(-15),
+                UpdatedAt = DateTime.UtcNow.AddDays(-15)
+            },
+            new PaymentRequest
+            {
+                UserId = users[0].Id,
+                PayeeName = "EcoMarket",
+                PayeeCategory = "Subscription Box",
+                Amount = 45.00m,
+                DueDate = DateTime.UtcNow.AddDays(7),
+                Status = PaymentRequestStatus.Pending,
+                CreatedAt = DateTime.UtcNow.AddDays(-5),
+                UpdatedAt = DateTime.UtcNow.AddDays(-5)
+            },
+            // John's paid payment requests (from last month)
+            new PaymentRequest
+            {
+                UserId = users[0].Id,
+                AccountId = accounts[0].Id,
+                PayeeName = "City Utilities",
+                PayeeCategory = "Water & Electricity",
+                Amount = 138.75m,
+                AmountPaid = 138.75m,
+                DueDate = DateTime.UtcNow.AddMonths(-1).AddDays(5),
+                PaidDate = DateTime.UtcNow.AddMonths(-1).AddDays(3),
+                Status = PaymentRequestStatus.Paid,
+                CreatedAt = DateTime.UtcNow.AddMonths(-1).AddDays(-10),
+                UpdatedAt = DateTime.UtcNow.AddMonths(-1).AddDays(3)
+            },
+            new PaymentRequest
+            {
+                UserId = users[0].Id,
+                AccountId = accounts[0].Id,
+                PayeeName = "MobileNet",
+                PayeeCategory = "Monthly Plan",
+                Amount = 79.99m,
+                AmountPaid = 79.99m,
+                DueDate = DateTime.UtcNow.AddMonths(-1),
+                PaidDate = DateTime.UtcNow.AddMonths(-1).AddDays(-2),
+                Status = PaymentRequestStatus.Paid,
+                CreatedAt = DateTime.UtcNow.AddMonths(-1).AddDays(-15),
+                UpdatedAt = DateTime.UtcNow.AddMonths(-1).AddDays(-2)
+            }
+        };
+
+        context.PaymentRequests.AddRange(paymentRequests);
+        await context.SaveChangesAsync();
+
         Console.WriteLine($"✅ Seeded {users.Count} users");
         Console.WriteLine($"✅ Seeded {accounts.Count} accounts");
         Console.WriteLine($"✅ Seeded {transactions.Count} transactions");
         Console.WriteLine($"✅ Seeded {budgets.Count} budgets");
         Console.WriteLine($"✅ Seeded {loans.Count} loans");
+        Console.WriteLine($"✅ Seeded {paymentRequests.Count} payment requests");
         Console.WriteLine("Database seeding completed successfully!");
     }
 }

@@ -87,6 +87,22 @@ export interface Loan {
     disbursementDate?: string;
 }
 
+export interface PaymentRequest {
+    id: number;
+    userId: number;
+    accountId?: number;
+    payeeName: string;
+    payeeCategory: string;
+    amount: number;
+    amountPaid: number;
+    dueDate: string;
+    paidDate?: string;
+    status: number;  // 0=Pending, 1=Paid, 2=PartiallyPaid, 3=Declined, 4=Overdue
+    notes?: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
 export interface ApiResponse<T> {
     success: boolean;
     data: T | null;
@@ -302,6 +318,52 @@ export const loans = {
             return response.data.data;
         }
         throw new Error(response.data.message || 'Failed to apply for loan');
+    },
+};
+
+// Payment Requests API
+export const paymentRequests = {
+    getAll: async (status?: string): Promise<PaymentRequest[]> => {
+        const url = status ? `/api/paymentrequests?status=${status}` : '/api/paymentrequests';
+        const response = await apiClient.get<ApiResponse<PaymentRequest[]>>(url);
+        return response.data.data || [];
+    },
+
+    getById: async (id: number): Promise<PaymentRequest> => {
+        const response = await apiClient.get<ApiResponse<PaymentRequest>>(`/api/paymentrequests/${id}`);
+        if (response.data.data) {
+            return response.data.data;
+        }
+        throw new Error('Payment request not found');
+    },
+
+    payFull: async (id: number, accountId: number): Promise<PaymentRequest> => {
+        const response = await apiClient.post<ApiResponse<PaymentRequest>>(`/api/paymentrequests/${id}/pay`, {
+            accountId,
+        });
+        if (response.data.data) {
+            return response.data.data;
+        }
+        throw new Error(response.data.message || 'Payment failed');
+    },
+
+    payPartial: async (id: number, accountId: number, amount: number): Promise<PaymentRequest> => {
+        const response = await apiClient.post<ApiResponse<PaymentRequest>>(`/api/paymentrequests/${id}/pay-partial`, {
+            accountId,
+            amount,
+        });
+        if (response.data.data) {
+            return response.data.data;
+        }
+        throw new Error(response.data.message || 'Partial payment failed');
+    },
+
+    decline: async (id: number): Promise<PaymentRequest> => {
+        const response = await apiClient.post<ApiResponse<PaymentRequest>>(`/api/paymentrequests/${id}/decline`);
+        if (response.data.data) {
+            return response.data.data;
+        }
+        throw new Error(response.data.message || 'Failed to decline request');
     },
 };
 
