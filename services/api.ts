@@ -57,7 +57,8 @@ export interface Transaction {
     amount: number;
     category: string;
     description?: string;
-    transactionDate: string;
+    transactionDate?: string;
+    transactionTime?: string;
     createdAt: string;
 }
 
@@ -184,7 +185,13 @@ export const auth = {
     },
 
     logout: async (): Promise<void> => {
-        await clearAuth();
+        try {
+            await apiClient.post('/api/Auth/logout');
+        } catch (error) {
+            console.error('Error logging out from backend:', error);
+        } finally {
+            await clearAuth();
+        }
     },
 
     getCurrentUser: async (): Promise<User | null> => {
@@ -237,7 +244,7 @@ export const accounts = {
 // Transactions API
 export const transactions = {
     getAll: async (accountId?: number): Promise<Transaction[]> => {
-        const url = accountId ? `/api/transactions?accountId=${accountId}` : '/api/transactions';
+        const url = accountId ? `/api/Transactions/account/${accountId}` : '/api/transactions';
         const response = await apiClient.get<ApiResponse<Transaction[]>>(url);
         return response.data.data || [];
     },

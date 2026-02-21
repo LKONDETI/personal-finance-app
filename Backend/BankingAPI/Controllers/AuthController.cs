@@ -156,6 +156,23 @@ public class AuthController : ControllerBase
     }
 
     /// <summary>
+    /// Logout user
+    /// </summary>
+    /// <returns>Success response</returns>
+    [HttpPost("logout")]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
+    public IActionResult Logout()
+    {
+        // For JWT, we don't strictly need backend state clearing unless using a token blacklist
+        // Returning a 200 OK signals a successful logical logout operation for the client.
+        return Ok(new ApiResponse<object>
+        {
+            Success = true,
+            Message = "Logout successful"
+        });
+    }
+
+    /// <summary>
     /// Simple email validation
     /// </summary>
     private bool IsValidEmail(string email)
