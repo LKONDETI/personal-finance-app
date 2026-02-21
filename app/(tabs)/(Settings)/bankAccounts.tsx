@@ -4,18 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ArrowLeft, Plus } from "lucide-react-native";
 import { useState, useEffect } from "react";
 
-interface Account {
-  id: number;
-  account_name: string;
-  account_number: number;
-  product_id: string;
-  currency: string;
-  created_at: string;
-  balance?: number;
-  available_balance?: number;
-  bank_name?: string;
-  party_id?: number;
-}
+import { accounts as accountsApi, Account } from "@/services/api";
 
 export default function BankAccounts() {
   const router = useRouter();
@@ -30,24 +19,15 @@ export default function BankAccounts() {
 
   useEffect(() => {
     let isMounted = true;
-    if (!party_id) {
-      setError('No party ID found. Please log in again.');
-      setLoading(false);
-      return;
-    }
     fetchAccounts();
     return () => { isMounted = false; };
-  }, [party_id]);
+  }, []);
 
   const fetchAccounts = async () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await fetch(`http://192.168.1.183:8000/accounts?party_id=${party_id}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch accounts');
-      }
-      const data = await response.json();
+      const data = await accountsApi.getAll();
       console.log('Accounts data:', data);
       setAccounts(data);
     } catch (error) {
@@ -58,19 +38,6 @@ export default function BankAccounts() {
     }
   };
 
-  if (!party_id) {
-    return (
-      <View className="flex-1 items-center justify-center bg-white">
-        <Text className="text-red-500 text-lg">Please log in to view your accounts</Text>
-        <TouchableOpacity 
-          onPress={() => router.replace('/')}
-          className="mt-4 bg-blue-500 px-4 py-2 rounded-full"
-        >
-          <Text className="text-white font-medium">Go to Login</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  }
 
   return (
     <ScrollView className="flex-1 bg-white">
@@ -83,13 +50,13 @@ export default function BankAccounts() {
             </TouchableOpacity>
             <Text className="text-2xl font-bold ml-4">Bank Accounts</Text>
           </View>
-          <TouchableOpacity 
-          onPress={() => setModalVisible(true)}
-          className="bg-blue-500 px-4 py-2 rounded-full flex-row items-center gap-2"
-        >
-          <Plus size={20} color="white" />
-          <Text className="text-white font-medium">Add Account</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setModalVisible(true)}
+            className="bg-blue-500 px-4 py-2 rounded-full flex-row items-center gap-2"
+          >
+            <Plus size={20} color="white" />
+            <Text className="text-white font-medium">Add Account</Text>
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -121,7 +88,7 @@ export default function BankAccounts() {
         ) : error ? (
           <View className="items-center justify-center py-8">
             <Text className="text-red-500 text-lg mb-2">{error}</Text>
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={fetchAccounts}
               className="bg-blue-500 px-4 py-2 rounded-full mt-2"
             >
@@ -145,12 +112,12 @@ export default function BankAccounts() {
                 params: { accountId: account.id, party_id }
               })}
             >
-              <Text className="text-lg font-semibold mb-1">{account.account_name}</Text>
-              <Text className="text-gray-500 text-xs mb-2">Account #{account.account_number} • {account.currency}</Text>
-              <Text className="text-gray-500 text-xs mb-2">Created: {account.created_at}</Text>
+              <Text className="text-lg font-semibold mb-1">{account.accountName}</Text>
+              <Text className="text-gray-500 text-xs mb-2">Account #{account.accountNumber} • {account.currency}</Text>
+              <Text className="text-gray-500 text-xs mb-2">Created: {new Date(account.createdAt).toLocaleDateString()}</Text>
               <Text className="text-gray-500 mb-1">Available balance</Text>
               <Text className="text-3xl font-bold text-blue-600 mb-1 text-right">
-                ${account.available_balance?.toFixed(2) ?? account.balance?.toFixed(2) ?? '0'}
+                ${account.balance.toFixed(2)}
               </Text>
             </TouchableOpacity>
           ))
