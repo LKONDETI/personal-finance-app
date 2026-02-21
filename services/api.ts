@@ -57,7 +57,8 @@ export interface Transaction {
     amount: number;
     category: string;
     description?: string;
-    transactionDate: string;
+    transactionDate?: string;
+    transactionTime?: string;
     createdAt: string;
 }
 
@@ -243,7 +244,7 @@ export const accounts = {
 // Transactions API
 export const transactions = {
     getAll: async (accountId?: number): Promise<Transaction[]> => {
-        const url = accountId ? `/api/transactions?accountId=${accountId}` : '/api/transactions';
+        const url = accountId ? `/api/Transactions/account/${accountId}` : '/api/transactions';
         const response = await apiClient.get<ApiResponse<Transaction[]>>(url);
         return response.data.data || [];
     },

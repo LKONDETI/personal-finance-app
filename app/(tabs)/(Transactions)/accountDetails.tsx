@@ -41,6 +41,33 @@ export default function AccountDetails() {
     fetchData();
   }, [accountId]);
 
+  const processedTransactions = React.useMemo(() => {
+    if (!account || transactions.length === 0) return [];
+
+    // Sort descending by date (newest first)
+    const sorted = [...transactions].sort(
+      // @ts-ignore
+      (a, b) => new Date(b.transactionTime || b.transactionDate || '').getTime() - new Date(a.transactionTime || a.transactionDate || '').getTime()
+    );
+
+    let currentBalance = account.balance;
+    const withBalance = sorted.map(tx => {
+      const balanceAfterTx = currentBalance;
+      // Revert this transaction for the previous running balance
+      if (tx.transactionType === 'Credit') {
+        currentBalance -= tx.amount;
+      } else {
+        currentBalance += tx.amount;
+      }
+      return {
+        ...tx,
+        balanceAfterTx
+      };
+    });
+
+    return withBalance;
+  }, [transactions, account]);
+
   if (loading) {
     return (
       <View className="flex-1 items-center justify-center bg-white">
@@ -97,18 +124,20 @@ export default function AccountDetails() {
       {/* Transactions List */}
       <Text className="text-lg font-bold px-4 mb-3 mt-2">All Transactions</Text>
       <View className="bg-white rounded-2xl shadow mx-4 mb-8 border border-gray-100">
-        {transactions.length === 0 ? (
+        {processedTransactions.length === 0 ? (
           <Text className="text-gray-500 text-center py-6">No transactions found.</Text>
         ) : (
-          [...transactions]
+          processedTransactions
             .filter(tx =>
               tx.category?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              tx.transactionType?.toLowerCase().includes(searchQuery.toLowerCase())
+              tx.transactionType?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              tx.description?.toLowerCase().includes(searchQuery.toLowerCase())
             )
-            .sort((a, b) => new Date(b.transactionDate).getTime() - new Date(a.transactionDate).getTime())
-            .map((tx, idx) => {
+            .map((tx, idx, arr) => {
               const isCredit = tx.transactionType === 'Credit';
-              const dateObj = new Date(tx.transactionDate);
+              // Check for either transactionTime or transactionDate (one will always be passed back, default to empty string for TS)
+              const dateString = tx.transactionTime || tx.transactionDate || '';
+              const dateObj = new Date(dateString);
               const formattedDate = isNaN(dateObj.getTime())
                 ? '—'
                 : dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
@@ -116,10 +145,10 @@ export default function AccountDetails() {
               return (
                 <View
                   key={tx.id}
-                  className={`flex-row justify-between items-center px-4 py-4 ${idx < transactions.length - 1 ? 'border-b border-gray-100' : ''
+                  className={`flex-row justify-between items-center px-4 py-4 ${idx < arr.length - 1 ? 'border-b border-gray-100' : ''
                     }`}
                 >
-                  <View className="flex-row items-center">
+                  <View className="flex-row items-center flex-1">
                     {isCredit ? (
                       <View className="bg-green-100 p-2 rounded-full mr-3">
                         <ArrowDownRight size={20} color="#22c55e" />
@@ -129,12 +158,16 @@ export default function AccountDetails() {
                         <ArrowUpRight size={20} color="#ef4444" />
                       </View>
                     )}
-                    <View>
-                      <Text className="font-medium text-base">{tx.category || tx.transactionType}</Text>
+                    <View className="flex-1 pr-2">
+                      {/* Show description if available, fallback to category/type */}
+                      <Text className="font-medium text-base flex-wrap" numberOfLines={2}>
+                        {tx.description || tx.category || tx.transactionType}
+                      </Text>
                       <Text className="text-gray-500 text-xs mt-1">{formattedDate}</Text>
+                      <Text className="text-gray-500 text-xs mt-0.5">Balance: ${tx.balanceAfterTx.toFixed(2)}</Text>
                     </View>
                   </View>
-                  <Text className={`font-semibold text-base ${isCredit ? 'text-green-500' : 'text-red-500'}`}>
+                  <Text className={`font-semibold text-base whitespace-nowrap ${isCredit ? 'text-green-500' : 'text-red-500'}`}>
                     {isCredit ? '+' : '-'}${tx.amount.toFixed(2)}
                   </Text>
                 </View>
