@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, ScrollView, Alert, Pressable, Modal } fro
 import { useRouter } from "expo-router";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ArrowLeft, ChevronRight, LogOut, CreditCard, Settings as SettingsIcon, MessageCircle, User, Bell, Shield } from "lucide-react-native";
+import { auth } from '@/services/api';
 
 export default function SettingsView() {
   const router = useRouter();
@@ -13,23 +14,8 @@ export default function SettingsView() {
   const handleLogout = async () => {
     try {
       console.log('Attempting logout...');
-      const response = await fetch('http://192.168.1.183:8000/logout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-      });
-      
-      console.log('Logout response status:', response.status);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      console.log('Logout successful:', data);
-      
+      await auth.logout();
+      console.log('Logout successful');
       router.replace('/');
     } catch (error) {
       console.error('Logout error:', error);
@@ -46,7 +32,7 @@ export default function SettingsView() {
     iconBgColor: string,
     iconColor: string
   ) => (
-    <TouchableOpacity 
+    <TouchableOpacity
       className="bg-white px-4 py-4 border-b border-gray-100 flex-row items-center"
       onPress={onPress}
     >

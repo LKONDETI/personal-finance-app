@@ -184,7 +184,13 @@ export const auth = {
     },
 
     logout: async (): Promise<void> => {
-        await clearAuth();
+        try {
+            await apiClient.post('/api/Auth/logout');
+        } catch (error) {
+            console.error('Error logging out from backend:', error);
+        } finally {
+            await clearAuth();
+        }
     },
 
     getCurrentUser: async (): Promise<User | null> => {
