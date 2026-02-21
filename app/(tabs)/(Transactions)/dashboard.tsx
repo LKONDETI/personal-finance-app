@@ -3,20 +3,18 @@ import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, RefreshCon
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { accounts, transactions, loans } from '@/services/api';
+import { accounts, loans } from '@/services/api';
 import type { Account, Transaction, Loan } from '@/services/api';
 
 export default function Dashboard() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { party_id, user_name } = useLocalSearchParams<{ party_id: string; user_name?: string }>();
-  
+
   const [accountsList, setAccountsList] = useState<Account[]>([]);
-  const [transactionsList, setTransactionsList] = useState<Transaction[]>([]);
   const [loansList, setLoansList] = useState<Loan[]>([]);
-  
+
   const [accountsLoading, setAccountsLoading] = useState(true);
-  const [transactionsLoading, setTransactionsLoading] = useState(true);
   const [loansLoading, setLoansLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -34,16 +32,6 @@ export default function Dashboard() {
       setAccountsLoading(false);
     }
 
-    try {
-      // Fetch recent transactions
-      setTransactionsLoading(true);
-      const transactionsData = await transactions.getAll();
-      setTransactionsList(transactionsData.slice(-5)); // Get last 5
-    } catch (error) {
-      console.error('Failed to fetch transactions:', error);
-    } finally {
-      setTransactionsLoading(false);
-    }
 
     try {
       // Fetch loans
@@ -92,7 +80,7 @@ export default function Dashboard() {
   }
 
   return (
-    <ScrollView 
+    <ScrollView
       className="flex-1 bg-gray-50"
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -104,7 +92,7 @@ export default function Dashboard() {
           <Text className="text-3xl font-extrabold tracking-tight">Dashboard</Text>
           {user_name && <Text className="text-gray-500 mt-1">Welcome, {user_name}</Text>}
         </View>
-        <TouchableOpacity 
+        <TouchableOpacity
           onPress={() => router.push('/(tabs)/(Settings)/settings')}
           className="bg-white rounded-full p-2 shadow-sm border border-gray-200"
         >
@@ -207,7 +195,7 @@ export default function Dashboard() {
                 </TouchableOpacity>
               );
             })}
-            
+
             {loansList.length > 2 && (
               <TouchableOpacity
                 className="flex-row items-center justify-center py-3"
@@ -221,40 +209,7 @@ export default function Dashboard() {
         )}
       </View>
 
-      {/* Recent Transactions */}
-      <Text className="text-xl font-bold mb-3 mt-8 px-6">Recent Transactions</Text>
-      <View className="bg-white rounded-2xl shadow mx-4 mb-8 border border-gray-100">
-        {transactionsLoading ? (
-          <ActivityIndicator size="small" color="#4B7BF5" className="py-6" />
-        ) : transactionsList.length === 0 ? (
-          <Text className="text-gray-400 text-center py-6">No transactions found.</Text>
-        ) : (
-          transactionsList.map((txn, idx) => {
-            const isCredit = txn.transactionType === 'Credit';
-            const dateObj = new Date(txn.transactionDate);
-            const formattedDate = isNaN(dateObj.getTime()) 
-              ? txn.transactionDate?.toString().slice(0, 10) ?? '—'
-              : dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-            
-            return (
-              <View 
-                key={txn.id} 
-                className={`flex-row items-center justify-between px-6 py-4 ${
-                  idx < transactionsList.length - 1 ? 'border-b border-gray-100' : ''
-                }`}
-              >
-                <View>
-                  <Text className="font-medium text-base">{txn.category}</Text>
-                  <Text className="text-gray-400 text-xs mt-1">{formattedDate}</Text>
-                </View>
-                <Text className={`font-semibold text-base ${isCredit ? 'text-green-500' : 'text-red-500'}`}>
-                  {isCredit ? '+' : '-'}${txn.amount.toFixed(2)}
-                </Text>
-              </View>
-            );
-          })
-        )}
-      </View>
+
     </ScrollView>
   );
 }
