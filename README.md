@@ -1,7 +1,6 @@
 # MOBILE BANKING APP WITH AI 
 
-A React Native app built with Expo for managing personal finances, tracking expenses, and managing bank accounts with a modern, intuitive interface. The app integrates with a FastAPI backend for secure data management and real-time updates.
-
+A React Native app built with Expo for managing personal finances, tracking expenses, and managing bank accounts with a modern, intuitive interface. The app integrates with a robust .NET 9.0 backend and PostgreSQL database for secure data management and real-time updates.
 <div style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 15px; justify-content: center;">
    <img src="./assets/screenshots/login.png" width="230" alt="Personal Information Screenshot"/>
    <img src="./assets/screenshots/dashboard.png" width="230" alt="Dashboard Screenshot"/>
@@ -58,6 +57,13 @@ A React Native app built with Expo for managing personal finances, tracking expe
 - 🔄 Real-time transaction updates
 - 📱 Responsive transaction list
 
+### Payment Requests (Bills)
+- 🧾 View pending and paid bills
+- 💵 Pay in full directly from selected accounts
+- ✂️ Make partial payments effortlessly
+- ❌ Decline requests with confirmation
+- 🔔 Due date badges and visual tracking
+
 ### Settings
 - 👤 Personal Information management
 - 🏦 Bank account management
@@ -76,18 +82,19 @@ A React Native app built with Expo for managing personal finances, tracking expe
    cd pf-app
    ```
 
-2. Install dependencies
+2. Start the backend with Docker
+   This will spin up the PostgreSQL database and the .NET 9.0 API, running any EF Core migrations and seeding the database.
+   ```bash
+   docker compose up -d --build
+   ```
+   *The backend will be available at http://localhost:5200. You can view the API documentation at http://localhost:5200/swagger*
+
+3. Install frontend dependencies
    ```bash
    npm install
    ```
 
-3. Start the backend server
-   ```bash
-   cd FastAPI
-   uvicorn main:app --reload
-   ```
-
-4. Start the development server
+4. Start the React Native / Expo development server
    ```bash
    npx expo start
    ```
@@ -174,8 +181,10 @@ npm test -- --watch
 - [React Native](https://reactnative.dev) - Mobile app development
 - [NativeWind](https://www.nativewind.dev) - Styling
 - [React Native SVG](https://github.com/react-native-svg/react-native-svg) - Chart visualization
-- [React Native Progress](https://github.com/oblador/react-native-progress) - Progress indicators
-- [FastAPI](https://fastapi.tiangolo.com) - Backend API
+- [.NET 9.0 API](https://dotnet.microsoft.com/) - Restful Backend API
+- [Entity Framework Core](https://docs.microsoft.com/en-us/ef/core/) - ORM
+- [PostgreSQL](https://www.postgresql.org/) - Relational Database
+- [Docker](https://www.docker.com/) - Containerization
 - [Jest](https://jestjs.io) - Testing framework
 - [Expo Router](https://docs.expo.dev/router/introduction/) - Navigation
 - [Lucide React Native](https://lucide.dev) - Icon library
