@@ -50,7 +50,8 @@
       "expo-router",
       "expo-video",
       "expo-localization",
-      "expo-font"
+      "expo-font",
+      "@config-plugins/detox"
     ],
     "experiments": {
       "typedRoutes": true
