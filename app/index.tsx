@@ -49,19 +49,19 @@ export default function LoginScreen() {
     setIsLoading(true);
     try {
       const response = await auth.login(email, password);
-      
+
       router.replace({
         pathname: '/(tabs)/(Transactions)/dashboard',
-        params: { 
+        params: {
           party_id: response.user.id.toString(),
-          user_name: response.user.name 
+          user_name: response.user.name
         }
       });
     } catch (error: any) {
       console.error('Login Error:', error);
-      
+
       let errorMessage = 'Failed to login. Please try again.';
-      
+
       if (error.response?.status === 401) {
         errorMessage = 'Invalid email or password. Please check your credentials.';
       } else if (error.response?.data?.message) {
@@ -69,7 +69,7 @@ export default function LoginScreen() {
       } else if (error.message) {
         errorMessage = error.message;
       }
-      
+
       showAlert('Login Failed', errorMessage);
     } finally {
       setIsLoading(false);
@@ -77,13 +77,13 @@ export default function LoginScreen() {
   };
 
   return (
-    <KeyboardAvoidingView 
+    <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       className="flex-1"
       style={{ backgroundColor: '#f0f4f8' }}
     >
       <GlassWrapper glassStyle="regular" style={{ flex: 1 }}>
-        <ScrollView 
+        <ScrollView
           className="flex-1"
           contentContainerStyle={{ flexGrow: 1 }}
           keyboardShouldPersistTaps="handled"
@@ -96,11 +96,11 @@ export default function LoginScreen() {
             </View>
 
             {/* Login Form */}
-            <GlassWrapper 
-              glassStyle="clear" 
-              tintColor="rgba(255,255,255,0.6)" 
-              style={{ 
-                borderRadius: 24, 
+            <GlassWrapper
+              glassStyle="clear"
+              tintColor="rgba(255,255,255,0.6)"
+              style={{
+                borderRadius: 24,
                 overflow: 'hidden',
                 borderWidth: 1,
                 borderColor: 'rgba(209,213,219,0.5)',
@@ -113,12 +113,12 @@ export default function LoginScreen() {
                 {/* Email Input */}
                 <View style={{ marginBottom: 20 }}>
                   <Text style={{ fontSize: 14, fontWeight: '600', color: '#374151', marginBottom: 8 }}>Email Address</Text>
-                  <View style={{ 
-                    flexDirection: 'row', 
-                    alignItems: 'center', 
-                    backgroundColor: '#fff', 
-                    borderRadius: 12, 
-                    borderWidth: 1, 
+                  <View style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    backgroundColor: '#fff',
+                    borderRadius: 12,
+                    borderWidth: 1,
                     borderColor: '#D1D5DB',
                     paddingHorizontal: 16,
                     height: 52,
@@ -133,6 +133,7 @@ export default function LoginScreen() {
                       autoCapitalize="none"
                       keyboardType="email-address"
                       editable={!isLoading}
+                      testID="email-input"
                     />
                   </View>
                 </View>
@@ -140,12 +141,12 @@ export default function LoginScreen() {
                 {/* Password Input */}
                 <View style={{ marginBottom: 24 }}>
                   <Text style={{ fontSize: 14, fontWeight: '600', color: '#374151', marginBottom: 8 }}>Password</Text>
-                  <View style={{ 
-                    flexDirection: 'row', 
-                    alignItems: 'center', 
-                    backgroundColor: '#fff', 
-                    borderRadius: 12, 
-                    borderWidth: 1, 
+                  <View style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    backgroundColor: '#fff',
+                    borderRadius: 12,
+                    borderWidth: 1,
                     borderColor: '#D1D5DB',
                     paddingHorizontal: 16,
                     height: 52,
@@ -160,16 +161,17 @@ export default function LoginScreen() {
                       secureTextEntry={!showPassword}
                       autoCapitalize="none"
                       editable={!isLoading}
+                      testID="password-input"
                     />
-                    <TouchableOpacity 
+                    <TouchableOpacity
                       onPress={() => setShowPassword(!showPassword)}
                       disabled={isLoading}
                       hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                     >
-                      <Ionicons 
-                        name={showPassword ? "eye-outline" : "eye-off-outline"} 
-                        size={20} 
-                        color="#6B7280" 
+                      <Ionicons
+                        name={showPassword ? "eye-outline" : "eye-off-outline"}
+                        size={20}
+                        color="#6B7280"
                       />
                     </TouchableOpacity>
                   </View>
@@ -179,6 +181,7 @@ export default function LoginScreen() {
                 <TouchableOpacity
                   onPress={handleLogin}
                   disabled={isLoading}
+                  testID="login-button"
                   style={{
                     backgroundColor: isLoading ? '#93C5FD' : '#2563EB',
                     paddingVertical: 16,
