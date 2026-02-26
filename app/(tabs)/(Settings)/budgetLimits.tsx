@@ -250,7 +250,7 @@ export default function BudgetLimits() {
                   <View className="flex-row items-center bg-white border border-gray-200 rounded-lg px-3 py-2">
                     <Text className="text-lg text-gray-500 mr-1">$</Text>
                     <TextInput
-                      className="text-lg flex-1"
+                      className="text-lg flex-1 py-0 h-8 mt-0 leading-tight"
                       keyboardType="numeric"
                       value={row.limitInput}
                       onChangeText={(v) => handleLimitChange(index, v)}
