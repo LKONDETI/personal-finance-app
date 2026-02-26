@@ -299,6 +299,10 @@ export const budgets = {
         }
         throw new Error(response.data.message || 'Failed to update budget');
     },
+
+    delete: async (id: number): Promise<void> => {
+        await apiClient.delete(`/api/budgets/${id}`);
+    },
 };
 
 // Loans API
