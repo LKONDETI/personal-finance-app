@@ -94,6 +94,7 @@ builder.Services.AddScoped<BankingAPI.Services.ITransactionService, BankingAPI.S
 builder.Services.AddScoped<BankingAPI.Services.IBudgetService, BankingAPI.Services.BudgetService>();
 builder.Services.AddScoped<BankingAPI.Services.ILoanService, BankingAPI.Services.LoanService>();
 builder.Services.AddScoped<BankingAPI.Services.IPaymentRequestService, BankingAPI.Services.PaymentRequestService>();
+builder.Services.AddScoped<BankingAPI.Services.IUserService, BankingAPI.Services.UserService>();
 
 // ===== Swagger / OpenAPI =====
 builder.Services.AddEndpointsApiExplorer();
