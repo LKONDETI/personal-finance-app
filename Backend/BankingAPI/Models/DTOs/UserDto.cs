@@ -12,3 +12,12 @@ public class UserDto
     public bool IsActive { get; set; }
     public DateTime CreatedAt { get; set; }
 }
+
+/// <summary>
+/// Request model for updating a user's profile
+/// </summary>
+public class UpdateProfileRequest
+{
+    public string? Name { get; set; }
+    public string? Phone { get; set; }
+}

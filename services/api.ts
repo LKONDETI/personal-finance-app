@@ -380,6 +380,27 @@ export const paymentRequests = {
     },
 };
 
+// Users API
+export const users = {
+    getCurrentProfile: async (): Promise<User> => {
+        const response = await apiClient.get<ApiResponse<User>>('/api/user/me');
+        if (response.data.data) {
+            return response.data.data;
+        }
+        throw new Error(response.data.message || 'Failed to fetch user profile');
+    },
+
+    updateProfile: async (data: { name?: string; phone?: string }): Promise<User> => {
+        const response = await apiClient.put<ApiResponse<User>>('/api/user/me', data);
+        if (response.data.data) {
+            // Update the local storage user cache just in case
+            await SecureStore.setItemAsync(USER_KEY, JSON.stringify(response.data.data));
+            return response.data.data;
+        }
+        throw new Error(response.data.message || 'Failed to update user profile');
+    },
+};
+
 // Helper Functions
 const clearAuth = async (): Promise<void> => {
     try {
