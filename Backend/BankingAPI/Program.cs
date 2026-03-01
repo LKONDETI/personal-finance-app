@@ -230,6 +230,11 @@ app.MapGet("/", () => new
             getById = "GET /api/transactions/{id}",
             create = "POST /api/transactions",
             byCategory = "GET /api/transactions/category/{category}"
+        },
+        user = new
+        {
+            getProfile = "GET /api/user/me",
+            updateProfile = "PUT /api/user/me"
         }
     },
     swagger = "/swagger",
