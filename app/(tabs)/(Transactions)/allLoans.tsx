@@ -76,7 +76,7 @@ export default function AllLoans() {
       <View className="bg-white pb-4 px-6 shadow-sm" style={{ paddingTop: insets.top + 8 }}>
         <View className="flex-row items-center justify-between mb-4">
           <View className="flex-row items-center">
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => router.back()}
               className="bg-gray-100 rounded-full p-2 border border-gray-200 mr-3"
             >
@@ -92,13 +92,11 @@ export default function AllLoans() {
             <TouchableOpacity
               key={filter}
               onPress={() => handleFilterChange(filter as typeof activeFilter)}
-              className={`px-4 py-2 rounded-full mr-2 ${
-                activeFilter === filter ? 'bg-purple-600' : 'bg-gray-100'
-              }`}
+              className={`px-4 py-2 rounded-full mr-2 ${activeFilter === filter ? 'bg-purple-600' : 'bg-gray-100'
+                }`}
             >
-              <Text className={`font-semibold capitalize ${
-                activeFilter === filter ? 'text-white' : 'text-gray-700'
-              }`}>
+              <Text className={`font-semibold capitalize ${activeFilter === filter ? 'text-white' : 'text-gray-700'
+                }`}>
                 {filter}
               </Text>
             </TouchableOpacity>
@@ -125,7 +123,7 @@ export default function AllLoans() {
           filteredLoans.map((loan) => {
             const statusColors = getStatusColor(loan.status);
             const loanIcon = getLoanIcon(loan.loanType);
-            
+
             return (
               <TouchableOpacity
                 key={loan.id}
@@ -186,7 +184,7 @@ export default function AllLoans() {
       {/* Floating Action Button */}
       <TouchableOpacity
         className="absolute bottom-6 right-6 bg-purple-600 rounded-full p-4 shadow-lg"
-        onPress={() => router.push('/(tabs)/(Transactions)/applyLoan')}
+        onPress={() => router.push('/(tabs)/(Transactions)/loanSelect' as any)}
         style={{
           shadowColor: '#8B5CF6',
           shadowOffset: { width: 0, height: 4 },
