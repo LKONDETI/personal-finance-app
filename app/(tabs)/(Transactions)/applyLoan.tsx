@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, KeyboardAvoidingView, Platform } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { loans } from '@/services/api';
 import showAlert from '@/components/utility/ShowAlert';
 
-const LOAN_TYPES = ['Personal', 'Auto', 'Home', 'Education'];
+const LOAN_TYPES = ['Personal', 'Auto', 'Home', 'Education', 'Business'];
 const TERM_OPTIONS = [12, 24, 36, 48, 60];
 
 export default function ApplyLoan() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const [loanType, setLoanType] = useState('Personal');
+  const { type } = useLocalSearchParams<{ type?: string }>();
+  const [loanType, setLoanType] = useState(type || 'Personal');
   const [amount, setAmount] = useState('');
   const [termMonths, setTermMonths] = useState(36);
   const [purpose, setPurpose] = useState('');
@@ -23,15 +24,16 @@ export default function ApplyLoan() {
     if (principal === 0) return 0;
 
     // Simplified interest rate calculation (varies by loan type)
-    let annualRate = 0.08; // Default 8%
+    let annualRate = 0.08; // Default 8% (Personal)
     if (loanType === 'Home') annualRate = 0.045;
     if (loanType === 'Auto') annualRate = 0.06;
     if (loanType === 'Education') annualRate = 0.055;
+    if (loanType === 'Business') annualRate = 0.09;
 
     const monthlyRate = annualRate / 12;
-    const monthlyPayment = (principal * monthlyRate * Math.pow(1 + monthlyRate, termMonths)) / 
-                          (Math.pow(1 + monthlyRate, termMonths) - 1);
-    
+    const monthlyPayment = (principal * monthlyRate * Math.pow(1 + monthlyRate, termMonths)) /
+      (Math.pow(1 + monthlyRate, termMonths) - 1);
+
     return monthlyPayment;
   };
 
@@ -96,19 +98,19 @@ export default function ApplyLoan() {
   const monthlyPayment = calculateMonthlyPayment();
 
   return (
-    <KeyboardAvoidingView 
+    <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       className="flex-1 bg-gray-50"
     >
       {/* Header */}
       <View className="bg-purple-600 pb-6 px-6" style={{ paddingTop: insets.top + 8 }}>
-        <TouchableOpacity 
+        <TouchableOpacity
           onPress={() => router.back()}
           className="bg-purple-700 rounded-full p-2 mb-4 self-start"
         >
           <Ionicons name="arrow-back" size={24} color="white" />
         </TouchableOpacity>
-        
+
         <Text className="text-white text-3xl font-bold mb-2">Apply for Loan</Text>
         <Text className="text-purple-200">Complete the form below to submit your application</Text>
       </View>
@@ -122,13 +124,11 @@ export default function ApplyLoan() {
               <TouchableOpacity
                 key={type}
                 onPress={() => setLoanType(type)}
-                className={`px-4 py-2 rounded-full mr-2 mb-2 ${
-                  loanType === type ? 'bg-purple-600' : 'bg-gray-100'
-                }`}
+                className={`px-4 py-2 rounded-full mr-2 mb-2 ${loanType === type ? 'bg-purple-600' : 'bg-gray-100'
+                  }`}
               >
-                <Text className={`font-semibold ${
-                  loanType === type ? 'text-white' : 'text-gray-700'
-                }`}>
+                <Text className={`font-semibold ${loanType === type ? 'text-white' : 'text-gray-700'
+                  }`}>
                   {type}
                 </Text>
               </TouchableOpacity>
@@ -161,13 +161,11 @@ export default function ApplyLoan() {
               <TouchableOpacity
                 key={term}
                 onPress={() => setTermMonths(term)}
-                className={`px-4 py-2 rounded-full mr-2 mb-2 ${
-                  termMonths === term ? 'bg-purple-600' : 'bg-gray-100'
-                }`}
+                className={`px-4 py-2 rounded-full mr-2 mb-2 ${termMonths === term ? 'bg-purple-600' : 'bg-gray-100'
+                  }`}
               >
-                <Text className={`font-semibold ${
-                  termMonths === term ? 'text-white' : 'text-gray-700'
-                }`}>
+                <Text className={`font-semibold ${termMonths === term ? 'text-white' : 'text-gray-700'
+                  }`}>
                   {term} months
                 </Text>
               </TouchableOpacity>

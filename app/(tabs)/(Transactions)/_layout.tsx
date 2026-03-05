@@ -10,6 +10,10 @@ export default function RootLayout() {
     >
       <Stack.Screen name="dashboard" />
       <Stack.Screen name="accountDetails" />
+      <Stack.Screen name="allLoans" />
+      <Stack.Screen name="applyLoan" />
+      <Stack.Screen name="loanSelect" />
+      <Stack.Screen name="loanDetails" />
     </Stack>
   );
 }
