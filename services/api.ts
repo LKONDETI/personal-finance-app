@@ -3,8 +3,10 @@ import axios, { AxiosError, AxiosInstance } from 'axios';
 import * as SecureStore from 'expo-secure-store';
 
 // API Configuration
-// Use env variable, or fall back to localhost for simulator access
-const API_BASE_URL = 'http://127.0.0.1:5200';
+// Priority: EXPO_PUBLIC_API_URL env var → localhost fallback (simulator only)
+// To use Expo Go on a physical device, set EXPO_PUBLIC_API_URL in your .env file
+// to your ngrok URL (e.g. https://abc123.ngrok-free.app) or your machine's local IP.
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://127.0.0.1:5200';
 console.log('🔗 API_BASE_URL:', API_BASE_URL);
 const TOKEN_KEY = 'jwt_token';
 const USER_KEY = 'user_data';
