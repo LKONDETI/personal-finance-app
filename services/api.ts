@@ -80,12 +80,12 @@ export interface Loan {
     id: number;
     userId: number;
     loanType: string;
-    amount: number;
+    loanAmount: number;
     interestRate: number;
-    termMonths: number;
+    loanTermMonths: number;
     monthlyPayment: number;
     outstandingBalance: number;
-    loanPurpose: string;
+    purpose?: string;
     status: string;
     applicationDate: string;
     approvalDate?: string;
@@ -328,7 +328,12 @@ export const loans = {
         termMonths: number;
         loanPurpose: string;
     }): Promise<Loan> => {
-        const response = await apiClient.post<ApiResponse<Loan>>('/api/loans', data);
+        const response = await apiClient.post<ApiResponse<Loan>>('/api/loans', {
+            loanType: data.loanType,
+            loanAmount: data.amount,
+            loanTermMonths: data.termMonths,
+            purpose: data.loanPurpose,
+        });
         if (response.data.data) {
             return response.data.data;
         }
