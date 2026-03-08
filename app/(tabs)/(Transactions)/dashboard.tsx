@@ -134,7 +134,7 @@ export default function Dashboard() {
         ) : loansList.length === 0 ? (
           <TouchableOpacity
             className="bg-purple-600 rounded-2xl p-6 flex-row items-center justify-between shadow-lg mb-4"
-            onPress={() => router.push('/(tabs)/(Transactions)/applyLoan')}
+            onPress={() => router.push('/(tabs)/(Transactions)/loanSelect' as any)}
             style={{
               shadowColor: '#8B5CF6',
               shadowOffset: { width: 0, height: 4 },
@@ -205,6 +205,15 @@ export default function Dashboard() {
                 <Ionicons name="arrow-forward" size={16} color="#8B5CF6" />
               </TouchableOpacity>
             )}
+
+            {/* Apply for another loan */}
+            <TouchableOpacity
+              className="mt-2 mb-2 border-2 border-purple-200 bg-purple-50 rounded-2xl p-4 flex-row items-center justify-center"
+              onPress={() => router.push('/(tabs)/(Transactions)/loanSelect' as any)}
+            >
+              <Ionicons name="add-circle-outline" size={20} color="#8B5CF6" />
+              <Text className="text-purple-600 font-semibold ml-2">Apply for Another Loan</Text>
+            </TouchableOpacity>
           </>
         )}
       </View>
