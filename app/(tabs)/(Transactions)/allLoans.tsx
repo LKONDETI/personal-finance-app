@@ -141,7 +141,7 @@ export default function AllLoans() {
                     </View>
                     <View className="flex-1">
                       <Text className="font-bold text-lg">{loan.loanType}</Text>
-                      <Text className="text-gray-500 text-sm">{loan.loanPurpose}</Text>
+                      <Text className="text-gray-500 text-sm">{loan.purpose}</Text>
                     </View>
                   </View>
                   <View className={`${statusColors.bg} px-3 py-1 rounded-full flex-row items-center`}>
@@ -156,11 +156,11 @@ export default function AllLoans() {
                 <View className="flex-row items-center justify-between mb-3 pb-3 border-b border-gray-100">
                   <View>
                     <Text className="text-gray-500 text-xs">Loan Amount</Text>
-                    <Text className="font-bold text-xl">${loan.amount.toLocaleString()}</Text>
+                    <Text className="font-bold text-xl">${loan.loanAmount.toLocaleString()}</Text>
                   </View>
                   <View className="bg-purple-50 px-3 py-2 rounded-lg">
                     <Text className="text-purple-700 font-bold text-sm">{loan.interestRate}% APR</Text>
-                    <Text className="text-purple-600 text-xs">{loan.termMonths} months</Text>
+                    <Text className="text-purple-600 text-xs">{loan.loanTermMonths} months</Text>
                   </View>
                 </View>
 

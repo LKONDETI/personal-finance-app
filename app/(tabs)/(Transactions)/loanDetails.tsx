@@ -15,7 +15,7 @@ export default function LoanDetails() {
 
   useEffect(() => {
     if (!loanId) return;
-    
+
     const fetchLoanDetails = async () => {
       try {
         setLoading(true);
@@ -43,17 +43,17 @@ export default function LoanDetails() {
 
   const formatDate = (date?: string) => {
     if (!date) return 'N/A';
-    return new Date(date).toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
+    return new Date(date).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
     });
   };
 
   const calculateProgress = () => {
     if (!loan) return 0;
-    const paid = loan.amount - loan.outstandingBalance;
-    return (paid / loan.amount) * 100;
+    const paid = loan.loanAmount - loan.outstandingBalance;
+    return (paid / loan.loanAmount) * 100;
   };
 
   if (loading) {
@@ -82,16 +82,16 @@ export default function LoanDetails() {
     <View className="flex-1 bg-gray-50">
       {/* Header */}
       <View className="bg-purple-600 pb-6 px-6" style={{ paddingTop: insets.top + 8 }}>
-        <TouchableOpacity 
+        <TouchableOpacity
           onPress={() => router.back()}
           className="bg-purple-700 rounded-full p-2 mb-4 self-start"
         >
           <Ionicons name="arrow-back" size={24} color="white" />
         </TouchableOpacity>
-        
+
         <Text className="text-white text-3xl font-bold mb-2">{loan.loanType}</Text>
-        <Text className="text-purple-200">{loan.loanPurpose}</Text>
-        
+        <Text className="text-purple-200">{loan.purpose}</Text>
+
         <View className={`${statusColors.bg} ${statusColors.border} border px-4 py-2 rounded-full self-start mt-4`}>
           <Text className={`${statusColors.text} font-semibold`}>{loan.status}</Text>
         </View>
@@ -103,7 +103,7 @@ export default function LoanDetails() {
           <View className="flex-row justify-between items-center mb-4">
             <View>
               <Text className="text-gray-500 text-sm">Loan Amount</Text>
-              <Text className="text-3xl font-bold text-gray-900">${loan.amount.toLocaleString()}</Text>
+              <Text className="text-3xl font-bold text-gray-900">${loan.loanAmount.toLocaleString()}</Text>
             </View>
             <View className="bg-purple-100 px-4 py-2 rounded-lg">
               <Text className="text-purple-700 font-bold text-lg">{loan.interestRate}%</Text>
@@ -118,7 +118,7 @@ export default function LoanDetails() {
               <Text className="text-gray-600 text-sm font-semibold">{progress.toFixed(1)}%</Text>
             </View>
             <View className="bg-gray-200 h-3 rounded-full overflow-hidden">
-              <View 
+              <View
                 className="bg-purple-600 h-full rounded-full"
                 style={{ width: `${progress}%` }}
               />
@@ -129,32 +129,32 @@ export default function LoanDetails() {
         {/* Payment Details */}
         <View className="bg-white mx-4 rounded-2xl shadow p-6 mb-4">
           <Text className="text-lg font-bold mb-4">Payment Details</Text>
-          
+
           <View className="flex-row justify-between py-3 border-b border-gray-100">
             <Text className="text-gray-600">Monthly Payment</Text>
             <Text className="font-bold text-purple-600">${loan.monthlyPayment.toLocaleString()}</Text>
           </View>
-          
+
           <View className="flex-row justify-between py-3 border-b border-gray-100">
             <Text className="text-gray-600">Outstanding Balance</Text>
             <Text className="font-bold">${loan.outstandingBalance.toLocaleString()}</Text>
           </View>
-          
+
           <View className="flex-row justify-between py-3 border-b border-gray-100">
             <Text className="text-gray-600">Loan Term</Text>
-            <Text className="font-bold">{loan.termMonths} months</Text>
+            <Text className="font-bold">{loan.loanTermMonths} months</Text>
           </View>
-          
+
           <View className="flex-row justify-between py-3">
             <Text className="text-gray-600">Total Interest</Text>
-            <Text className="font-bold">${((loan.monthlyPayment * loan.termMonths) - loan.amount).toFixed(2)}</Text>
+            <Text className="font-bold">${((loan.monthlyPayment * loan.loanTermMonths) - loan.loanAmount).toFixed(2)}</Text>
           </View>
         </View>
 
         {/* Timeline */}
         <View className="bg-white mx-4 rounded-2xl shadow p-6 mb-4">
           <Text className="text-lg font-bold mb-4">Timeline</Text>
-          
+
           <View className="space-y-4">
             <View className="flex-row items-start">
               <View className="bg-purple-100 rounded-full p-2 mr-3">

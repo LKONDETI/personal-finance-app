@@ -75,15 +75,10 @@ export default function ApplyLoan() {
       });
 
       showAlert(
-        'Success',
-        'Your loan application has been submitted successfully! We will review it and get back to you soon.',
-        [
-          {
-            text: 'OK',
-            onPress: () => router.back(),
-          },
-        ]
+        'Application Submitted',
+        'Your loan application has been submitted! We will review it and get back to you soon.'
       );
+      router.back();
     } catch (error: any) {
       console.error('Failed to submit loan application:', error);
       showAlert(
