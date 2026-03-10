@@ -43,6 +43,22 @@ services:
       postgres:
         condition: service_healthy
 
+  # ngrok tunnel — exposes backend port 5200 to the internet
+  # Required for Expo Go on a physical device
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: banking-ngrok
+    restart: unless-stopped
+    environment:
+      NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN}
+    command: http backend:5200 --log stdout
+    ports:
+      - "4041:4040"   # ngrok web UI available at http://localhost:4041
+    networks:
+      - banking-network
+    depends_on:
+      - backend
+
 volumes:
   postgres_data:
     driver: local
