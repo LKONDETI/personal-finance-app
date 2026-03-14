@@ -64,12 +64,20 @@ A React Native app built with Expo for managing personal finances, tracking expe
 - ❌ Decline requests with confirmation
 - 🔔 Due date badges and visual tracking
 
+### Loans
+- 💵 Overview of active, pending, and completed loans
+- 📊 Detailed loan information (Outstanding Balance, Monthly Payment, Interest Rate)
+- 📝 Loan application logic 
+- ⏪ Soft-delete / Withdraw functionality for pending applications
+- 🔔 Important reminders for upcoming loan payments
+
 ### Settings
 - 👤 Personal Information management
 - 🏦 Bank account management
-- 💰 Budget limits configuration
+- 💰 Budget limits configuration (with Upsert logic)
 - 🔔 Notification preferences with modal interface
-- 🔒 Security settings with bank contact modal
+- 🔒 Security settings with **Change Password** capabilities
+- 👁️ **Privacy Mode**: Globally mask sensitive financial balances
 - 💬 AI Chatbot support
 - 🎨 Modern, intuitive UI
 - 🔄 Seamless navigation
@@ -172,7 +180,8 @@ npm test -- --watch
 - App preferences
 - User profile management
 - Modal-based notifications
-- Security settings with bank contact
+- Advanced Security Settings (Change Password)
+- Privacy Mode (Masking sensitive information)
 - AI-powered chatbot support
 
 ## Technologies Used
