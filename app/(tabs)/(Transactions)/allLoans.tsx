@@ -6,10 +6,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { loans } from '@/services/api';
 import type { Loan } from '@/services/api';
 import { checkAndSendLoanReminder } from '@/services/NotificationService';
+import { usePrivacyMode } from '@/context/PrivacyContext';
 
 export default function AllLoans() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const { maskAmount } = usePrivacyMode();
   const [loansList, setLoansList] = useState<Loan[]>([]);
   const [filteredLoans, setFilteredLoans] = useState<Loan[]>([]);
   const [loading, setLoading] = useState(true);
@@ -159,7 +161,7 @@ export default function AllLoans() {
                 <View className="flex-row items-center justify-between mb-3 pb-3 border-b border-gray-100">
                   <View>
                     <Text className="text-gray-500 text-xs">Loan Amount</Text>
-                    <Text className="font-bold text-xl">${loan.loanAmount.toLocaleString()}</Text>
+                    <Text className="font-bold text-xl">{maskAmount(loan.loanAmount)}</Text>
                   </View>
                   <View className="bg-purple-50 px-3 py-2 rounded-lg">
                     <Text className="text-purple-700 font-bold text-sm">{loan.interestRate}% APR</Text>
@@ -171,11 +173,11 @@ export default function AllLoans() {
                 <View className="flex-row justify-between">
                   <View>
                     <Text className="text-gray-500 text-xs">Outstanding Balance</Text>
-                    <Text className="font-bold text-base">${loan.outstandingBalance.toLocaleString()}</Text>
+                    <Text className="font-bold text-base">{maskAmount(loan.outstandingBalance)}</Text>
                   </View>
                   <View className="items-end">
                     <Text className="text-gray-500 text-xs">Monthly Payment</Text>
-                    <Text className="font-bold text-base text-purple-600">${loan.monthlyPayment.toLocaleString()}</Text>
+                    <Text className="font-bold text-base text-purple-600">{maskAmount(loan.monthlyPayment)}</Text>
                   </View>
                 </View>
               </TouchableOpacity>

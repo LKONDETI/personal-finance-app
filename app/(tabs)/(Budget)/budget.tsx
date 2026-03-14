@@ -10,6 +10,7 @@ import { accounts, transactions, budgets } from '@/services/api';
 import type { Transaction, Budget, Account } from '@/services/api';
 import categoryMappings from '@/data/categoryMappings.json';
 import { checkAndSendBudgetAlert } from '@/services/NotificationService';
+import { usePrivacyMode } from '@/context/PrivacyContext';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -118,6 +119,7 @@ export default function BudgetView() {
   const [savedBudgets, setSavedBudgets] = useState<Budget[]>([]);
   const [activeSlice, setActiveSlice] = useState<number | null>(null);
   const [showUncategorized, setShowUncategorized] = useState(false);
+  const { isPrivacyModeEnabled, maskAmount } = usePrivacyMode();
 
   // ── Fetch ─────────────────────────────────────────────────────────────────
 
@@ -344,7 +346,7 @@ export default function BudgetView() {
                 </Svg>
                 <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center' }}>
                   <Text className="text-xs text-gray-400">Spent</Text>
-                  <Text className="text-base font-bold text-gray-800">${totalSpent.toFixed(0)}</Text>
+                  <Text className="text-base font-bold text-gray-800">{maskAmount(totalSpent)}</Text>
                 </View>
               </View>
 
@@ -408,13 +410,13 @@ export default function BudgetView() {
 
                   <View className="flex-row justify-between items-center">
                     <Text className="text-xs text-gray-500">
-                      Spent: <Text className="font-medium text-gray-700">${item.spent.toFixed(2)}</Text>
+                      Spent: <Text className="font-medium text-gray-700">{maskAmount(item.spent)}</Text>
                     </Text>
                     <Text className={`text-xs font-semibold ${isOver ? 'text-red-500' : 'text-gray-400'}`}>
                       {pct}% {isOver ? '🔴 Over' : 'of limit'}
                     </Text>
                     <Text className="text-xs text-gray-500">
-                      Limit: <Text className="font-medium text-gray-700">${item.limit.toFixed(2)}</Text>
+                      Limit: <Text className="font-medium text-gray-700">{maskAmount(item.limit)}</Text>
                     </Text>
                   </View>
                 </TouchableOpacity>
@@ -451,7 +453,7 @@ export default function BudgetView() {
                           {getTxDate(tx).toLocaleDateString()}
                         </Text>
                       </View>
-                      <Text className="text-sm font-semibold text-red-500">-${tx.amount.toFixed(2)}</Text>
+                      <Text className="text-sm font-semibold text-red-500">-{maskAmount(tx.amount)}</Text>
                     </View>
                   ))}
                 </View>

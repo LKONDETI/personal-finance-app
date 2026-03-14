@@ -123,12 +123,12 @@ export default function SettingsView() {
           "#8B5CF6"
         )}
 
-        {/* Security - show modal instead of routing */}
+        {/* Security */}
         {renderMenuItem(
           <Shield size={20} color="#EF4444" />,
           "Security",
           "Manage your security settings",
-          () => setSecurityModalVisible(true),
+          () => router.push('/securitySettings'),
           "bg-red-100",
           "#EF4444"
         )}
@@ -143,27 +143,6 @@ export default function SettingsView() {
           "#A78BFA"
         )}
       </View>
-
-      {/* Security Modal */}
-      <Modal
-        visible={securityModalVisible}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setSecurityModalVisible(false)}
-      >
-        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.3)', justifyContent: 'center', alignItems: 'center' }}>
-          <View style={{ backgroundColor: 'white', padding: 24, borderRadius: 16, alignItems: 'center', minWidth: 250 }}>
-            <Text className="text-lg font-semibold mb-4">Contact the bank</Text>
-            <Text className="text-gray-600 mb-6">To manage your security settings, please contact your bank directly.</Text>
-            <TouchableOpacity
-              onPress={() => setSecurityModalVisible(false)}
-              className="bg-blue-500 px-6 py-2 rounded-full"
-            >
-              <Text className="text-white font-medium">OK</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
 
       {/* Notifications Modal */}
       <Modal

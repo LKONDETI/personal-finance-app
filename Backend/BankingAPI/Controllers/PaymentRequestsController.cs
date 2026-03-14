@@ -71,6 +71,9 @@ public class PaymentRequestsController : ControllerBase
             var userId = GetAuthenticatedUserId();
             var result = await _service.PayFullAsync(id, userId, body.AccountId);
 
+            // Prevent JSON circular reference cycle during serialization
+            result.Account = null;
+
             return Ok(new { success = true, data = result, message = "Payment completed successfully" });
         }
         catch (InvalidOperationException ex)
@@ -90,6 +93,9 @@ public class PaymentRequestsController : ControllerBase
             var userId = GetAuthenticatedUserId();
             var result = await _service.PayPartialAsync(id, userId, body.AccountId, body.Amount);
 
+            // Prevent JSON circular reference cycle during serialization
+            result.Account = null;
+
             return Ok(new { success = true, data = result, message = "Partial payment completed successfully" });
         }
         catch (InvalidOperationException ex)
@@ -108,6 +114,9 @@ public class PaymentRequestsController : ControllerBase
         {
             var userId = GetAuthenticatedUserId();
             var result = await _service.DeclineAsync(id, userId);
+
+            // Prevent JSON circular reference cycle during serialization
+            result.Account = null;
 
             return Ok(new { success = true, data = result, message = "Payment request declined" });
         }

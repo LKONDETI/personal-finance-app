@@ -49,14 +49,17 @@ public class BudgetService : IBudgetService
 
     public async Task<BudgetDto?> CreateBudgetAsync(int userId, string category, decimal monthlyLimit, int month, int year)
     {
-        // Check if budget already exists for this category/month/year
+        // Upsert: update the limit if a budget already exists for this category/month/year
         var existing = await _context.BudgetLimits
             .FirstOrDefaultAsync(b => b.UserId == userId && b.Category == category && b.Month == month && b.Year == year);
 
         if (existing != null)
         {
-            _logger.LogWarning("Budget already exists for user {UserId}, category {Category}, {Month}/{Year}", userId, category, month, year);
-            return null;
+            existing.MonthlyLimit = monthlyLimit;
+            existing.UpdatedAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+            _logger.LogInformation("Budget upserted (updated) for user {UserId}: {Category} - {Limit:C}", userId, category, monthlyLimit);
+            return MapToBudgetDto(existing);
         }
 
         var budget = new BudgetLimit

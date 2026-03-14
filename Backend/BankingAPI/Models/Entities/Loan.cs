@@ -50,5 +50,6 @@ public enum LoanStatus
     Active,       // Loan disbursed and active
     Rejected,     // Application rejected
     PaidOff,      // Loan fully repaid
-    Defaulted     // Loan in default
+    Defaulted,    // Loan in default
+    Withdrawn     // Application withdrawn by the user
 }

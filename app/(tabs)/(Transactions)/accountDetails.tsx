@@ -6,12 +6,14 @@ import { ArrowDownRight, ArrowLeft, ArrowUpRight, MoreVertical } from "lucide-re
 import { accounts, transactions as transactionsApi } from "@/services/api";
 import type { Account, Transaction } from "@/services/api";
 import { sendLargeTransactionAlert } from '@/services/NotificationService';
+import { usePrivacyMode } from '@/context/PrivacyContext';
 
 export default function AccountDetails() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { accountId, party_id } = useLocalSearchParams<{ accountId: string, party_id: string }>();
   const accountIdNum = Number(accountId);
+  const { maskAmount } = usePrivacyMode();
 
   const [account, setAccount] = useState<Account | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -116,7 +118,7 @@ export default function AccountDetails() {
         <Text className="text-gray-500 text-xs mb-2">Created: {new Date(account.createdAt).toLocaleDateString()}</Text>
         <Text className="text-gray-500 mb-1">Available balance</Text>
         <Text className="text-3xl font-bold text-blue-600 mb-1">
-          ${account.balance.toFixed(2)}
+          {maskAmount(account.balance)}
         </Text>
       </View>
 
@@ -173,11 +175,11 @@ export default function AccountDetails() {
                         {tx.description || tx.category || tx.transactionType}
                       </Text>
                       <Text className="text-gray-500 text-xs mt-1">{formattedDate}</Text>
-                      <Text className="text-gray-500 text-xs mt-0.5">Balance: ${tx.balanceAfterTx.toFixed(2)}</Text>
+                      <Text className="text-gray-500 text-xs mt-0.5">Balance: {maskAmount(tx.balanceAfterTx)}</Text>
                     </View>
                   </View>
                   <Text className={`font-semibold text-base whitespace-nowrap ${isCredit ? 'text-green-500' : 'text-red-500'}`}>
-                    {isCredit ? '+' : '-'}${tx.amount.toFixed(2)}
+                    {isCredit ? '+' : '-'}{maskAmount(tx.amount)}
                   </Text>
                 </View>
               );
