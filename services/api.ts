@@ -339,6 +339,10 @@ export const loans = {
         }
         throw new Error(response.data.message || 'Failed to apply for loan');
     },
+
+    withdraw: async (id: number, reason: string): Promise<void> => {
+        await apiClient.delete(`/api/loans/${id}`, { data: { reason } });
+    },
 };
 
 // Payment Requests API

@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
+import {
+  View, Text, TouchableOpacity, ScrollView, ActivityIndicator,
+  Modal, TextInput, Alert, KeyboardAvoidingView, Platform
+} from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -13,9 +16,13 @@ export default function LoanDetails() {
   const [loan, setLoan] = useState<Loan | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Withdrawal modal state
+  const [withdrawModalVisible, setWithdrawModalVisible] = useState(false);
+  const [withdrawReason, setWithdrawReason] = useState('');
+  const [withdrawing, setWithdrawing] = useState(false);
+
   useEffect(() => {
     if (!loanId) return;
-
     const fetchLoanDetails = async () => {
       try {
         setLoading(true);
@@ -27,33 +34,50 @@ export default function LoanDetails() {
         setLoading(false);
       }
     };
-
     fetchLoanDetails();
   }, [loanId]);
 
   const getStatusColor = (status: string) => {
-    const statusLower = status.toLowerCase();
-    if (statusLower === 'pending') return { bg: 'bg-amber-100', text: 'text-amber-700', border: 'border-amber-200' };
-    if (statusLower === 'approved') return { bg: 'bg-green-100', text: 'text-green-700', border: 'border-green-200' };
-    if (statusLower === 'active') return { bg: 'bg-blue-100', text: 'text-blue-700', border: 'border-blue-200' };
-    if (statusLower === 'rejected') return { bg: 'bg-red-100', text: 'text-red-700', border: 'border-red-200' };
-    if (statusLower === 'completed') return { bg: 'bg-gray-100', text: 'text-gray-700', border: 'border-gray-200' };
+    const s = status.toLowerCase();
+    if (s === 'pending')   return { bg: 'bg-amber-100',  text: 'text-amber-700',  border: 'border-amber-200' };
+    if (s === 'approved')  return { bg: 'bg-green-100',  text: 'text-green-700',  border: 'border-green-200' };
+    if (s === 'active')    return { bg: 'bg-blue-100',   text: 'text-blue-700',   border: 'border-blue-200' };
+    if (s === 'rejected')  return { bg: 'bg-red-100',    text: 'text-red-700',    border: 'border-red-200' };
+    if (s === 'withdrawn') return { bg: 'bg-gray-100',   text: 'text-gray-500',   border: 'border-gray-200' };
+    if (s === 'completed') return { bg: 'bg-gray-100',   text: 'text-gray-700',   border: 'border-gray-200' };
     return { bg: 'bg-gray-100', text: 'text-gray-700', border: 'border-gray-200' };
   };
 
   const formatDate = (date?: string) => {
     if (!date) return 'N/A';
-    return new Date(date).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
+    return new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
   };
 
   const calculateProgress = () => {
     if (!loan) return 0;
     const paid = loan.loanAmount - loan.outstandingBalance;
     return (paid / loan.loanAmount) * 100;
+  };
+
+  const handleWithdraw = async () => {
+    if (!withdrawReason.trim() || withdrawReason.trim().length < 5) {
+      Alert.alert('Reason Required', 'Please enter a reason for withdrawing (at least 5 characters).');
+      return;
+    }
+    try {
+      setWithdrawing(true);
+      await loans.withdraw(parseInt(loanId!), withdrawReason.trim());
+      setWithdrawModalVisible(false);
+      Alert.alert(
+        'Application Withdrawn',
+        'Your loan application has been withdrawn successfully.',
+        [{ text: 'OK', onPress: () => router.back() }]
+      );
+    } catch (error: any) {
+      Alert.alert('Error', error?.response?.data?.message || 'Failed to withdraw application. Please try again.');
+    } finally {
+      setWithdrawing(false);
+    }
   };
 
   if (loading) {
@@ -77,6 +101,7 @@ export default function LoanDetails() {
 
   const statusColors = getStatusColor(loan.status);
   const progress = calculateProgress();
+  const isPending = loan.status.toLowerCase() === 'pending';
 
   return (
     <View className="flex-1 bg-gray-50">
@@ -192,12 +217,85 @@ export default function LoanDetails() {
           </View>
         </View>
 
-        {/* Contact Support */}
-        <TouchableOpacity className="bg-purple-600 mx-4 rounded-2xl p-4 mb-6 flex-row items-center justify-center shadow-lg">
-          <Ionicons name="chatbubble-outline" size={20} color="white" />
-          <Text className="text-white font-semibold ml-2">Contact Support</Text>
-        </TouchableOpacity>
+        {/* Withdraw Button — only for Pending loans */}
+        {isPending && (
+          <TouchableOpacity
+            className="mx-4 mb-6 border-2 border-red-300 bg-red-50 rounded-2xl p-4 flex-row items-center justify-center"
+            onPress={() => setWithdrawModalVisible(true)}
+          >
+            <Ionicons name="close-circle-outline" size={20} color="#EF4444" />
+            <Text className="text-red-500 font-semibold ml-2">Withdraw Application</Text>
+          </TouchableOpacity>
+        )}
+
+        {!isPending && <View className="h-6" />}
       </ScrollView>
+
+      {/* Withdrawal Reason Modal */}
+      <Modal
+        visible={withdrawModalVisible}
+        transparent
+        animationType="slide"
+        onRequestClose={() => !withdrawing && setWithdrawModalVisible(false)}
+      >
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={{ flex: 1, justifyContent: 'flex-end' }}
+        >
+          <View style={{ backgroundColor: 'rgba(0,0,0,0.4)', flex: 1, justifyContent: 'flex-end' }}>
+            <View className="bg-white rounded-t-3xl px-6 pt-6 pb-10">
+              {/* Handle bar */}
+              <View className="w-10 h-1 bg-gray-200 rounded-full self-center mb-5" />
+
+              <View className="flex-row items-center mb-2">
+                <View className="bg-red-100 rounded-full p-2 mr-3">
+                  <Ionicons name="close-circle-outline" size={22} color="#EF4444" />
+                </View>
+                <Text className="text-xl font-bold text-gray-900">Withdraw Application</Text>
+              </View>
+              <Text className="text-gray-500 text-sm mb-5 ml-1">
+                Please tell us why you're withdrawing this {loan?.loanType} loan application.
+              </Text>
+
+              <TextInput
+                className="bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3 text-gray-800 text-sm min-h-[100px]"
+                placeholder="Enter your reason here..."
+                placeholderTextColor="#9CA3AF"
+                multiline
+                textAlignVertical="top"
+                value={withdrawReason}
+                onChangeText={setWithdrawReason}
+                editable={!withdrawing}
+              />
+
+              <View className="flex-row gap-3 mt-5">
+                <TouchableOpacity
+                  className="flex-1 bg-gray-100 rounded-2xl py-4 items-center"
+                  onPress={() => {
+                    setWithdrawModalVisible(false);
+                    setWithdrawReason('');
+                  }}
+                  disabled={withdrawing}
+                >
+                  <Text className="text-gray-600 font-semibold">Cancel</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  className="flex-1 bg-red-500 rounded-2xl py-4 items-center"
+                  onPress={handleWithdraw}
+                  disabled={withdrawing}
+                  style={{ opacity: withdrawing ? 0.6 : 1 }}
+                >
+                  {withdrawing
+                    ? <ActivityIndicator size="small" color="white" />
+                    : <Text className="text-white font-semibold">Confirm Withdrawal</Text>
+                  }
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </KeyboardAvoidingView>
+      </Modal>
     </View>
   );
 }

@@ -266,6 +266,69 @@ public class LoansController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Withdraw a pending loan application
+    /// </summary>
+    [HttpDelete("{id}")]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> WithdrawLoan(int id, [FromBody] WithdrawLoanRequest request)
+    {
+        try
+        {
+            var userId = GetAuthenticatedUserId();
+            if (userId == null)
+            {
+                return Unauthorized(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "User not authenticated"
+                });
+            }
+
+            // Fetch the loan first to verify ownership and status
+            var loan = await _loanService.GetLoanByIdAsync(id, userId.Value);
+
+            if (loan == null)
+            {
+                return NotFound(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "Loan not found"
+                });
+            }
+
+            if (!string.Equals(loan.Status, "Pending", StringComparison.OrdinalIgnoreCase))
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "Only pending loan applications can be withdrawn"
+                });
+            }
+
+            await _loanService.UpdateLoanStatusAsync(id, userId.Value, LoanStatus.Withdrawn);
+
+            _logger.LogInformation("Loan {LoanId} withdrawn by user {UserId}. Reason: {Reason}", id, userId.Value, request.Reason);
+
+            return Ok(new ApiResponse<object>
+            {
+                Success = true,
+                Message = "Loan application withdrawn successfully"
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error withdrawing loan {LoanId}", id);
+            return StatusCode(500, new ApiResponse<object>
+            {
+                Success = false,
+                Message = "Internal server error"
+            });
+        }
+    }
+
     private int? GetAuthenticatedUserId()
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -284,4 +347,9 @@ public class ApplyLoanRequest
 public class UpdateLoanStatusRequest
 {
     public required string Status { get; set; } // Pending, Approved, Rejected, Disbursed, Closed
+}
+
+public class WithdrawLoanRequest
+{
+    public string? Reason { get; set; }
 }
