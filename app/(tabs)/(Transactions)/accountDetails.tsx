@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ArrowDownRight, ArrowLeft, ArrowUpRight, MoreVertical } from "lucide-react-native";
 import { accounts, transactions as transactionsApi } from "@/services/api";
 import type { Account, Transaction } from "@/services/api";
+import { sendLargeTransactionAlert } from '@/services/NotificationService';
 
 export default function AccountDetails() {
   const router = useRouter();
@@ -30,6 +31,14 @@ export default function AccountDetails() {
         // Fetch all transactions for this account
         const txData = await transactionsApi.getAll(accountIdNum);
         setTransactions(txData);
+        // Alert for any large debit transactions (>$200)
+        txData
+          .filter(tx => tx.transactionType === 'Debit' && tx.amount >= 200)
+          .forEach(tx => sendLargeTransactionAlert(
+            tx.description ?? 'Unknown',
+            tx.amount,
+            accData.accountName
+          ));
       } catch (error) {
         console.error("Failed to fetch account details or transactions:", error);
         Alert.alert("Error", "Failed to load account details. Make sure the backend is running.");

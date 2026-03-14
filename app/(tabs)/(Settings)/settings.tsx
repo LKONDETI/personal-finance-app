@@ -1,15 +1,30 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Alert, Pressable, Modal } from "react-native";
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, ScrollView, Alert, Pressable, Modal, Switch } from "react-native";
 import { useRouter } from "expo-router";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ArrowLeft, ChevronRight, LogOut, CreditCard, Settings as SettingsIcon, MessageCircle, User, Bell, Shield } from "lucide-react-native";
 import { auth } from '@/services/api';
+import { areNotificationsEnabled, setNotificationsEnabled, requestNotificationPermissions } from '@/services/NotificationService';
 
 export default function SettingsView() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const [securityModalVisible, setSecurityModalVisible] = useState(false);
   const [notificationsModalVisible, setNotificationsModalVisible] = useState(false);
+  const [notificationsOn, setNotificationsOn] = useState(true);
+
+  useEffect(() => {
+    areNotificationsEnabled().then(setNotificationsOn);
+  }, []);
+
+  const handleNotificationToggle = async (value: boolean) => {
+    setNotificationsOn(value);
+    await setNotificationsEnabled(value);
+    if (value) {
+      const granted = await requestNotificationPermissions();
+      if (!granted) Alert.alert('Permission Required', 'Please enable notifications in your device settings.');
+    }
+  };
 
   const handleLogout = async () => {
     try {
@@ -154,18 +169,54 @@ export default function SettingsView() {
       <Modal
         visible={notificationsModalVisible}
         transparent
-        animationType="fade"
+        animationType="slide"
         onRequestClose={() => setNotificationsModalVisible(false)}
       >
-        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.3)', justifyContent: 'center', alignItems: 'center' }}>
-          <View style={{ backgroundColor: 'white', padding: 24, borderRadius: 16, alignItems: 'center', minWidth: 250 }}>
-            <Text className="text-lg font-semibold mb-4">Notifications</Text>
-            <Text className="text-gray-600 mb-6">No notifications at this time.</Text>
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.3)', justifyContent: 'flex-end' }}>
+          <View style={{ backgroundColor: 'white', borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 24 }}>
+            <Text className="text-xl font-bold mb-1">Notifications</Text>
+            <Text className="text-gray-400 text-sm mb-6">Manage what alerts you receive</Text>
+
+            {/* Master toggle */}
+            <View className="flex-row items-center justify-between bg-purple-50 rounded-2xl px-4 py-4 mb-5">
+              <View className="flex-row items-center">
+                <View className="bg-purple-100 rounded-full p-2 mr-3">
+                  <Bell size={18} color="#8B5CF6" />
+                </View>
+                <View>
+                  <Text className="font-semibold text-gray-800">Enable Notifications</Text>
+                  <Text className="text-xs text-gray-400">{notificationsOn ? 'Active' : 'Disabled'}</Text>
+                </View>
+              </View>
+              <Switch
+                value={notificationsOn}
+                onValueChange={handleNotificationToggle}
+                trackColor={{ true: '#8B5CF6', false: '#E5E7EB' }}
+                thumbColor="white"
+              />
+            </View>
+
+            {/* Notification types */}
+            {[
+              { emoji: '🚨', title: 'Over-Budget Alerts', desc: 'When a category reaches 80%+ of its limit' },
+              { emoji: '💸', title: 'Large Transactions', desc: 'When a debit over $200 hits your account' },
+              { emoji: '📅', title: 'Loan Reminders', desc: 'Payment due in 3 days for active loans' },
+            ].map(item => (
+              <View key={item.title} className="flex-row items-center py-3 border-b border-gray-100">
+                <Text className="text-2xl mr-3">{item.emoji}</Text>
+                <View className="flex-1">
+                  <Text className="font-medium text-gray-800">{item.title}</Text>
+                  <Text className="text-xs text-gray-400">{item.desc}</Text>
+                </View>
+                <View className={`w-2 h-2 rounded-full ${notificationsOn ? 'bg-green-400' : 'bg-gray-300'}`} />
+              </View>
+            ))}
+
             <TouchableOpacity
               onPress={() => setNotificationsModalVisible(false)}
-              className="bg-blue-500 px-6 py-2 rounded-full"
+              className="bg-purple-600 mt-6 py-3 rounded-2xl items-center"
             >
-              <Text className="text-white font-medium">OK</Text>
+              <Text className="text-white font-semibold">Done</Text>
             </TouchableOpacity>
           </View>
         </View>
