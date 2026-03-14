@@ -9,6 +9,7 @@ import { Settings, AlertTriangle, ChevronDown, ChevronRight, ChevronLeft } from 
 import { accounts, transactions, budgets } from '@/services/api';
 import type { Transaction, Budget, Account } from '@/services/api';
 import categoryMappings from '@/data/categoryMappings.json';
+import { checkAndSendBudgetAlert } from '@/services/NotificationService';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -229,6 +230,14 @@ export default function BudgetView() {
 
   const overBudgetCategories = categoryData.filter(c => c.spent > c.limit && c.limit > 0);
   const totalSpent = categoryData.reduce((s, c) => s + c.spent, 0);
+
+  // Fire budget alert notifications for categories at/above 80% of limit
+  useEffect(() => {
+    if (loading || categoryData.length === 0) return;
+    categoryData.forEach(cat => {
+      checkAndSendBudgetAlert(cat.label, cat.spent, cat.limit, 0.8);
+    });
+  }, [categoryData, loading]);
 
   // ── Render ────────────────────────────────────────────────────────────────
 

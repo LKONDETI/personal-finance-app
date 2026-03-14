@@ -51,7 +51,15 @@
       "expo-video",
       "expo-localization",
       "expo-font",
-      "@config-plugins/detox"
+      "@config-plugins/detox",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/icon.png",
+          "color": "#4B7BF5",
+          "sounds": []
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

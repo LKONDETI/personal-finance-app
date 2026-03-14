@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { loans } from '@/services/api';
 import type { Loan } from '@/services/api';
+import { checkAndSendLoanReminder } from '@/services/NotificationService';
 
 export default function AllLoans() {
   const router = useRouter();
@@ -21,6 +22,8 @@ export default function AllLoans() {
       const data = await loans.getAll();
       setLoansList(data);
       filterLoans(data, activeFilter);
+      // Send payment reminders for active loans due within 3 days
+      data.forEach(loan => checkAndSendLoanReminder(loan, 3));
     } catch (error) {
       console.error('Failed to fetch loans:', error);
     } finally {
