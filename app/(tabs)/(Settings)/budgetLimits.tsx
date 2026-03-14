@@ -123,29 +123,22 @@ export default function BudgetLimits() {
 
     setSaving(true);
     try {
-      // Run all updates/creates in parallel
+      // Always call create — the backend now upserts (creates or updates) automatically.
+      // This avoids the duplicate key error that occurred when row.budget was stale.
       await Promise.all(
         dirtyRows.map(async (row) => {
           const monthlyLimit = parseFloat(row.limitInput);
           if (isNaN(monthlyLimit) || monthlyLimit <= 0) return;
-
-          if (row.budget) {
-            // Update existing
-            await budgetsApi.update(row.budget.id, { monthlyLimit });
-          } else {
-            // Create new
-            await budgetsApi.create({
-              category: row.category,
-              monthlyLimit,
-              month: CURRENT_MONTH,
-              year: CURRENT_YEAR,
-            });
-          }
+          await budgetsApi.create({
+            category: row.category,
+            monthlyLimit,
+            month: CURRENT_MONTH,
+            year: CURRENT_YEAR,
+          });
         })
       );
 
       Alert.alert("Saved!", "Your budget limits have been updated.");
-      // Reload fresh data from backend
       await loadBudgets();
     } catch (err) {
       Alert.alert("Error", "Failed to save some budget limits. Please try again.");
@@ -155,7 +148,11 @@ export default function BudgetLimits() {
   };
 
   return (
-    <ScrollView className="flex-1 bg-white">
+    <ScrollView
+      className="flex-1 bg-white"
+      contentContainerStyle={{ flexGrow: 1, paddingBottom: 32 }}
+      keyboardShouldPersistTaps="handled"
+    >
       {/* Header */}
       <View
         className="p-4 flex-row items-center justify-between border-b border-gray-100"
