@@ -2,21 +2,26 @@
 
 A React Native app built with Expo for managing personal finances, tracking expenses, and managing bank accounts with a modern, intuitive interface. The app integrates with a robust .NET 9.0 backend and PostgreSQL database for secure data management and real-time updates.
 <div style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 15px; justify-content: center;">
-   <img src="./assets/screenshots/login.png" width="230" alt="Personal Information Screenshot"/>
-   <img src="./assets/screenshots/dashboard.png" width="230" alt="Dashboard Screenshot"/>
-   <img src="./assets/screenshots/transactions.png" width="230" alt="Transactions Screenshot"/>
-   <img src="./assets/screenshots/budget.png" width="230" alt="Budget Screenshot"/>
-   <img src="./assets/screenshots/requests.png" width="230" alt="Requests Screenshot"/>
-   <img src="./assets/screenshots/pay-now.png" width="230" alt="Pay Now Screenshot"/>
-   <img src="./assets/screenshots/paid.png" width="230" alt="Paid Screenshot"/>
-   <img src="./assets/screenshots/settings.png" width="230" alt="Settings Screenshot"/>
-   <img src="./assets/screenshots/profile.png" width="230" alt="Personal Information Screenshot"/>
-   <img src="./assets/screenshots/showBankAccounts.png" width="230" alt="Show Bank Accounts Screenshot"/>
-   <img src="./assets/screenshots/addAccounts.png" width="230" alt="Add Accounts Screenshot"/>
-   <img src="./assets/screenshots/budgetLimits.png" width="230" alt="Budget Limits Screenshot"/>
-   <img src="./assets/screenshots/notifications.png" width="230" alt="Notifications Screenshot"/>
-   <img src="./assets/screenshots/securitySettings.png" width="230" alt="Security Settings Screenshot"/>
-   <img src="./assets/screenshots/chatbot.png" width="230" alt="AI Financial Assistant Screenshot"/>
+   <img src="./assets/screenshots/IMG_5432.jpg" width="230" alt="App Screenshot"/>
+   <img src="./assets/screenshots/IMG_5433.jpg" width="230" alt="App Screenshot"/>
+   <img src="./assets/screenshots/IMG_5434.jpg" width="230" alt="App Screenshot"/>
+   <img src="./assets/screenshots/IMG_5435.jpg" width="230" alt="App Screenshot"/>
+   <img src="./assets/screenshots/IMG_5436.jpg" width="230" alt="App Screenshot"/>
+   <img src="./assets/screenshots/IMG_5437.jpg" width="230" alt="App Screenshot"/>
+   <img src="./assets/screenshots/IMG_5438.jpg" width="230" alt="App Screenshot"/>
+   <img src="./assets/screenshots/IMG_5439.jpg" width="230" alt="App Screenshot"/>
+   <img src="./assets/screenshots/IMG_5440.jpg" width="230" alt="App Screenshot"/>
+   <img src="./assets/screenshots/IMG_5441.jpg" width="230" alt="App Screenshot"/>
+   <img src="./assets/screenshots/IMG_5442.PNG" width="230" alt="App Screenshot"/>
+   <img src="./assets/screenshots/IMG_5443.jpg" width="230" alt="App Screenshot"/>
+   <img src="./assets/screenshots/IMG_5444.jpg" width="230" alt="App Screenshot"/>
+   <img src="./assets/screenshots/IMG_5445.jpg" width="230" alt="App Screenshot"/>
+   <img src="./assets/screenshots/IMG_5446.jpg" width="230" alt="App Screenshot"/>
+   <img src="./assets/screenshots/IMG_5447.jpg" width="230" alt="App Screenshot"/>
+   <img src="./assets/screenshots/IMG_5448.jpg" width="230" alt="App Screenshot"/>
+   <img src="./assets/screenshots/IMG_5449.jpg" width="230" alt="App Screenshot"/>
+   <img src="./assets/screenshots/IMG_5450.jpg" width="230" alt="App Screenshot"/>
+   <img src="./assets/screenshots/IMG_5451.jpg" width="230" alt="App Screenshot"/>
 </div>
 
 ## Features

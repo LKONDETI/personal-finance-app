@@ -213,9 +213,6 @@ export default function LoginScreen() {
 
             {/* Footer */}
             <View style={{ marginTop: 32 }}>
-              <Text style={{ fontSize: 13, color: '#6B7280', textAlign: 'center' }}>
-                Powered by .NET 9.0 Backend
-              </Text>
             </View>
           </View>
         </ScrollView>
