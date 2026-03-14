@@ -58,4 +58,19 @@ public class UserService : IUserService
             CreatedAt = user.CreatedAt
         };
     }
+
+    public async Task<bool> ChangePasswordAsync(int id, string currentPassword, string newPassword)
+    {
+        var user = await _context.Users.FindAsync(id);
+        if (user == null) return false;
+
+        bool isPasswordValid = BCrypt.Net.BCrypt.Verify(currentPassword, user.PasswordHash);
+        if (!isPasswordValid) return false;
+
+        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+        user.UpdatedAt = DateTime.UtcNow;
+
+        await _context.SaveChangesAsync();
+        return true;
+    }
 }

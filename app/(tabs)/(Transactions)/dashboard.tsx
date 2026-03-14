@@ -5,11 +5,13 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { accounts, loans } from '@/services/api';
 import type { Account, Transaction, Loan } from '@/services/api';
+import { usePrivacyMode } from '@/context/PrivacyContext';
 
 export default function Dashboard() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { party_id, user_name } = useLocalSearchParams<{ party_id: string; user_name?: string }>();
+  const { maskAmount } = usePrivacyMode();
 
   const [accountsList, setAccountsList] = useState<Account[]>([]);
   const [loansList, setLoansList] = useState<Loan[]>([]);
@@ -119,7 +121,7 @@ export default function Dashboard() {
                 <Text className="text-xs text-gray-400">Available balance</Text>
               </View>
               <Text className="text-2xl font-extrabold text-blue-600">
-                ${account.balance.toFixed(2)}
+                {maskAmount(account.balance)}
               </Text>
             </TouchableOpacity>
           ))
@@ -185,11 +187,11 @@ export default function Dashboard() {
                   <View className="flex-row justify-between">
                     <View>
                       <Text className="text-gray-500 text-xs">Outstanding</Text>
-                      <Text className="font-bold text-lg">${loan.outstandingBalance.toLocaleString()}</Text>
+                      <Text className="font-bold text-lg">{maskAmount(loan.outstandingBalance)}</Text>
                     </View>
                     <View className="items-end">
                       <Text className="text-gray-500 text-xs">Monthly Payment</Text>
-                      <Text className="font-bold text-lg text-purple-600">${loan.monthlyPayment.toLocaleString()}</Text>
+                      <Text className="font-bold text-lg text-purple-600">{maskAmount(loan.monthlyPayment)}</Text>
                     </View>
                   </View>
                 </TouchableOpacity>

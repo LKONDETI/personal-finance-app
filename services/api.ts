@@ -410,6 +410,11 @@ export const users = {
         }
         throw new Error(response.data.message || 'Failed to update user profile');
     },
+
+    changePassword: async (currentPassword: string, newPassword: string): Promise<any> => {
+        const response = await apiClient.put('/api/user/password', { currentPassword, newPassword });
+        return response.data;
+    },
 };
 
 // Helper Functions

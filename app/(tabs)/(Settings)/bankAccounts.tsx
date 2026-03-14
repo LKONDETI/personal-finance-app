@@ -5,6 +5,7 @@ import { ArrowLeft, Plus } from "lucide-react-native";
 import { useState, useEffect } from "react";
 
 import { accounts as accountsApi, Account } from "@/services/api";
+import { usePrivacyMode } from '@/context/PrivacyContext';
 
 export default function BankAccounts() {
   const router = useRouter();
@@ -14,6 +15,7 @@ export default function BankAccounts() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const { maskAmount } = usePrivacyMode();
 
   console.log('BankAccounts party_id:', party_id);
 
@@ -117,7 +119,7 @@ export default function BankAccounts() {
               <Text className="text-gray-500 text-xs mb-2">Created: {new Date(account.createdAt).toLocaleDateString()}</Text>
               <Text className="text-gray-500 mb-1">Available balance</Text>
               <Text className="text-3xl font-bold text-blue-600 mb-1 text-right">
-                ${account.balance.toFixed(2)}
+                {maskAmount(account.balance)}
               </Text>
             </TouchableOpacity>
           ))
@@ -125,4 +127,4 @@ export default function BankAccounts() {
       </View>
     </ScrollView>
   );
-} 
+}
