@@ -96,6 +96,10 @@ builder.Services.AddScoped<BankingAPI.Services.ILoanService, BankingAPI.Services
 builder.Services.AddScoped<BankingAPI.Services.IPaymentRequestService, BankingAPI.Services.PaymentRequestService>();
 builder.Services.AddScoped<BankingAPI.Services.IUserService, BankingAPI.Services.UserService>();
 
+// AI Advisor services
+builder.Services.AddScoped<BankingAPI.Services.IFinancialContextService, BankingAPI.Services.FinancialContextService>();
+builder.Services.AddScoped<BankingAPI.Services.IBedrockService, BankingAPI.Services.BedrockService>();
+
 // ===== Swagger / OpenAPI =====
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>

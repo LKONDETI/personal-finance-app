@@ -427,5 +427,25 @@ const clearAuth = async (): Promise<void> => {
     }
 };
 
+// AI Advisor API
+export const aiAdvisor = {
+    /**
+     * Ask the AI financial advisor a question.
+     * The backend aggregates your real financial data and grounds the answer in it.
+     * When the backend is in mock mode, returns a demo response with no AWS cost.
+     */
+    ask: async (question: string): Promise<{ answer: string; isMockResponse: boolean }> => {
+        const response = await apiClient.post<ApiResponse<{ answer: string; isMockResponse: boolean }>>(
+            '/api/aiadvisor/ask',
+            { question }
+        );
+        if (response.data.data) {
+            return response.data.data;
+        }
+        throw new Error(response.data.message || 'AI advisor request failed');
+    },
+};
+
 // Export axios instance for direct use if needed
 export default apiClient;
+

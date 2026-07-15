@@ -35,6 +35,13 @@ services:
       JwtSettings__Issuer: "BankingAPI"
       JwtSettings__Audience: "BankingApp"
       JwtSettings__ExpirationMinutes: "60"
+      # AI Advisor — AWS credentials (only needed when AI_MOCK_MODE=false)
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+      AWS_REGION: ${AWS_REGION:-us-east-1}
+      AiAdvisor__Region: ${AWS_REGION:-us-east-1}
+      AiAdvisor__MockMode: ${AI_MOCK_MODE:-true}
+      AiAdvisor__MaxTokens: ${AI_MAX_TOKENS_PER_RESPONSE:-512}
     ports:
       - "5200:5200"
     networks:
