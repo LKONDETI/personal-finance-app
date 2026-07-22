@@ -1,6 +1,6 @@
 // API Client for Banking API (.NET Backend)
 import axios, { AxiosError, AxiosInstance } from 'axios';
-import * as SecureStore from 'expo-secure-store';
+import { storage } from '../utils/storage'; 
 
 // API Configuration
 // Priority: EXPO_PUBLIC_API_URL env var → localhost fallback (simulator only)
@@ -128,7 +128,7 @@ const apiClient: AxiosInstance = axios.create({
 apiClient.interceptors.request.use(
     async (config) => {
         try {
-            const token = await SecureStore.getItemAsync(TOKEN_KEY);
+            const token = await storage.getItem(TOKEN_KEY);
             if (token) {
                 config.headers.Authorization = `Bearer ${token}`;
             }
@@ -165,8 +165,8 @@ export const auth = {
 
         if (response.data.success && response.data.data) {
             // Store token and user data securely
-            await SecureStore.setItemAsync(TOKEN_KEY, response.data.data.token);
-            await SecureStore.setItemAsync(USER_KEY, JSON.stringify(response.data.data.user));
+            await storage.setItem(TOKEN_KEY, response.data.data.token);
+            await storage.setItem(USER_KEY, JSON.stringify(response.data.data.user));
             return response.data.data;
         }
 
@@ -178,8 +178,8 @@ export const auth = {
 
         if (response.data.success && response.data.data) {
             // Store token and user data securely
-            await SecureStore.setItemAsync(TOKEN_KEY, response.data.data.token);
-            await SecureStore.setItemAsync(USER_KEY, JSON.stringify(response.data.data.user));
+            await storage.setItem(TOKEN_KEY, response.data.data.token);
+            await storage.setItem(USER_KEY, JSON.stringify(response.data.data.user));
             return response.data.data;
         }
 
@@ -198,7 +198,7 @@ export const auth = {
 
     getCurrentUser: async (): Promise<User | null> => {
         try {
-            const userData = await SecureStore.getItemAsync(USER_KEY);
+            const userData = await storage.getItem(USER_KEY);
             return userData ? JSON.parse(userData) : null;
         } catch (error) {
             console.error('Error getting current user:', error);
@@ -208,7 +208,7 @@ export const auth = {
 
     getToken: async (): Promise<string | null> => {
         try {
-            return await SecureStore.getItemAsync(TOKEN_KEY);
+            return await storage.getItem(TOKEN_KEY);
         } catch (error) {
             console.error('Error getting token:', error);
             return null;
@@ -405,7 +405,7 @@ export const users = {
         const response = await apiClient.put<ApiResponse<User>>('/api/user/me', data);
         if (response.data.data) {
             // Update the local storage user cache just in case
-            await SecureStore.setItemAsync(USER_KEY, JSON.stringify(response.data.data));
+            await storage.setItem(USER_KEY, JSON.stringify(response.data.data));
             return response.data.data;
         }
         throw new Error(response.data.message || 'Failed to update user profile');
@@ -420,8 +420,8 @@ export const users = {
 // Helper Functions
 const clearAuth = async (): Promise<void> => {
     try {
-        await SecureStore.deleteItemAsync(TOKEN_KEY);
-        await SecureStore.deleteItemAsync(USER_KEY);
+        await storage.removeItem(TOKEN_KEY);
+        await storage.removeItem(USER_KEY);
     } catch (error) {
         console.error('Error clearing auth:', error);
     }

@@ -1,5 +1,5 @@
 import * as Notifications from 'expo-notifications';
-import * as SecureStore from 'expo-secure-store';
+import { storage } from '../utils/storage'; 
 import { Platform } from 'react-native';
 import type { Loan } from '@/services/api';
 
@@ -32,7 +32,7 @@ export async function requestNotificationPermissions(): Promise<boolean> {
 
 export async function areNotificationsEnabled(): Promise<boolean> {
   try {
-    const stored = await SecureStore.getItemAsync(NOTIFICATIONS_ENABLED_KEY);
+    const stored = await storage.getItem(NOTIFICATIONS_ENABLED_KEY);
     return stored !== 'false'; // default to true
   } catch {
     return true;
@@ -40,7 +40,7 @@ export async function areNotificationsEnabled(): Promise<boolean> {
 }
 
 export async function setNotificationsEnabled(enabled: boolean): Promise<void> {
-  await SecureStore.setItemAsync(NOTIFICATIONS_ENABLED_KEY, enabled ? 'true' : 'false');
+  await storage.setItem(NOTIFICATIONS_ENABLED_KEY, enabled ? 'true' : 'false');
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────

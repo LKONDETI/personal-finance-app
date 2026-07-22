@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import * as SecureStore from 'expo-secure-store';
+import { storage } from '../utils/storage'; 
 
 interface PrivacyContextType {
   isPrivacyModeEnabled: boolean;
@@ -16,7 +16,7 @@ export function PrivacyProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // Load saved preference on mount
-    SecureStore.getItemAsync(PRIVACY_MODE_KEY).then(value => {
+    storage.getItem(PRIVACY_MODE_KEY).then(value => {
       if (value === 'true') {
         setIsPrivacyModeEnabled(true);
       }
@@ -25,7 +25,7 @@ export function PrivacyProvider({ children }: { children: React.ReactNode }) {
 
   const togglePrivacyMode = async (value: boolean) => {
     setIsPrivacyModeEnabled(value);
-    await SecureStore.setItemAsync(PRIVACY_MODE_KEY, value ? 'true' : 'false');
+    await storage.setItem(PRIVACY_MODE_KEY, value ? 'true' : 'false');
   };
 
   const maskAmount = (amount: number | string | undefined | null): string => {

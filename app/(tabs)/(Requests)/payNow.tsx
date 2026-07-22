@@ -38,7 +38,13 @@ export default function PayNowScreen() {
       } catch (error) {
         console.error('Error fetching payment request:', error);
         Alert.alert('Error', 'Failed to load payment request.');
-        router.back();
+        setTimeout(() => {
+          if (router.canGoBack()) {
+            router.back();
+          } else {
+            router.replace('/'); // Fallback to home if no history
+          }
+        }, 100);
       } finally {
         setLoading(false);
       }
